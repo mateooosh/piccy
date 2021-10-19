@@ -1,24 +1,25 @@
 import logo from './logo.svg';
+import {useSelector, useStore} from "react-redux";
 
-function App() {
+export default function App() {
+  const store = useStore();
+  const logged = useSelector(state => state.logged);
+
+  function onClick() {
+    if(logged) {
+      store.dispatch({type: "logged/false"});
+    }
+    else {
+      store.dispatch({type: "logged/true"});
+    }
+
+  }
+
+  const a = 'sad';
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" onClick={onClick}>
+      {logged ? 'Logged' : 'Not logged'}
     </div>
   );
 }
 
-export default App;
