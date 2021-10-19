@@ -1,5 +1,5 @@
-import logo from './logo.svg';
 import {useSelector, useStore} from "react-redux";
+import Navigation from "./Navigation/Navigation";
 
 export default function App() {
   const store = useStore();
@@ -15,10 +15,12 @@ export default function App() {
 
   }
 
-  const a = 'sad';
   return (
-    <div className="App" onClick={onClick}>
-      {logged ? 'Logged' : 'Not logged'}
+    <div className="App">
+      <h4 onClick={onClick}>
+        {logged ? 'Logged' : 'Not logged'}
+      </h4>
+      <Navigation/>
     </div>
   );
 }
