@@ -1,5 +1,5 @@
 import {useSelector, useStore} from "react-redux";
-import Navigation from "./Navigation/Navigation";
+import Navigation from "./navigation/Navigation";
 
 export default function App() {
   const store = useStore();

@@ -4,6 +4,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import Button from "../components/button/Button";
 
 export default function Navigation() {
   return(
@@ -16,7 +17,9 @@ export default function Navigation() {
       </div>
       <Switch>
         <Route path="/register">
-          <div>Register</div>
+          <div>
+            <Button type="outline" content="Button"/>
+          </div>
         </Route>
         <Route path="/">
           <div>Home</div>
