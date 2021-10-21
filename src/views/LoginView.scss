@@ -1,0 +1,38 @@
+@import 'src/styles/variables.module';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 380px;
+  margin: auto;
+  padding: 80px 40px;
+  box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.3);
+
+  &__button {
+    color: white;
+    text-transform: none;
+    font-weight: 700;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  &__divider {
+    height: 1px;
+    width: 100%;
+    background-color: #eee;
+  }
+
+  &__paragraph {
+    font-size: 14px;
+    margin: 0;
+
+    &--sign-up {
+      font-weight: 700;
+      color: $primary;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+}
+

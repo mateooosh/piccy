@@ -1,11 +1,18 @@
-$primary: #29ab9c;
-$primary-hover: #56b0a6;
-$danger: #E40000;
+//$primary: #29ab9c;
+//$primary-hover: #56b0a6;
+//$danger: #E40000;
+//
+//$white: white;
+//$grey: grey;
 
-$white: white;
-$grey: grey;
+@import 'src/styles/variables.module';
 
-* {
-  box-sizing: content-box;
-  font-family: 'Trebuchet MS', sans-serif;
+.bg-primary {
+  background-color: $primary;
+  color: white;
+}
+
+.button {
+  text-transform: none;
+  font-weight: 700;
 }

@@ -4,10 +4,12 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import Button from "../components/button/Button";
+
+import '../App.scss';
+import LoginView from "../views/LoginView";
 
 export default function Navigation() {
-  return(
+  return (
     <Router>
       <div>
         <Link to="/">Home</Link>
@@ -17,12 +19,10 @@ export default function Navigation() {
       </div>
       <Switch>
         <Route path="/register">
-          <div>
-            <Button type="outline" content="Button"/>
-          </div>
+          register
         </Route>
         <Route path="/">
-          <div>Home</div>
+          <LoginView/>
         </Route>
       </Switch>
     </Router>
