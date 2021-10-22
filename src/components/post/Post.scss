@@ -1,0 +1,83 @@
+@import '../../styles/variables.module';
+
+.post {
+  width: 100%;
+  background-color: white;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
+
+  &__header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    margin-right: 16px;
+  }
+
+  &__details {
+    flex-grow: 1;
+
+    &__username {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    &__date {
+      font-size: 14px;
+      font-weight: 400;
+      color: #777;
+    }
+  }
+
+  &__more {
+    cursor: pointer;
+  }
+
+  &__image {
+    width: 600px;
+    height: 600px;
+
+    @media(max-width: 600px) {
+      width: 100vw;
+      height: 100vw;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+
+  &__icon {
+    cursor: pointer;
+  }
+
+  &__stats {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  &__likes {
+    margin: 0 15px;
+  }
+
+  &__bottom {
+    padding: 0 15px 15px;
+    font-size: 15px;
+
+    &__username {
+      font-weight: 700;
+    }
+
+    &__description {
+
+    }
+  }
+}
+

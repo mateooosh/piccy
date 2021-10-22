@@ -8,6 +8,7 @@ import '../App.scss';
 import LoginView from "../views/LoginView/LoginView";
 import {useSelector, useStore} from "react-redux";
 import RegisterView from "../views/RegisterView/RegisterView";
+import HomeView from "../views/HomeView/HomeView";
 
 export default function Navigation() {
   const store = useStore()
@@ -18,9 +19,7 @@ export default function Navigation() {
       {logged ? (
         <Switch>
           <Route path="/">
-            <div onClick={() => store.dispatch({type: 'resetStore'})}>
-              Log out
-            </div>
+            <HomeView/>
           </Route>
         </Switch>
       ) : (
