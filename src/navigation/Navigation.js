@@ -1,13 +1,13 @@
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 import '../App.scss';
-import LoginView from "../views/LoginView";
+import LoginView from "../views/LoginView/LoginView";
 import {useSelector, useStore} from "react-redux";
+import RegisterView from "../views/RegisterView/RegisterView";
 
 export default function Navigation() {
   const store = useStore()
@@ -15,12 +15,6 @@ export default function Navigation() {
 
   return (
     <Router>
-      <div>
-        <Link to="/">Home</Link>
-      </div>
-      <div>
-        <Link to="register">Register</Link>
-      </div>
       {logged ? (
         <Switch>
           <Route path="/">
@@ -32,7 +26,7 @@ export default function Navigation() {
       ) : (
         <Switch>
           <Route path="/register">
-            register
+            <RegisterView/>
           </Route>
           <Route path="/">
             <LoginView/>

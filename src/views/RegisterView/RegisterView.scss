@@ -1,0 +1,60 @@
+@import '../../styles/variables.module';
+
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 440px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 80px 40px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.15);
+
+  @media(max-width: 500px) {
+    width: 100%;
+    height: 100vh;
+    box-shadow: none;
+  }
+
+  @media(max-height: 850px) {
+    height: 100%;
+    margin: auto;
+    position: static;
+    transform: none;
+  }
+
+  &__button {
+    color: white;
+    text-transform: none;
+    font-weight: 700;
+    font-size: 16px;
+    margin-top: 10px;
+
+    &--disabled {
+      color: $primary;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    width: 100%;
+    background-color: #eee;
+  }
+
+  &__paragraph {
+    font-size: 14px;
+    margin: 0;
+    text-align: center;
+
+    &--log-in {
+      font-weight: 700;
+      color: $primary;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+  }
+}
+

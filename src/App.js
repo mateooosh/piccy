@@ -35,13 +35,9 @@ export default function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
-          <h4 onClick={onClick}>
-            {logged ? 'Logged' : 'Not logged'}
-          </h4>
           <Navigation/>
         </StyledEngineProvider>
       </ThemeProvider>
-
     </div>
   );
 }

@@ -3,9 +3,9 @@ import './LoginView.scss'
 import {TextField} from "@mui/material"
 import {LoadingButton} from "@mui/lab"
 
-import {validation} from '../functions/functions'
-import {Link} from "react-router-dom";
-import {useStore} from "react-redux";
+import {validation} from '../../functions/functions'
+import {Link} from "react-router-dom"
+import {useStore} from "react-redux"
 
 export default function LoginView() {
   const [username, setUsername] = useState('')
@@ -28,16 +28,16 @@ export default function LoginView() {
     if(!allCorrect())
       return
 
-    setLoading(true);
+    setLoading(true)
 
     const obj = {
       username: username,
       password: password,
     }
 
-    console.log(obj);
+    console.log(obj)
 
-    const url = `${process.env.REACT_APP_API_URL}/auth`;
+    const url = `${process.env.REACT_APP_API_URL}/auth`
     fetch(url, {
       method: "POST",
       body: JSON.stringify(obj),
@@ -47,12 +47,12 @@ export default function LoginView() {
     })
       .then(response => response.json())
       .then(response => {
-        // alert(response.message);
+        // alert(response.message)
         console.log('token:', response.token)
-        store.dispatch({type: "logged/true"});
-        store.dispatch({type: "tokenSet", payload: response.token});
-        store.dispatch({type: "usernameSet", payload: response.username});
-        store.dispatch({type: "idSet", payload: response.id});
+        store.dispatch({type: "logged/true"})
+        store.dispatch({type: "tokenSet", payload: response.token})
+        store.dispatch({type: "usernameSet", payload: response.username})
+        store.dispatch({type: "idSet", payload: response.id})
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false))
@@ -79,12 +79,12 @@ export default function LoginView() {
   }
 
   function getButtonClasses() {
-    return (allCorrect()) ? 'container__button' : 'container__button container__button--disabled'
+    return (allCorrect()) ? 'login__button' : 'login__button login__button--disabled'
   }
 
   return (
-    <div className="container">
-      <img src="piccy.svg"/>
+    <div className="login">
+      <img src="piccy.svg" alt="Piccy"/>
       <TextField label="Username" variant="standard" error={hasError(username)} value={username}
                  onChange={e => setUsername(e.target.value)} helperText={helperTextUsername()}
                  onKeyPress={(ev) => {
@@ -106,8 +106,8 @@ export default function LoginView() {
       <LoadingButton loading={loading} onClick={logIn} variant={getButtonVariant()} disabled={!allCorrect()} disableRipple className={getButtonClasses()}>
         Log in
       </LoadingButton>
-      <div className="container__divider"></div>
-      <p className="container__paragraph">You don't have an account on Piccy? <Link to="register" className="container__paragraph--sign-up">Sign up</Link></p>
+      <div className="login__divider"></div>
+      <p className="login__paragraph">You don't have an account on Piccy? <Link to="register" className="login__paragraph--sign-up">Sign up</Link></p>
 
     </div>
   )
