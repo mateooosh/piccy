@@ -5,6 +5,10 @@ import {createTheme, StyledEngineProvider, ThemeProvider} from '@mui/material/st
 import variables from './styles/variables.module.scss';
 console.log(variables)
 
+// require('dotenv').config()
+
+console.log(process.env.REACT_APP_API_URL)
+
 export default function App() {
   const store = useStore();
   const logged = useSelector(state => state.logged);
@@ -20,9 +24,9 @@ export default function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: variables.primary,
-        light: "#ff0",
-        dark: variables.primaryHover
+        main: variables['primary-main'],
+        light: variables['primary-light'],
+        dark: variables['primary-dark']
       }
     }
   });

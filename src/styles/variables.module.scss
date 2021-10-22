@@ -1,11 +1,15 @@
 $primary: #29ab9c;
-$primary-hover: #56b0a6;
+$primary-light: #56b0a6;
+$primary-dark: #029d8e;
 $danger: #E40000;
 
 $white: white;
 $grey: grey;
 
 :export {
-  primary: $primary;
-  primaryHover: $primary-hover;
+  primary: {
+    main: $primary;
+    light: $primary-light;
+    dark: $primary-dark;
+  }
 }

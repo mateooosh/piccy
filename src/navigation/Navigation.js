@@ -7,8 +7,12 @@ import {
 
 import '../App.scss';
 import LoginView from "../views/LoginView";
+import {useSelector, useStore} from "react-redux";
 
 export default function Navigation() {
+  const store = useStore()
+  const logged = useSelector(state => state.logged)
+
   return (
     <Router>
       <div>
@@ -17,14 +21,24 @@ export default function Navigation() {
       <div>
         <Link to="register">Register</Link>
       </div>
-      <Switch>
-        <Route path="/register">
-          register
-        </Route>
-        <Route path="/">
-          <LoginView/>
-        </Route>
-      </Switch>
+      {logged ? (
+        <Switch>
+          <Route path="/">
+            <div onClick={() => store.dispatch({type: 'resetStore'})}>
+              Log out
+            </div>
+          </Route>
+        </Switch>
+      ) : (
+        <Switch>
+          <Route path="/register">
+            register
+          </Route>
+          <Route path="/">
+            <LoginView/>
+          </Route>
+        </Switch>
+      )}
     </Router>
   )
 }

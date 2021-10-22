@@ -47,6 +47,9 @@ function Reducer(state = initialState, action) {
     case "notificationAmountSet":
       return { ...state, notificationAmount: action.payload };
 
+    case "resetStore":
+      return {...state, logged: false, token: '', username: '', id: null, lang: 'en', notificationAmount: 0};
+
     default:
       // If the reducer doesn't care about this action type,
       // return the existing state unchanged
