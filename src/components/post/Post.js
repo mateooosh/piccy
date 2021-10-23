@@ -20,7 +20,9 @@ export default function Post(props) {
 
   const [photo, setPhoto] = useState(null)
   const [post, setPost] = useState(null)
+  const [comments, setComments] = useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [actions, setActions] = useState([])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -35,7 +37,15 @@ export default function Post(props) {
 
 
   useEffect(() => {
-    setPost(props.post);
+    setPost(props.post)
+
+    let arr = ['Report post', 'Download photo']
+    if (props.post.username === store.getState().username) {
+      arr.unshift('Remove post')
+    }
+    setActions(arr)
+
+    getComments(props.post.id)
     getPhoto(props.post.id)
   }, [])
 
@@ -49,6 +59,19 @@ export default function Post(props) {
         setPhoto(response.photo)
       })
       .catch(err => console.log(err))
+  }
+
+  function getComments(id) {
+    if (props.displayComments) {
+      const url = `${process.env.REACT_APP_API_URL}/comments/${id}?token=${store.getState().token}`
+      fetch(url)
+        .then((response) => response.json())
+        .then((response) => {
+          console.log('comments', response)
+          setComments(response)
+        })
+        .catch((err) => console.log(err))
+    }
   }
 
   function likePost(idUser, idPost, index) {
@@ -112,26 +135,7 @@ export default function Post(props) {
                         open={open}
                         anchorEl={anchorEl}
                         onClose={handleClose}
-                        actions={['Remove post', 'Report post', 'Download photo']}/>
-            <Popover
-              className="popover"
-
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-            >
-              <div className="popover__item">
-                Report post
-              </div>
-              <div className="popover__item">
-                Remove post
-              </div>
-              <div className="popover__item">
-                Download photo
-              </div>
-            </Popover>
-
+                        actions={actions}/>
           </div>
         </div>
 
@@ -186,9 +190,24 @@ export default function Post(props) {
               else return <span key={index}>{word} </span>
             })}
           </span>
+
+          {comments.length !== 0 &&
+          <div className="post__bottom__comments">
+            <div className="post__bottom__comments__header">
+              Comments
+            </div>
+            {comments.map((comment, index) =>
+              <div key={index}>
+                <span className="post__bottom__comments__username">{comment.username} </span>{comment.content}
+              </div>
+            )}
+          </div>
+          }
+
         </div>
       </>
       }
+
 
     </div>
   )

@@ -78,5 +78,21 @@
     &__description {
 
     }
+
+    &__comments {
+      margin-top: 10px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      &__header {
+        color: #555;
+      }
+
+      &__username {
+        font-weight: 700;
+      }
+    }
   }
 }

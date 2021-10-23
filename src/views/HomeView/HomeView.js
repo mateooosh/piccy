@@ -57,15 +57,11 @@ export default function HomeView() {
       </div>
       Home
       <div className="home__posts">
-        {/*<Post/>*/}
-        {/*<Post/>*/}
-        {/*<Post/>*/}
         {posts.map((post, idx) => (
           <Post
             post={post}
             idx={idx}
             key={idx}
-            homeScreen={true}
           />
         ))}
       </div>
