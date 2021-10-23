@@ -95,4 +95,39 @@
       }
     }
   }
+
+  &__dialog {
+    &__title {
+      font-size: 20px;
+      color: #404040;
+      font-weight: 700;
+    }
+
+    &__input {
+      margin: 12px 0;
+    }
+
+    &__button {
+      color: white;
+      text-transform: none;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: all .2s;
+
+      &--disabled {
+        color: $primary;
+      }
+
+      &--outlined {
+        color: #808080;
+        border-color: #ccc;
+
+        &:hover {
+          border-color: #ccc;
+          background-color: #eee;
+        }
+      }
+    }
+  }
 }

@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './HomeView.scss'
-import {TextField} from "@mui/material"
-import {LoadingButton} from "@mui/lab"
 
-import {validation} from '../../functions/functions'
-import {Link} from "react-router-dom"
 import {useStore} from "react-redux"
 import Post from "../../components/post/Post";
 
@@ -46,7 +42,7 @@ export default function HomeView() {
   }
 
   useEffect(() => {
-    getPosts();
+    getPosts()
   }, [])
 
 

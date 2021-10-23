@@ -27,13 +27,6 @@ const translations = {
     fr: 'Réinitialiser le mot de passe',
     pl: 'Zresetuj hasło'
   },
-  search: {
-    de: 'Suche',
-    en: 'Search',
-    es: 'Buscar',
-    fr: 'Chercher',
-    pl: 'Szukaj'
-  },
   createPost: {
     de: 'Hinzufügen',
     en: 'Add',
@@ -283,10 +276,6 @@ const translations = {
   signUpHere: {
     en: 'Sign up',
     pl: 'Zarejestruj'
-  },
-  logIn: {
-    en: 'Log in',
-    pl: 'Zaloguj'
   },
   logIn: {
     en: 'Log in',

@@ -13,12 +13,16 @@ export default function ActionMenu({id, open, anchorEl, onClose, actions}) {
       onClose={onClose}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left'
+        horizontal: 'right'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
       }}
     >
       {actions.map((action, index) =>
-        <div key={index} className="popover__item">
-          {action}
+        <div key={index} className="popover__item" onClick={action.onClick.bind(this, true)}>
+          {action.title}
         </div>
       )}
     </Popover>
