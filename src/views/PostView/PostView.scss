@@ -1,0 +1,13 @@
+@import '../../styles/variables.module';
+
+.post-view {
+  &__post {
+    width: 600px;
+    margin: auto;
+
+    @media(max-width: 600px) {
+      width: 100vw;
+    }
+  }
+}
+

@@ -2,13 +2,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route
-} from "react-router-dom";
+} from "react-router-dom"
 
-import '../App.scss';
-import LoginView from "../views/LoginView/LoginView";
-import {useSelector, useStore} from "react-redux";
-import RegisterView from "../views/RegisterView/RegisterView";
-import HomeView from "../views/HomeView/HomeView";
+import '../App.scss'
+import LoginView from "../views/LoginView/LoginView"
+import {useSelector, useStore} from "react-redux"
+import RegisterView from "../views/RegisterView/RegisterView"
+import HomeView from "../views/HomeView/HomeView"
+import PostView from "../views/PostView/PostView"
 
 export default function Navigation() {
   const store = useStore()
@@ -18,6 +19,9 @@ export default function Navigation() {
     <Router>
       {logged ? (
         <Switch>
+          <Route path="/post/:id">
+            <PostView/>
+          </Route>
           <Route path="/">
             <HomeView/>
           </Route>

@@ -1,33 +1,32 @@
 import React, {useEffect, useState} from 'react'
 import './Post.scss'
 
-import variables from '../../styles/variables.module.scss';
-import {displayTime, validation} from '../../functions/functions';
+import variables from '../../styles/variables.module.scss'
+import {displayTime, validation} from '../../functions/functions'
 
 import {useStore} from "react-redux"
 import {
   Avatar,
   Dialog, DialogActions,
-  DialogContent, DialogContentText,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
-  Drawer,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Popover, TextField
-} from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
-import ShareIcon from '@mui/icons-material/Share';
+  TextField
+} from "@mui/material"
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
+import ShareIcon from '@mui/icons-material/Share'
 
-import {t} from "../../translations/translations";
-import ActionMenu from "../action-menu/ActionMenu";
-import {LoadingButton} from "@mui/lab";
+import {t} from "../../translations/translations"
+import ActionMenu from "../action-menu/ActionMenu"
+import {LoadingButton} from "@mui/lab"
+import {useHistory} from "react-router-dom"
 
 export default function Post(props) {
   const store = useStore()
+  const history = useHistory()
 
   const [photo, setPhoto] = useState(null)
   const [post, setPost] = useState(null)
@@ -86,7 +85,7 @@ export default function Post(props) {
   }
 
   function getComments(id) {
-    if (props.displayComments) {
+    if (!props.homeScreen) {
       const url = `${process.env.REACT_APP_API_URL}/comments/${id}?token=${store.getState().token}`
       fetch(url)
         .then((response) => response.json())
@@ -171,6 +170,13 @@ export default function Post(props) {
       })
   }
 
+  function handleClickPhoto() {
+    console.log('photo click')
+    if(props.homeScreen) {
+      history.push(`/post/${post.id}`)
+    }
+  }
+
   function allCorrect() {
     return validation.min6Chars(reason)
   }
@@ -202,7 +208,7 @@ export default function Post(props) {
         </div>
 
         <div className="post__image">
-          <img width="100%" src={photo}/>
+          <img onClick={handleClickPhoto} width="100%" src={photo} className={props.homeScreen ? 'post__image--cursor' : ''}/>
         </div>
 
         <div className="post__actions">

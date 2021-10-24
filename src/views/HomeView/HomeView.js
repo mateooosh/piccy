@@ -2,16 +2,16 @@ import React, {useEffect, useState} from 'react'
 import './HomeView.scss'
 
 import {useStore} from "react-redux"
-import Post from "../../components/post/Post";
+import Post from "../../components/post/Post"
 
 export default function HomeView() {
 
-  const store = useStore();
+  const store = useStore()
 
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [emptyPosts, setEmptyPosts] = useState(false);
+  const [posts, setPosts] = useState([])
+  const [page, setPage] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [emptyPosts, setEmptyPosts] = useState(false)
 
 
   function getPosts() {
@@ -58,6 +58,7 @@ export default function HomeView() {
             post={post}
             idx={idx}
             key={idx}
+            homeScreen
           />
         ))}
       </div>
