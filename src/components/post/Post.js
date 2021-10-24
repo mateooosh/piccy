@@ -171,10 +171,13 @@ export default function Post(props) {
   }
 
   function handleClickPhoto() {
-    console.log('photo click')
     if(props.homeScreen) {
       history.push(`/post/${post.id}`)
     }
+  }
+
+  function pushToProfile() {
+    history.push(`/${post.username}`)
   }
 
   function allCorrect() {
@@ -191,10 +194,10 @@ export default function Post(props) {
       <>
         <div className="post__header">
           <div className="post__badge">
-            <Avatar className="post__avatar" src={post.userPhoto}></Avatar>
+            <Avatar onClick={pushToProfile} className="post__avatar" src={post.userPhoto}></Avatar>
           </div>
           <div className="post__details">
-            <div className="post__details__username">{post.username}</div>
+            <div onClick={pushToProfile} className="post__details__username">{post.username}</div>
             <div className="post__details__date">{displayTime(post.uploadDate, 'en', t)}</div>
           </div>
           <div className="post__more">

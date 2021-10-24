@@ -10,6 +10,7 @@ import {useSelector, useStore} from "react-redux"
 import RegisterView from "../views/RegisterView/RegisterView"
 import HomeView from "../views/HomeView/HomeView"
 import PostView from "../views/PostView/PostView"
+import ProfileView from "../views/ProfileView/ProfileView"
 
 export default function Navigation() {
   const store = useStore()
@@ -21,6 +22,9 @@ export default function Navigation() {
         <Switch>
           <Route path="/post/:id">
             <PostView/>
+          </Route>
+          <Route path="/:username">
+            <ProfileView/>
           </Route>
           <Route path="/">
             <HomeView/>
