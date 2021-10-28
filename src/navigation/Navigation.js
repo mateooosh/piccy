@@ -11,6 +11,8 @@ import RegisterView from "../views/RegisterView/RegisterView"
 import HomeView from "../views/HomeView/HomeView"
 import PostView from "../views/PostView/PostView"
 import ProfileView from "../views/ProfileView/ProfileView"
+import Navbar from "../components/navbar/Navbar";
+import React from "react";
 
 export default function Navigation() {
   const store = useStore()
@@ -19,17 +21,20 @@ export default function Navigation() {
   return (
     <Router>
       {logged ? (
-        <Switch>
-          <Route path="/post/:id">
-            <PostView/>
-          </Route>
-          <Route path="/:username">
-            <ProfileView/>
-          </Route>
-          <Route path="/">
-            <HomeView/>
-          </Route>
-        </Switch>
+        <>
+          <Navbar/>
+          <Switch>
+            <Route path="/post/:id">
+              <PostView/>
+            </Route>
+            <Route path="/:username">
+              <ProfileView/>
+            </Route>
+            <Route path="/">
+              <HomeView/>
+            </Route>
+          </Switch>
+        </>
       ) : (
         <Switch>
           <Route path="/register">

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import './Post.scss'
 
 import variables from '../../styles/variables.module.scss'
@@ -18,15 +18,25 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import ShareIcon from '@mui/icons-material/Share'
+import ReportGmailerrorredRoundedIcon from '@mui/icons-material/ReportGmailerrorredRounded'
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 
 import {t} from "../../translations/translations"
 import ActionMenu from "../action-menu/ActionMenu"
-import {LoadingButton} from "@mui/lab"
+import {LoadingButton, Skeleton} from "@mui/lab"
 import {useHistory} from "react-router-dom"
 
 export default function Post(props) {
   const store = useStore()
   const history = useHistory()
+
+  const postRef = useRef()
+
+  const [width, setWidth] = useState(0)
+
+  useEffect(() => {
+    setWidth(postRef.current.scrollWidth)
+  }, [postRef])
 
   const [photo, setPhoto] = useState(null)
   const [post, setPost] = useState(null)
@@ -61,8 +71,16 @@ export default function Post(props) {
 
   useEffect(() => {
     setPost(props.post)
-
-    let arr = [{title: 'Report post', onClick: setReportDialogOpen}, {title: 'Download photo', onClick: () => null}]
+    let arr = [
+      {
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><ReportGmailerrorredRoundedIcon
+          onClick={handleClick}/>Report post</div>,
+        onClick: setReportDialogOpen
+      },
+      {
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><FileDownloadOutlinedIcon/>Download photo</div>,
+        onClick: () => null
+      }]
     if (props.post.username === store.getState().username) {
       arr.unshift({title: 'Remove post', onClick: () => null})
     }
@@ -139,7 +157,7 @@ export default function Post(props) {
   }
 
   function reportPost() {
-    if(!allCorrect())
+    if (!allCorrect())
       return
 
     const url = `${process.env.REACT_APP_API_URL}/reports`;
@@ -171,7 +189,7 @@ export default function Post(props) {
   }
 
   function handleClickPhoto() {
-    if(props.homeScreen) {
+    if (props.homeScreen) {
       history.push(`/post/${post.id}`)
     }
   }
@@ -189,7 +207,7 @@ export default function Post(props) {
   }
 
   return (
-    <div className="post">
+    <div className="post" ref={postRef}>
       {post &&
       <>
         <div className="post__header">
@@ -211,7 +229,14 @@ export default function Post(props) {
         </div>
 
         <div className="post__image">
-          <img onClick={handleClickPhoto} width="100%" src={photo} className={props.homeScreen ? 'post__image--cursor' : ''}/>
+
+          {photo ? (
+            <img onClick={handleClickPhoto} width="100%" src={photo}
+                 className={props.homeScreen ? 'post__image--cursor' : ''}/>
+          ) : (
+            <Skeleton variant="rectangular" width={width} height={width}/>
+          )}
+
         </div>
 
         <div className="post__actions">
@@ -309,7 +334,8 @@ export default function Post(props) {
           </LoadingButton>
 
           <LoadingButton loading={reportPostLoading}
-                         onClick={reportPost} variant="contained" disableRipple disabled={!allCorrect()} className={getButtonClasses()}>
+                         onClick={reportPost} variant="contained" disableRipple disabled={!allCorrect()}
+                         className={getButtonClasses()}>
             Report
           </LoadingButton>
         </DialogActions>

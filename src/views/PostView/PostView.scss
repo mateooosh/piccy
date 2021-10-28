@@ -1,11 +1,24 @@
 @import '../../styles/variables.module';
 
 .post-view {
-  &__post {
-    width: 600px;
-    margin: auto;
+  margin: 20px 0;
 
-    @media(max-width: 600px) {
+  @media(max-width: 640px) {
+    margin: 0;
+  }
+
+  &__indicator {
+    margin-top: 60px;
+  }
+
+  &__post {
+    width: 640px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @media(max-width: 640px) {
       width: 100vw;
     }
   }

@@ -1,11 +1,17 @@
 @import '../../styles/variables.module';
 
 .home {
+  &__indicator {
+    margin-top: 60px;
+  }
+
   &__posts {
-    width: 600px;
+    width: 640px;
     margin: auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 20px;
 
     @media(max-width: 620px) {

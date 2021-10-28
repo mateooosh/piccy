@@ -108,9 +108,9 @@ export default function RegisterView() {
 
   return (
     <div className="register">
-      <img src="piccy.svg" alt="Piccy"/>
+      <img className="register__logo" src="piccy.svg" alt="Piccy"/>
 
-      <TextField label="E-mail" variant="standard" error={hasErrorEmail(email)} value={email}
+      <TextField className="register__input" label="E-mail" variant="standard" error={hasErrorEmail(email)} value={email}
                  onChange={e => setEmail(e.target.value)} helperText={helperTextEmail()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -119,7 +119,7 @@ export default function RegisterView() {
                    }
                  }}/>
 
-      <TextField label="Username" variant="standard" error={hasError(username)} value={username}
+      <TextField className="register__input" label="Username" variant="standard" error={hasError(username)} value={username}
                  onChange={e => setUsername(e.target.value)} helperText={helperTextUsername()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -127,7 +127,7 @@ export default function RegisterView() {
                      ev.preventDefault()
                    }
                  }}/>
-      <TextField label="Password" variant="standard" error={hasError(password)} value={password}
+      <TextField className="register__input" label="Password" variant="standard" error={hasError(password)} value={password}
                  onChange={e => setPassword(e.target.value)} helperText={helperTextPassword()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -137,7 +137,7 @@ export default function RegisterView() {
                  }}
                  type="password"/>
 
-      <TextField label="Name" variant="standard" error={nameHasError()} value={name}
+      <TextField className="register__input" label="Name" variant="standard" error={nameHasError()} value={name}
                  onChange={e => setName(e.target.value)} helperText={helperTextName()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {

@@ -3,6 +3,9 @@ import './HomeView.scss'
 
 import {useStore} from "react-redux"
 import Post from "../../components/post/Post"
+import Navbar from "../../components/navbar/Navbar"
+import {CircularProgress} from "@mui/material";
+import variables from "../../styles/variables.module.scss";
 
 export default function HomeView() {
 
@@ -15,7 +18,7 @@ export default function HomeView() {
 
 
   function getPosts() {
-    if(emptyPosts || loading)
+    if (emptyPosts || loading)
       return;
 
     let temp = page + 1;
@@ -48,11 +51,12 @@ export default function HomeView() {
 
   return (
     <div className="home">
-      <div onClick={() => store.dispatch({type: 'resetStore'})}>
-        Log out
-      </div>
-      Home
       <div className="home__posts">
+
+        {loading &&
+        <CircularProgress className="home__indicator" size={60}/>
+        }
+
         {posts.map((post, idx) => (
           <Post
             post={post}
@@ -61,6 +65,7 @@ export default function HomeView() {
             homeScreen
           />
         ))}
+
       </div>
     </div>
   )

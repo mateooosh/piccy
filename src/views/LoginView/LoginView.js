@@ -84,8 +84,8 @@ export default function LoginView() {
 
   return (
     <div className="login">
-      <img src="piccy.svg" alt="Piccy"/>
-      <TextField label="Username" variant="standard" error={hasError(username)} value={username}
+      <img src="piccy.svg" alt="Piccy" className="login__logo"/>
+      <TextField className="login__input" label="Username" variant="standard" error={hasError(username)} value={username}
                  onChange={e => setUsername(e.target.value)} helperText={helperTextUsername()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -93,7 +93,7 @@ export default function LoginView() {
                      ev.preventDefault()
                    }
                  }}/>
-      <TextField label="Password" variant="standard" error={hasError(password)} value={password}
+      <TextField className="login__input" label="Password" variant="standard" error={hasError(password)} value={password}
                  onChange={e => setPassword(e.target.value)} helperText={helperTextPassword()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
