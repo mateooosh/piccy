@@ -4,7 +4,7 @@ import './ProfileView.scss'
 import {useStore} from "react-redux"
 import {Avatar, Button, CircularProgress} from "@mui/material"
 import {useHistory, useParams} from "react-router-dom"
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "../../components/navbar/Navbar"
 
 export default function ProfileView() {
 
@@ -46,6 +46,51 @@ export default function ProfileView() {
     }
   }, [])
 
+  //follow user
+  function follow(idUser, idFollower) {
+    console.log(idUser, idFollower)
+
+    let deepCopy = JSON.parse(JSON.stringify(profile))
+    deepCopy.amIFollowing = 1
+    deepCopy.followers++
+    setProfile(deepCopy)
+
+    const url = `${process.env.REACT_APP_API_URL}/users/${idUser}/follow/${idFollower}?token=${store.getState().token}`
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response.message)
+      })
+      .catch((err) => console.log(err))
+  }
+
+  // unfollow user
+  function unfollow(idUser, idFollower) {
+    let deepCopy = JSON.parse(JSON.stringify(profile))
+    console.log(deepCopy)
+    deepCopy.amIFollowing = 0
+    deepCopy.followers--
+    setProfile(deepCopy)
+
+    const url = `${process.env.REACT_APP_API_URL}/users/${idUser}/follow/${idFollower}?token=${store.getState().token}`
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response.message)
+      })
+      .catch((err) => console.log(err))
+  }
+
 
   return (
     <div className="profile">
@@ -83,11 +128,14 @@ export default function ProfileView() {
         <div className="profile__actions">
           {profile.amIFollowing ? (
             <Button variant="contained" disableRipple
-                    className="profile__actions__button profile__actions__button--disabled">
+                    className="profile__actions__button profile__actions__button--disabled"
+                    onClick={unfollow.bind(this, store.getState().id, profile.id)}>
               Following
             </Button>
           ) : (
-            <Button variant="contained" disableRipple className="profile__actions__button">
+            <Button variant="contained"
+                    disableRipple className="profile__actions__button"
+                    onClick={follow.bind(this, store.getState().id, profile.id)}>
               Follow
             </Button>
           )}
