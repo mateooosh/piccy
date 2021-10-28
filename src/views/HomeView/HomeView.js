@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import './HomeView.scss'
 
 import {useStore} from "react-redux"
@@ -6,6 +6,7 @@ import Post from "../../components/post/Post"
 import Navbar from "../../components/navbar/Navbar"
 import {CircularProgress} from "@mui/material";
 import variables from "../../styles/variables.module.scss";
+import ImagePicker from "../../components/image-picker/ImagePicker";
 
 export default function HomeView() {
 
@@ -16,6 +17,23 @@ export default function HomeView() {
   const [loading, setLoading] = useState(false)
   const [emptyPosts, setEmptyPosts] = useState(false)
 
+  const postContainerRef = useRef()
+
+  const [size, setSize] = useState(0)
+
+  useEffect(sizeChange, [postContainerRef])
+
+  useEffect(() => {
+    window.addEventListener('resize', sizeChange)
+
+    return () => {
+      window.removeEventListener('resize', sizeChange)
+    }
+  }, [])
+
+  function sizeChange() {
+    setSize(postContainerRef.current.scrollWidth)
+  }
 
   function getPosts() {
     if (emptyPosts || loading)
@@ -51,7 +69,9 @@ export default function HomeView() {
 
   return (
     <div className="home">
-      <div className="home__posts">
+      <div className="home__posts" ref={postContainerRef}>
+
+        <ImagePicker size={size}/>
 
         {loading &&
         <CircularProgress className="home__indicator" size={60}/>
