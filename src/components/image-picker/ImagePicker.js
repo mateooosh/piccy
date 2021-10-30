@@ -7,15 +7,14 @@ import RotateRightIcon from '@mui/icons-material/RotateRight'
 import Grid3x3Icon from '@mui/icons-material/Grid3x3'
 import getCroppedImg from "./cropImage"
 
-export default function ImagePicker({size}) {
+export default function ImagePicker({size, setCroppedImage}) {
   const [crop, setCrop] = useState({x: 0, y: 0})
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
   const [showGrid, setShowGrid] = useState(true)
-  const [open, setOpen] = useState(false)
+  const [photoCroppingIsOpen, setPhotoCroppingIsOpen] = useState(false)
 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
-  const [croppedImage, setCroppedImage] = useState(null)
 
   const [src, setSrc] = useState(null)
 
@@ -24,10 +23,11 @@ export default function ImagePicker({size}) {
   }, [])
 
   useEffect(() => {
+    console.log(src)
     if (src)
-      setOpen(true)
+      setPhotoCroppingIsOpen(true)
     else
-      setOpen(false)
+      setPhotoCroppingIsOpen(false)
   }, [src])
 
   const showCroppedImage = useCallback(async () => {
@@ -85,13 +85,13 @@ export default function ImagePicker({size}) {
         <input type="file" accept="image/*" onChange={onSelectFile} hidden/>
       </Button>
 
-      {!!croppedImage &&
-      <img src={croppedImage} width={size}/>
-      }
+      {/*{!!croppedImage &&*/}
+      {/*<img src={croppedImage} width={size}/>*/}
+      {/*}*/}
 
 
       <Dialog
-        open={open}
+        open={photoCroppingIsOpen}
         keepMounted
         onClose={resetState}
         fullScreen

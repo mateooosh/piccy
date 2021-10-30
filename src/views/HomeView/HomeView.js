@@ -4,9 +4,10 @@ import './HomeView.scss'
 import {useStore} from "react-redux"
 import Post from "../../components/post/Post"
 import Navbar from "../../components/navbar/Navbar"
-import {CircularProgress} from "@mui/material";
+import {CircularProgress} from "@mui/material"
 import variables from "../../styles/variables.module.scss";
-import ImagePicker from "../../components/image-picker/ImagePicker";
+import ImagePicker from "../../components/image-picker/ImagePicker"
+import NewPostDialog from "../../components/new-post-dialog/NewPostDialog";
 
 export default function HomeView() {
 
@@ -16,6 +17,10 @@ export default function HomeView() {
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
   const [emptyPosts, setEmptyPosts] = useState(false)
+
+  const [newPostDialogIsOpen, setNewPostDialogIsOpen] = useState(false)
+
+  const [croppedImage, setCroppedImage] = useState(null)
 
   const postContainerRef = useRef()
 
@@ -30,6 +35,10 @@ export default function HomeView() {
       window.removeEventListener('resize', sizeChange)
     }
   }, [])
+
+  useEffect(() => {
+    croppedImage ? setNewPostDialogIsOpen(true) : setNewPostDialogIsOpen(false)
+  }, [croppedImage])
 
   function sizeChange() {
     setSize(postContainerRef.current.scrollWidth)
@@ -71,7 +80,10 @@ export default function HomeView() {
     <div className="home">
       <div className="home__posts" ref={postContainerRef}>
 
-        <ImagePicker size={size}/>
+        <ImagePicker size={size} setCroppedImage={setCroppedImage}/>
+
+        <NewPostDialog croppedImage={croppedImage} open={newPostDialogIsOpen} setOpen={setNewPostDialogIsOpen}/>
+
 
         {loading &&
         <CircularProgress className="home__indicator" size={60}/>

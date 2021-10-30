@@ -3,6 +3,7 @@ import Navigation from "./navigation/Navigation";
 import {createTheme, StyledEngineProvider, ThemeProvider} from '@mui/material/styles';
 
 import variables from './styles/variables.module.scss';
+import {SnackbarProvider} from "notistack";
 console.log(variables)
 
 // require('dotenv').config()
@@ -35,7 +36,9 @@ export default function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
-          <Navigation/>
+          <SnackbarProvider maxSnack={3}>
+            <Navigation/>
+          </SnackbarProvider>
         </StyledEngineProvider>
       </ThemeProvider>
     </div>
