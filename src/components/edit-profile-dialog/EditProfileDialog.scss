@@ -1,0 +1,35 @@
+@import '../../styles/variables.module';
+
+.edit {
+  &__content {
+    margin: 0 auto 16px;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__avatar {
+    margin-top: 20px;
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+  }
+
+  &__button {
+    color: white;
+    text-transform: none;
+    font-weight: 700;
+    font-size: 16px;
+
+    &--disabled {
+      color: $primary;
+    }
+  }
+
+  &__input {
+    margin: 16px 24px;
+    width: 500px;
+  }
+}

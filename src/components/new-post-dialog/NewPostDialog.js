@@ -53,7 +53,7 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
       open={open}
       keepMounted
       onClose={() => setOpen(false)}
-      class="new-post"
+      className="new-post"
     >
       <DialogTitle>Create new post</DialogTitle>
       <DialogContent style={{margin: 'auto', width: '100%', padding: 0, display: 'flex', flexDirection: 'column'}}>

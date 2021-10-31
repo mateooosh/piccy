@@ -13,6 +13,7 @@ import PostView from "../views/PostView/PostView"
 import ProfileView from "../views/ProfileView/ProfileView"
 import Navbar from "../components/navbar/Navbar";
 import React from "react";
+import AccountView from "../views/AccountView/AccountView";
 
 export default function Navigation() {
   const store = useStore()
@@ -26,6 +27,9 @@ export default function Navigation() {
           <Switch>
             <Route path="/post/:id">
               <PostView/>
+            </Route>
+            <Route path="/account">
+              <AccountView/>
             </Route>
             <Route path="/:username">
               <ProfileView/>
