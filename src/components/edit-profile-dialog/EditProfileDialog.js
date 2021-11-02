@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import './EditProfileDialog.scss'
 import {useStore} from "react-redux"
-import {Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material"
+import {Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@mui/material"
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from 'notistack'
 import {useHistory} from "react-router-dom"
+import ImagePicker from "../image-picker/ImagePicker";
 
-export default function EditProfileDialog({open, setOpen, profile}) {
+export default function EditProfileDialog({open, setOpen, profile, getProfile}) {
   const history = useHistory()
   const store = useStore()
   const {enqueueSnackbar} = useSnackbar()
@@ -16,6 +17,10 @@ export default function EditProfileDialog({open, setOpen, profile}) {
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+
+
+  const [croppedImage, setCroppedImage] = useState(null)
+  const [src, setSrc] = useState(null)
 
   const [loading, setLoading] = useState(false)
 
@@ -29,11 +34,18 @@ export default function EditProfileDialog({open, setOpen, profile}) {
     }
   }, [profile])
 
+
+  function closeDialog() {
+    setOpen(false)
+    setCroppedImage(null)
+    setSrc(null)
+  }
+
   function saveChanges() {
     const url = `${process.env.REACT_APP_API_URL}/users/${store.getState().id}`
 
-    const index = avatar.indexOf(',')
-    let base64 = avatar.slice(index + 1, (avatar.length))
+    const index = getAvatar().indexOf(',')
+    let base64 = getAvatar().slice(index + 1, (getAvatar().length))
 
     const obj = {
       name: name,
@@ -57,72 +69,113 @@ export default function EditProfileDialog({open, setOpen, profile}) {
       .then(response => response.json())
       .then(response => {
         enqueueSnackbar(response.message)
-        history.push(`/account`)
+        setOpen(false)
+        getProfile()
       })
       .catch(err => enqueueSnackbar('Something went wrong'))
       .finally(() => setLoading(false))
+  }
+
+  function onSelectFile(e) {
+    if (e.target.files && e.target.files.length > 0) {
+      const reader = new FileReader()
+      reader.addEventListener('load', () =>
+        setSrc(reader.result)
+      )
+      reader.readAsDataURL(e.target.files[0])
+    }
+  }
+
+  function getAvatar() {
+    return croppedImage ? croppedImage : profile.photo
   }
 
   return (
     <Dialog
       open={open}
       keepMounted
-      onClose={() => setOpen(false)}
+      onClose={closeDialog}
       className="edit"
     >
-      <DialogTitle>Edit profile</DialogTitle>
-      <DialogContent className="edit__content">
-        <Avatar className="edit__avatar" src={profile.photo}></Avatar>
-        <TextField className="edit__input"
-                   label="E-mail"
-                   variant="standard"
-                   value={email}
-                   onChange={e => setEmail(e.target.value)}
-                   disabled
-        />
 
-        <TextField className="edit__input"
-                   label="Username"
-                   variant="standard"
-                   value={username}
-                   onChange={e => setUsername(e.target.value)}
-                   disabled
-        />
 
-        <TextField className="edit__input"
-                   label="Name"
-                   variant="standard"
-                   value={name}
-                   onChange={e => setName(e.target.value)}
-        />
+      <ImagePicker setCroppedImage={setCroppedImage} src={src} setSrc={setSrc}/>
 
-        <TextField className="edit__input"
-                   label="Description"
-                   variant="standard"
-                   value={description}
-                   onChange={e => setDescription(e.target.value)}
-                   multiline
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button
-          variant="outlined"
-          className="edit__button edit__button--disabled"
-          disableRipple
-          onClick={() => setOpen(false)}
-        >
-          Cancel
-        </Button>
-        <LoadingButton
-          loading={loading}
-          variant="contained"
-          className="edit__button"
-          disableRipple
-          onClick={saveChanges}
-        >
-          Save changes
-        </LoadingButton>
-      </DialogActions>
+      {!!profile &&
+      <>
+        <DialogTitle>Edit profile</DialogTitle>
+        <DialogContent className="edit__content">
+          {getAvatar() !== null ? (
+            <>
+              <input accept="image/*" style={{display: 'none'}} id="icon-button-file" type="file" onChange={onSelectFile}/>
+              <label htmlFor="icon-button-file">
+                <IconButton color="primary" component="span">
+                  <Avatar className="edit__avatar" src={getAvatar()}/>
+                </IconButton>
+              </label>
+            </>
+          ) : (
+            <>
+              <input accept="image/*" style={{display: 'none'}} id="icon-button-file" type="file" onChange={onSelectFile}/>
+              <label htmlFor="icon-button-file">
+                <IconButton color="primary" component="span">
+                  <Avatar className="edit__avatar"></Avatar>
+                </IconButton>
+              </label>
+            </>
+          )}
+          <TextField className="edit__input"
+                     label="E-mail"
+                     variant="standard"
+                     value={email}
+                     onChange={e => setEmail(e.target.value)}
+                     disabled
+          />
+
+          <TextField className="edit__input"
+                     label="Username"
+                     variant="standard"
+                     value={username}
+                     onChange={e => setUsername(e.target.value)}
+                     disabled
+          />
+
+          <TextField className="edit__input"
+                     label="Name"
+                     variant="standard"
+                     value={name}
+                     onChange={e => setName(e.target.value)}
+          />
+
+          <TextField className="edit__input"
+                     label="Description"
+                     variant="standard"
+                     value={description}
+                     onChange={e => setDescription(e.target.value)}
+                     multiline
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            className="edit__button edit__button--disabled"
+            disableRipple
+            onClick={closeDialog}
+          >
+            Cancel
+          </Button>
+          <LoadingButton
+            loading={loading}
+            variant="contained"
+            className="edit__button"
+            disableRipple
+            onClick={saveChanges}
+          >
+            Save changes
+          </LoadingButton>
+        </DialogActions>
+      </>
+      }
     </Dialog>
   )
 }

@@ -5,6 +5,7 @@ import {useStore} from "react-redux"
 import {Avatar, Button, CircularProgress} from "@mui/material"
 import {useHistory} from "react-router-dom"
 import EditProfileDialog from "../../components/edit-profile-dialog/EditProfileDialog";
+import {Skeleton} from "@mui/lab";
 
 export default function AccountView() {
 
@@ -43,7 +44,7 @@ export default function AccountView() {
   return (
     <div className="account">
 
-      <EditProfileDialog profile={profile} open={editProfileIsOpen} setOpen={setEditProfileIsOpen}/>
+      <EditProfileDialog profile={profile} open={editProfileIsOpen} setOpen={setEditProfileIsOpen} getProfile={getProfile}/>
 
       {loading &&
       <CircularProgress className="account__indicator" size={60}/>

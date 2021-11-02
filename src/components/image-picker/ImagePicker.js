@@ -7,7 +7,7 @@ import RotateRightIcon from '@mui/icons-material/RotateRight'
 import Grid3x3Icon from '@mui/icons-material/Grid3x3'
 import getCroppedImg from "./cropImage"
 
-export default function ImagePicker({size, setCroppedImage}) {
+export default function ImagePicker({size, setCroppedImage, src, setSrc}) {
   const [crop, setCrop] = useState({x: 0, y: 0})
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
@@ -16,7 +16,7 @@ export default function ImagePicker({size, setCroppedImage}) {
 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
 
-  const [src, setSrc] = useState(null)
+
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -44,16 +44,6 @@ export default function ImagePicker({size, setCroppedImage}) {
     }
   }, [croppedAreaPixels, rotation])
 
-  function onSelectFile(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader()
-      reader.addEventListener('load', () =>
-        setSrc(reader.result)
-      )
-      reader.readAsDataURL(e.target.files[0])
-    }
-  }
-
   function rotateToLeft() {
     setRotation(rotation - 90)
   }
@@ -75,15 +65,7 @@ export default function ImagePicker({size, setCroppedImage}) {
 
   return (
     <div className="picker">
-      <Button
-        variant="contained"
-        component="label"
-        className="picker__button"
-        disableRipple
-      >
-        Create new post
-        <input type="file" accept="image/*" onChange={onSelectFile} hidden/>
-      </Button>
+
 
       {/*{!!croppedImage &&*/}
       {/*<img src={croppedImage} width={size}/>*/}
