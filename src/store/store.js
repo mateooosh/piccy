@@ -4,8 +4,8 @@ import { createStore } from 'redux';
 const initialState = {
   logged: true,
   token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzksImlhdCI6MTYzMTQ2NjE5MSwiZXhwIjoxNjMxNTUyNTkxfQ.5wTXB5pPvS3cF2jasWIlft_Pb6rSf81cv2qgkNemS-A',
-  username: 'Stacato',
-  id: 59,
+  username: 'asdasd',
+  id: 40,
   lang: 'en',
   notificationAmount: 0
 };
@@ -48,7 +48,7 @@ function Reducer(state = initialState, action) {
       return { ...state, notificationAmount: action.payload };
 
     case "resetStore":
-      return {...state, logged: false, token: '', username: '', id: null, lang: 'en', notificationAmount: 0};
+      return {...state, token: '', username: '', id: null, lang: 'en', notificationAmount: 0, logged: false};
 
     default:
       // If the reducer doesn't care about this action type,

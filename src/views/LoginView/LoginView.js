@@ -4,7 +4,7 @@ import {TextField} from "@mui/material"
 import {LoadingButton} from "@mui/lab"
 
 import {validation} from '../../functions/functions'
-import {Link} from "react-router-dom"
+import {Link, useHistory} from "react-router-dom"
 import {useStore} from "react-redux"
 
 export default function LoginView() {
@@ -13,6 +13,7 @@ export default function LoginView() {
   const [loading, setLoading] = useState(false)
 
   const store = useStore()
+  const history = useHistory()
 
   useEffect(() => {
     return() => {
@@ -49,10 +50,11 @@ export default function LoginView() {
       .then(response => {
         // alert(response.message)
         console.log('token:', response.token)
-        store.dispatch({type: "logged/true"})
         store.dispatch({type: "tokenSet", payload: response.token})
         store.dispatch({type: "usernameSet", payload: response.username})
         store.dispatch({type: "idSet", payload: response.id})
+        store.dispatch({type: "logged/true"})
+        history.push('/')
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false))

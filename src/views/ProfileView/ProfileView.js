@@ -4,7 +4,6 @@ import './ProfileView.scss'
 import {useStore} from "react-redux"
 import {Avatar, Button, CircularProgress} from "@mui/material"
 import {useHistory, useParams} from "react-router-dom"
-import Navbar from "../../components/navbar/Navbar"
 
 export default function ProfileView() {
 
@@ -21,6 +20,7 @@ export default function ProfileView() {
     //if this is my account
     if (username === store.getState().username) {
       console.log('my account')
+      history.push('/account')
       return
     } else {
       setLoading(true)
