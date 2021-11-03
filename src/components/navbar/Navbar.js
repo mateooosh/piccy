@@ -7,6 +7,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import {useHistory} from "react-router-dom"
 import {io} from "socket.io-client";
+import {Avatar} from "@mui/material";
 
 export default function Navbar() {
 
@@ -19,10 +20,9 @@ export default function Navbar() {
 
   useEffect(() => {
     window.addEventListener('scroll', (e) => {
-      if(window.pageYOffset > 50) {
+      if (window.pageYOffset > 50) {
         setPageScrolled(true)
-      }
-      else {
+      } else {
         setPageScrolled(false)
       }
     })
@@ -37,12 +37,16 @@ export default function Navbar() {
     store.dispatch({type: 'resetStore'})
   }
 
-  return(
+  return (
     <div className={getClassesOfNavbar()}>
+
       <img className="navbar__logo" src="piccy.svg" alt="Piccy" onClick={() => history.push('')}/>
       <div className="navbar__actions">
-        <ChatBubbleOutlineOutlinedIcon className="navbar__actions__icon"/>
-        <AccountCircleOutlinedIcon className="navbar__actions__icon" onClick={() => history.push('/account')}/>
+        <ChatBubbleOutlineOutlinedIcon className="navbar__actions__icon" onClick={() => history.push('/messages')}/>
+        {/*<AccountCircleOutlinedIcon className="navbar__actions__icon" onClick={() => history.push('/account')}/>*/}
+        <Avatar className="navbar__actions__avatar"
+                src={store.getState().avatar}
+                onClick={() => history.push('/account')}/>
         <SettingsSharpIcon className="navbar__actions__icon" onClick={() => history.push('/settings')}/>
         <LogoutOutlinedIcon className="navbar__actions__icon"
                             onClick={logOut}/>

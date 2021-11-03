@@ -1,0 +1,38 @@
+@import '../../styles/variables.module';
+
+.message {
+  width: 100%;
+  display: flex;
+
+  &__block {
+    max-width: 60%;
+    padding: 12px 15px;
+
+    border-radius: 20px;
+    text-align: left;
+    word-wrap: break-word;
+    font-size: 16px;
+
+    &__link {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    &--my {
+      background-color: $primary;
+      color: white;
+    }
+
+    &--other {
+      background-color: #eee;
+    }
+  }
+
+  &--my {
+    justify-content: flex-end;
+  }
+
+  &--other {
+    justify-content: flex-start;
+  }
+}

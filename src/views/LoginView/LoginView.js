@@ -49,10 +49,11 @@ export default function LoginView() {
       .then(response => response.json())
       .then(response => {
         // alert(response.message)
-        console.log('token:', response.token)
+        console.log('asdasdasd', response)
         store.dispatch({type: "tokenSet", payload: response.token})
         store.dispatch({type: "usernameSet", payload: response.username})
         store.dispatch({type: "idSet", payload: response.id})
+        store.dispatch({type: "avatarSet", payload: response.photo})
         store.dispatch({type: "logged/true"})
         history.push('/')
       })

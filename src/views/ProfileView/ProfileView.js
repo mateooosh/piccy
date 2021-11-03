@@ -93,69 +93,71 @@ export default function ProfileView() {
 
 
   return (
-    <div className="profile">
-      {loading &&
-      <CircularProgress className="profile__indicator" size={60}/>
-      }
-      {profile !== null &&
-      <>
-        <Avatar className="profile__avatar" src={profile.photo}></Avatar>
-        <div className="profile__username">{profile.username}</div>
-        <div className="profile__stats">
-          <div>
-            <div className="profile__stats__amount">{profile.postsAmount}</div>
-            <div className="profile__stats__type">Posts</div>
+    <div style={{width: '100%', overflowY: 'auto'}}>
+      <div className="profile">
+        {loading &&
+        <CircularProgress className="profile__indicator" size={60}/>
+        }
+        {profile !== null &&
+        <>
+          <Avatar className="profile__avatar" src={profile.photo}></Avatar>
+          <div className="profile__username">{profile.username}</div>
+          <div className="profile__stats">
+            <div>
+              <div className="profile__stats__amount">{profile.postsAmount}</div>
+              <div className="profile__stats__type">Posts</div>
+            </div>
+
+            <div>
+              <div className="profile__stats__amount">{profile.followers}</div>
+              <div className="profile__stats__type">Followers</div>
+            </div>
+
+            <div>
+              <div className="profile__stats__amount">{profile.following}</div>
+              <div className="profile__stats__type">Following</div>
+            </div>
           </div>
 
-          <div>
-            <div className="profile__stats__amount">{profile.followers}</div>
-            <div className="profile__stats__type">Followers</div>
+          <div className="profile__description">
+            <div className="profile__description__username">{profile.username}</div>
+            <div>
+              {profile.description}
+            </div>
           </div>
 
-          <div>
-            <div className="profile__stats__amount">{profile.following}</div>
-            <div className="profile__stats__type">Following</div>
-          </div>
-        </div>
-
-        <div className="profile__description">
-          <div className="profile__description__username">{profile.username}</div>
-          <div>
-            {profile.description}
-          </div>
-        </div>
-
-        <div className="profile__actions">
-          {profile.amIFollowing ? (
-            <Button variant="contained" disableRipple
-                    className="profile__actions__button profile__actions__button--disabled"
-                    onClick={unfollow.bind(this, store.getState().id, profile.id)}>
-              Following
-            </Button>
-          ) : (
-            <Button variant="contained"
-                    disableRipple className="profile__actions__button"
-                    onClick={follow.bind(this, store.getState().id, profile.id)}>
-              Follow
-            </Button>
-          )}
-
-          <Button variant="contained" disableRipple className="profile__actions__button">
-            Message
-          </Button>
-        </div>
-
-        <div className="profile__posts">
-          <div className="profile__posts__header">Posts</div>
-          <div className="profile__posts__content">
-            {posts.map((post, index) =>
-              <img src={post.photo} key={index} className="profile__posts__content__item"
-                   onClick={() => history.push(`/post/${post.id}`)}/>
+          <div className="profile__actions">
+            {profile.amIFollowing ? (
+              <Button variant="contained" disableRipple
+                      className="profile__actions__button profile__actions__button--disabled"
+                      onClick={unfollow.bind(this, store.getState().id, profile.id)}>
+                Following
+              </Button>
+            ) : (
+              <Button variant="contained"
+                      disableRipple className="profile__actions__button"
+                      onClick={follow.bind(this, store.getState().id, profile.id)}>
+                Follow
+              </Button>
             )}
+
+            <Button variant="contained" disableRipple className="profile__actions__button">
+              Message
+            </Button>
           </div>
-        </div>
-      </>
-      }
+
+          <div className="profile__posts">
+            <div className="profile__posts__header">Posts</div>
+            <div className="profile__posts__content">
+              {posts.map((post, index) =>
+                <img src={post.photo} key={index} className="profile__posts__content__item"
+                     onClick={() => history.push(`/post/${post.id}`)}/>
+              )}
+            </div>
+          </div>
+        </>
+        }
+      </div>
     </div>
   )
 }

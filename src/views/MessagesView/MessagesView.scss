@@ -1,0 +1,106 @@
+@import '../../styles/variables.module';
+
+.messages {
+  width: 1000px;
+  max-width: 1000px;
+  margin: 20px auto 20px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  height: calc(100vh - 116px);
+  max-height: calc(100vh - 116px);
+  flex: 1;
+  display: flex;
+
+  @media(max-width: 1000px) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  &__nav {
+    width: 360px;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    &__user {
+      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      transition: all .2s;
+
+      &:hover {
+        background-color: #eee;
+        cursor: pointer;
+      }
+
+      &__username {
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      &__lastMessage {
+        color: #333;
+      }
+
+      &--active {
+        background-color: #eee;
+      }
+    }
+
+    &__indicator {
+      margin: 100px auto;
+    }
+  }
+
+  &__channel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+
+    &__indicator {
+      margin: 100px auto;
+    }
+
+    >div:first-child {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 20px;
+      gap: 10px;
+    }
+
+    &__bottom {
+      width: 100%;
+      position: relative;
+      display: flex;
+    }
+
+    &__input {
+      flex-grow: 1;
+      border-radius: 12px;
+      margin: 10px 16px;
+      background-color: #eee;
+      padding: 10px 16px;
+      outline: none;
+      border: none;
+      font-size: 16px;
+    }
+
+    &__send {
+      position: absolute;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+    }
+  }
+}
+

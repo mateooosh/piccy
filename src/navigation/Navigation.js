@@ -16,6 +16,7 @@ import React, {useEffect, useState} from "react";
 import AccountView from "../views/AccountView/AccountView";
 import SettingsView from "../views/SettingsView/SettingsView";
 import {io} from "socket.io-client";
+import MessagesView from "../views/MessagesView/MessagesView";
 
 export default function Navigation() {
   const store = useStore()
@@ -50,7 +51,7 @@ export default function Navigation() {
   return (
     <Router>
       {logged ? (
-        <>
+        <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
           <Navbar/>
           <Switch>
             <Route path="/post/:id">
@@ -62,6 +63,9 @@ export default function Navigation() {
             <Route path="/settings">
               <SettingsView/>
             </Route>
+            <Route path="/messages">
+              <MessagesView/>
+            </Route>
             <Route path="/:username">
               <ProfileView/>
             </Route>
@@ -69,7 +73,7 @@ export default function Navigation() {
               <HomeView/>
             </Route>
           </Switch>
-        </>
+        </div>
       ) : (
         <Switch>
           <Route path="/register">

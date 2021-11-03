@@ -37,7 +37,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
           <SnackbarProvider maxSnack={3}>
-            <Navigation/>
+            <Navigation />
           </SnackbarProvider>
         </StyledEngineProvider>
       </ThemeProvider>
