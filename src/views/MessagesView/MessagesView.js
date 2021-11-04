@@ -7,6 +7,8 @@ import {io} from "socket.io-client"
 import {Avatar, CircularProgress, TextField} from "@mui/material"
 import MessageItem from "../../components/message-item/MessageItem"
 import SendIcon from '@mui/icons-material/Send'
+import MessagesDrawer from "../../components/messages-drawer/MessagesDrawer"
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 
 export default function MessagesView() {
 
@@ -26,6 +28,8 @@ export default function MessagesView() {
   const [input, setInput] = useState('')
 
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
 
   const refMessages = useRef(messages)
@@ -60,7 +64,7 @@ export default function MessagesView() {
     getChannels()
     console.log(`message-to-user-${store.getState().id}`, response)
 
-    if(response.idChannel == refIdChannel.current) {
+    if (response.idChannel == refIdChannel.current) {
       setMessages(old => [...old, response])
       markAsRead(store.getState().id, response.idChannel)
       scrollToEnd('smooth')
@@ -145,6 +149,7 @@ export default function MessagesView() {
     if (!loadingMessages) {
       setActiveUserId(idUser)
       setIdChannel(idChannel)
+      setDrawerOpen(false)
     }
   }
 
@@ -152,9 +157,9 @@ export default function MessagesView() {
     return idUser === activeUserId ? 'messages__nav__user messages__nav__user--active' : 'messages__nav__user'
   }
 
-  return (
-    <div className="messages">
-      <div className="messages__nav">
+  function getChannelsView(rootClass) {
+    return (
+      <div className={rootClass}>
         {channels.map((channel, idx) =>
           <div key={idx} className={getClasses(channel.idUser)}
                onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)}>
@@ -176,6 +181,12 @@ export default function MessagesView() {
         <CircularProgress className="messages__nav__indicator" size={60}/>
         }
       </div>
+    )
+  }
+
+  return (
+    <div className="messages">
+      {getChannelsView('messages__nav')}
       <div className="messages__channel">
         <div ref={messagesRef}>
           {messages.map((message, idx) =>
@@ -196,6 +207,14 @@ export default function MessagesView() {
                  }}/>
           <SendIcon className="messages__channel__send" onClick={sendMessage}/>
         </div>
+
+        <div onClick={() => setDrawerOpen(true)}
+             className="messages__drawer-button">
+          <KeyboardArrowRightRoundedIcon sx={{fontSize: 44, color: '#666'}}/>
+        </div>
+        <MessagesDrawer open={drawerOpen} setOpen={setDrawerOpen}>
+          {getChannelsView('messages__drawer')}
+        </MessagesDrawer>
       </div>
     </div>
   )

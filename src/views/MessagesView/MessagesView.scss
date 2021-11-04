@@ -10,13 +10,19 @@
   flex: 1;
   display: flex;
 
+  @media(max-width: 620px) {
+    margin: 0;
+    height: calc(100vh - 76px);
+    max-height: calc(100vh - 76px);
+  }
+
   @media(max-width: 1000px) {
     width: 100%;
     max-width: 100%;
   }
 
-  &__nav {
-    width: 360px;
+  &__nav, &__drawer {
+    min-width: 300px;
     border-right: 1px solid #eee;
     display: flex;
     flex-direction: column;
@@ -54,10 +60,30 @@
     }
   }
 
+  &__nav {
+    @media(max-width: 620px) {
+      display: none;
+    }
+  }
+
+  &__drawer, &__drawer-button {
+    @media(min-width: 621px) {
+      display: none;
+    }
+  }
+
+  &__drawer-button {
+    position: absolute;
+    top: 0px;
+    left: -10px;
+    cursor: pointer;
+  }
+
   &__channel {
     width: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     &__indicator {
       margin: 100px auto;
@@ -70,7 +96,7 @@
       justify-content: flex-start;
       overflow-y: auto;
       flex: 1;
-      padding: 0 20px;
+      padding: 0 24px;
       gap: 10px;
     }
 
@@ -83,7 +109,7 @@
     &__input {
       flex-grow: 1;
       border-radius: 12px;
-      margin: 10px 16px;
+      margin: 10px 24px;
       background-color: #eee;
       padding: 10px 16px;
       outline: none;
