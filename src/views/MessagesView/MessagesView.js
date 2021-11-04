@@ -27,6 +27,17 @@ export default function MessagesView() {
 
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
 
+
+  const refMessages = useRef(messages)
+  useEffect(() => {
+    refMessages.current = messages
+  }, [messages])
+
+  const refIdChannel = useRef(idChannel)
+  useEffect(() => {
+    refIdChannel.current = idChannel
+  }, [idChannel])
+
   useEffect(() => {
     getChannels()
     socket.on(`message-to-user-${store.getState().id}`, handler)
@@ -46,15 +57,14 @@ export default function MessagesView() {
   }, [activeUserId])
 
   function handler(response) {
-    console.log('message-to-user', response)
+    getChannels()
+    console.log(`message-to-user-${store.getState().id}`, response)
 
-    let copy = messages
-    copy.push(response)
-    setMessages(copy)
-
-    // scrollToEnd()
-
-    markAsRead(store.getState().id, response.idChannel)
+    if(response.idChannel == refIdChannel.current) {
+      setMessages(old => [...old, response])
+      markAsRead(store.getState().id, response.idChannel)
+      scrollToEnd('smooth')
+    }
   }
 
   function markAsRead(idUser, idChannel) {
@@ -72,7 +82,8 @@ export default function MessagesView() {
       .then(response => {
         console.log('messages:', response)
         setMessages(response.messages)
-
+        markAsRead(store.getState().id, response.idChannel)
+        markAsReadOnApp(store.getState().id, response.idChannel)
         scrollToEnd('auto')
       })
       .catch(err => {
@@ -112,21 +123,22 @@ export default function MessagesView() {
       createdAt: new Date()
     }
 
-    console.log(obj)
-
-    let deepCopy = JSON.parse(JSON.stringify(messages))
-    deepCopy.push(obj)
-    console.log('deep', deepCopy)
-    setMessages(deepCopy)
+    setMessages(old => [...old, obj])
 
     socket.emit('message-from-user', obj)
-
-    // setTimeout(() => {
-    //   scrollViewRef.current.scrollToEnd({animated: true})
-    // }, 100)
     scrollToEnd('smooth')
-
     setInput('')
+    getChannels()
+  }
+
+  function markAsReadOnApp(idUser, idChannel) {
+    console.log('mark as read', channels)
+    let obj = channels.find(elem => elem.idChannel == idChannel)
+    let index = channels.indexOf(obj)
+
+    let deepCopy = JSON.parse(JSON.stringify(channels))
+    deepCopy[index].status = 0
+    setChannels(deepCopy)
   }
 
   function handleUserClick(idUser, idChannel) {
@@ -149,7 +161,13 @@ export default function MessagesView() {
             <Avatar src={channel.photo} sx={{width: 50, height: 50}}/>
             <div>
               <div className="messages__nav__user__username">{channel.username}</div>
-              <div className="messages__nav__user__lastMessage">{channel.lastMessage}</div>
+              <div className="messages__nav__user__lastMessage">
+                {channel.status == 0 ? (
+                  channel.lastMessage
+                ) : (
+                  <b>{channel.lastMessage}</b>
+                )}
+              </div>
             </div>
           </div>
         )}
