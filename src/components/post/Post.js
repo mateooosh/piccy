@@ -25,12 +25,17 @@ import {t} from "../../translations/translations"
 import ActionMenu from "../action-menu/ActionMenu"
 import {LoadingButton, Skeleton} from "@mui/lab"
 import {useHistory} from "react-router-dom"
+import SendIcon from "@mui/icons-material/Send";
+import {useSnackbar} from "notistack";
 
 export default function Post(props) {
   const store = useStore()
   const history = useHistory()
 
   const postRef = useRef()
+
+  const [commentInputVisible, setCommentInputVisible] = useState(false)
+  const [commentInput, setCommentInput] = useState('')
 
   const [width, setWidth] = useState(0)
 
@@ -43,6 +48,7 @@ export default function Post(props) {
   const [comments, setComments] = useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [actions, setActions] = useState([])
+  const {enqueueSnackbar} = useSnackbar()
 
 
   //reports
@@ -78,7 +84,8 @@ export default function Post(props) {
         onClick: setReportDialogOpen
       },
       {
-        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><FileDownloadOutlinedIcon/>Download photo</div>,
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><FileDownloadOutlinedIcon/>Download photo
+        </div>,
         onClick: () => null
       }]
     if (props.post.username === store.getState().username) {
@@ -188,6 +195,37 @@ export default function Post(props) {
       })
   }
 
+  function createComment() {
+    const url = `${process.env.REACT_APP_API_URL}/comments/${post.id}`;
+    const obj = {
+      idUser: store.getState().id,
+      content: commentInput,
+      token: store.getState().token
+    }
+
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(obj),
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        enqueueSnackbar(response.message);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        setCommentInput('');
+        setCommentInputVisible(false);
+
+        let deepCopy = JSON.parse(JSON.stringify(post));
+        deepCopy.comments++;
+        setPost(deepCopy);
+        getComments(props.post.id);
+      })
+  }
+
   function handleClickPhoto() {
     if (props.homeScreen) {
       history.push(`/post/${post.id}`)
@@ -248,7 +286,8 @@ export default function Post(props) {
                                 className="post__icon" sx={{fontSize: 30}}/>
           )
           }
-          <SmsOutlinedIcon className="post__icon" sx={{fontSize: 30}}/>
+          <SmsOutlinedIcon className="post__icon" sx={{fontSize: 30}}
+                           onClick={() => setCommentInputVisible(!commentInputVisible)}/>
           <ShareIcon className="post__icon" sx={{fontSize: 30}}/>
         </div>
 
@@ -287,6 +326,21 @@ export default function Post(props) {
             })}
           </span>
 
+          {commentInputVisible &&
+          <div className="post__bottom__input">
+            <input
+              value={commentInput}
+              onChange={e => setCommentInput(e.target.value)}
+              type="text" placeholder="Type here..."
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  createComment()
+                }
+              }}/>
+            <SendIcon className="post__bottom__send" onClick={createComment}/>
+          </div>
+          }
+
           {comments.length !== 0 &&
           <div className="post__bottom__comments">
             <div className="post__bottom__comments__header">
@@ -294,7 +348,8 @@ export default function Post(props) {
             </div>
             {comments.map((comment, index) =>
               <div key={index}>
-                <span className="post__bottom__comments__username">{comment.username} </span>{comment.content}
+                <span className="post__bottom__comments__username"
+                      onClick={() => history.push(`/${comment.username}`)}>{comment.username} </span>{comment.content}
               </div>
             )}
           </div>

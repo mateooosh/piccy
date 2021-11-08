@@ -1,22 +1,27 @@
 @import '../../styles/variables.module';
 
+
 .navbar {
   width: 100%;
   padding: 20px 40px;
   background-color: white;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
-
-  //position: sticky;
-  //top: 0;
   z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   transition: all .2s;
+
+  @media(max-width: 500px) {
+    padding: 20px;
+  }
 
   &--scrolled {
     padding: 12px 40px;
+
+    @media(max-width: 500px) {
+      padding: 20px;
+    }
   }
 
   &__logo {
@@ -28,6 +33,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    color: black;
 
     &__icon {
       cursor: pointer;

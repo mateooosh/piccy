@@ -11,15 +11,18 @@ import RegisterView from "../views/RegisterView/RegisterView"
 import HomeView from "../views/HomeView/HomeView"
 import PostView from "../views/PostView/PostView"
 import ProfileView from "../views/ProfileView/ProfileView"
-import Navbar from "../components/navbar/Navbar";
-import React, {useEffect, useState} from "react";
-import AccountView from "../views/AccountView/AccountView";
-import SettingsView from "../views/SettingsView/SettingsView";
-import {io} from "socket.io-client";
-import MessagesView from "../views/MessagesView/MessagesView";
+import Navbar from "../components/navbar/Navbar"
+import React, {useEffect, useState} from "react"
+import AccountView from "../views/AccountView/AccountView"
+import SettingsView from "../views/SettingsView/SettingsView"
+import {io} from "socket.io-client"
+import MessagesView from "../views/MessagesView/MessagesView"
+import {useSnackbar} from "notistack"
 
 export default function Navigation() {
   const store = useStore()
+  const { enqueueSnackbar } = useSnackbar()
+
   const logged = useSelector(state => state.logged)
 
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
@@ -46,6 +49,14 @@ export default function Navigation() {
 
   const handleMessage = (message) => {
     console.log('new message -> ', message)
+    const pathname = window.location.pathname
+
+    if(!pathname.includes('messages')) {
+      enqueueSnackbar('New message')
+      store.dispatch({type: 'notificationAmountSet', payload: store.getState().notificationAmount + 1})
+    } else {
+      console.log('nie')
+    }
   }
 
   return (

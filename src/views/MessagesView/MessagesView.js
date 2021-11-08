@@ -9,10 +9,12 @@ import MessageItem from "../../components/message-item/MessageItem"
 import SendIcon from '@mui/icons-material/Send'
 import MessagesDrawer from "../../components/messages-drawer/MessagesDrawer"
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
+import {useHistory} from "react-router-dom"
 
 export default function MessagesView() {
 
   const store = useStore()
+  const history = useHistory()
 
   const messagesRef = useRef()
 
@@ -23,6 +25,7 @@ export default function MessagesView() {
   const [activeUserId, setActiveUserId] = useState(null)
   const [idChannel, setIdChannel] = useState(null)
   const [messages, setMessages] = useState([])
+  const [userChattingWith, setUserChattingWith] = useState({})
   const [loadingMessages, setLoadingMessages] = useState(false)
 
   const [input, setInput] = useState('')
@@ -30,7 +33,6 @@ export default function MessagesView() {
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
 
   const [drawerOpen, setDrawerOpen] = useState(false)
-
 
   const refMessages = useRef(messages)
   useEffect(() => {
@@ -43,8 +45,13 @@ export default function MessagesView() {
   }, [idChannel])
 
   useEffect(() => {
+    store.dispatch({type: 'notificationAmountSet', payload: 0})
     getChannels()
     socket.on(`message-to-user-${store.getState().id}`, handler)
+
+    if(window.innerWidth <= 620) {
+      setDrawerOpen(true)
+    }
 
     return () => {
       socket.off(`message-to-user-${store.getState().id}`, handler)
@@ -86,6 +93,7 @@ export default function MessagesView() {
       .then(response => {
         console.log('messages:', response)
         setMessages(response.messages)
+        setUserChattingWith(findUserChattingWith(response.users))
         markAsRead(store.getState().id, response.idChannel)
         markAsReadOnApp(store.getState().id, response.idChannel)
         scrollToEnd('auto')
@@ -99,7 +107,6 @@ export default function MessagesView() {
   function scrollToEnd(behavior) {
     setTimeout(() => {
       const arr = messagesRef.current.children
-      console.log(arr)
       arr[arr.length - 1].scrollIntoView({behavior: behavior})
     }, 100)
   }
@@ -111,6 +118,9 @@ export default function MessagesView() {
       .then(response => {
         console.log(response)
         setChannels(response)
+        if(response.length > 0) {
+          setActiveUserId(response[0].idUser)
+        }
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false))
@@ -118,6 +128,9 @@ export default function MessagesView() {
 
   function sendMessage() {
     console.log('send', input)
+
+    if(activeUserId === null)
+      return
 
     const obj = {
       message: input,
@@ -151,6 +164,10 @@ export default function MessagesView() {
       setIdChannel(idChannel)
       setDrawerOpen(false)
     }
+  }
+
+  function findUserChattingWith(users) {
+    return users.find(elem => elem.idUser != store.getState().id);
   }
 
   function getClasses(idUser) {
@@ -188,7 +205,13 @@ export default function MessagesView() {
     <div className="messages">
       {getChannelsView('messages__nav')}
       <div className="messages__channel">
-        <div ref={messagesRef}>
+        {messages.length > 0 &&
+        <div className="messages__channel__avatar" onClick={() => history.push(`/${userChattingWith.username}`)}>
+          <Avatar src={userChattingWith.photo}/>
+          <div>{userChattingWith.username}</div>
+        </div>
+        }
+        <div className="messages__channel__messages" ref={messagesRef}>
           {messages.map((message, idx) =>
             <MessageItem key={idx} message={message}/>
           )}

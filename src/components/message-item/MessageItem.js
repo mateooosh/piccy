@@ -9,7 +9,7 @@ export default function MessageItem({message}) {
   const history = useHistory()
 
 
-  const id = useSelector(state => state.id);
+  const id = useSelector(state => state.id)
 
   return (
     <>
