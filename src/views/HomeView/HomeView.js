@@ -1,13 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './HomeView.scss'
 
 import {useStore} from "react-redux"
 import Post from "../../components/post/Post"
-import Navbar from "../../components/navbar/Navbar"
-import {Button, CircularProgress} from "@mui/material"
-import variables from "../../styles/variables.module.scss";
-import ImagePicker from "../../components/image-picker/ImagePicker"
-import NewPostDialog from "../../components/new-post-dialog/NewPostDialog";
+import {CircularProgress} from "@mui/material"
 
 export default function HomeView() {
 
@@ -17,39 +13,6 @@ export default function HomeView() {
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
   const [emptyPosts, setEmptyPosts] = useState(false)
-
-  const [newPostDialogIsOpen, setNewPostDialogIsOpen] = useState(false)
-
-  const [croppedImage, setCroppedImage] = useState(null)
-  const [src, setSrc] = useState(null)
-
-  const postContainerRef = useRef()
-
-  const [size, setSize] = useState(0)
-
-  useEffect(sizeChange, [postContainerRef])
-
-  useEffect(() => {
-    window.addEventListener('resize', sizeChange)
-    window.addEventListener('scroll', onScroll)
-
-    return () => {
-      window.removeEventListener('resize', sizeChange)
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
-
-  useEffect(() => {
-    croppedImage ? setNewPostDialogIsOpen(true) : setNewPostDialogIsOpen(false)
-  }, [croppedImage])
-
-  function sizeChange() {
-    setSize(postContainerRef.current.scrollWidth)
-  }
-
-  function onScroll() {
-
-  }
 
   function getPosts() {
     if (emptyPosts || loading)
@@ -82,34 +45,9 @@ export default function HomeView() {
     getPosts()
   }, [])
 
-  function onSelectFile(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader()
-      reader.addEventListener('load', () =>
-        setSrc(reader.result)
-      )
-      reader.readAsDataURL(e.target.files[0])
-    }
-  }
-
-
   return (
     <div className="home">
-      <Button
-        variant="contained"
-        component="label"
-        className="home__button"
-        disableRipple
-      >
-        Create new post
-        <input type="file" accept="image/*" onChange={onSelectFile} hidden/>
-      </Button>
-
-      <ImagePicker size={size} setCroppedImage={setCroppedImage} src={src} setSrc={setSrc}/>
-
-      <NewPostDialog croppedImage={croppedImage} open={newPostDialogIsOpen} setOpen={setNewPostDialogIsOpen}/>
-
-      <div className="home__posts" ref={postContainerRef}>
+      <div className="home__posts">
         {loading &&
         <CircularProgress className="home__indicator" size={60}/>
         }

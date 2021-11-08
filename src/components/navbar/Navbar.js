@@ -7,6 +7,8 @@ import SettingsSharpIcon from '@mui/icons-material/SettingsSharp'
 import {useHistory} from "react-router-dom"
 import {io} from "socket.io-client"
 import {Avatar, Badge} from "@mui/material"
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
+import NewPost from "../new-post/NewPost";
 
 export default function Navbar() {
 
@@ -43,6 +45,8 @@ export default function Navbar() {
 
       <img className="navbar__logo" src="piccy.svg" alt="Piccy" onClick={() => history.push('')}/>
       <div className="navbar__actions">
+        <NewPost />
+
         <Badge badgeContent={notificationAmount} color="primary"
                sx={{"& .MuiBadge-badge": {color: 'white'}}}
         >
@@ -55,7 +59,10 @@ export default function Navbar() {
         <SettingsSharpIcon className="navbar__actions__icon" onClick={() => history.push('/settings')}/>
         <LogoutOutlinedIcon className="navbar__actions__icon"
                             onClick={logOut}/>
+
       </div>
+
+
     </div>
   )
 }

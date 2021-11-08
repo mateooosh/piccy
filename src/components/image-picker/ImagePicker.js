@@ -7,7 +7,8 @@ import RotateRightIcon from '@mui/icons-material/RotateRight'
 import Grid3x3Icon from '@mui/icons-material/Grid3x3'
 import getCroppedImg from "./cropImage"
 
-export default function ImagePicker({size, setCroppedImage, src, setSrc}) {
+
+export default function ImagePicker({ setCroppedImage, src, setSrc}) {
   const [crop, setCrop] = useState({x: 0, y: 0})
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)

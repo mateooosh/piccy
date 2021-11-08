@@ -1,0 +1,19 @@
+@import '../../styles/variables.module';
+
+.new-post-button {
+  height: 28px;
+  &__icon {
+    color: black;
+    font-size: 28px;
+    transition: .2s all;
+    padding: 0;
+
+    span {
+      padding: 0;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
