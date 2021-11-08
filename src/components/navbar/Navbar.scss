@@ -57,3 +57,14 @@
     }
   }
 }
+
+.menu {
+
+  &__item{
+    padding: 10px 16px;
+
+    &__icon {
+      color: #333;
+    }
+  }
+}

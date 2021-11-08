@@ -6,7 +6,7 @@ import {displayTime, validation} from '../../functions/functions'
 
 import {useStore} from "react-redux"
 import {
-  Avatar,
+  Avatar, CircularProgress,
   Dialog, DialogActions,
   DialogContent,
   DialogContentText,
@@ -25,8 +25,9 @@ import {t} from "../../translations/translations"
 import ActionMenu from "../action-menu/ActionMenu"
 import {LoadingButton, Skeleton} from "@mui/lab"
 import {useHistory} from "react-router-dom"
-import SendIcon from "@mui/icons-material/Send";
-import {useSnackbar} from "notistack";
+import SendIcon from "@mui/icons-material/Send"
+import {useSnackbar} from "notistack"
+import {io} from "socket.io-client"
 
 export default function Post(props) {
   const store = useStore()
@@ -46,6 +47,7 @@ export default function Post(props) {
   const [photo, setPhoto] = useState(null)
   const [post, setPost] = useState(null)
   const [comments, setComments] = useState([])
+  const [channels, setChannels] = useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [actions, setActions] = useState([])
   const {enqueueSnackbar} = useSnackbar()
@@ -56,6 +58,15 @@ export default function Post(props) {
   const [reportDialogOpen, setReportDialogOpen] = useState(false)
   const [reportPostLoading, setReportPostLoading] = useState(false)
 
+  //sharing posts
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
+  const [sharePostLoading, setSharePostLoading] = useState(false)
+  const [loadingChannels, setLoadingChannels] = useState(false)
+
+
+  const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -64,8 +75,8 @@ export default function Post(props) {
     setAnchorEl(null)
   }
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
   useEffect(() => {
     if (reportDialogOpen)
@@ -98,7 +109,7 @@ export default function Post(props) {
   }, [])
 
   function getPhoto(id) {
-    const url = `${process.env.REACT_APP_API_URL}/posts/${id}/photo?token=${store.getState().token}`;
+    const url = `${process.env.REACT_APP_API_URL}/posts/${id}/photo?token=${store.getState().token}`
 
     fetch(url)
       .then(response => response.json())
@@ -123,8 +134,8 @@ export default function Post(props) {
   }
 
   function likePost(idUser, idPost, index) {
-    const url = `${process.env.REACT_APP_API_URL}/likes`;
-    console.log(JSON.stringify({idUser: idUser, idPost: idPost}));
+    const url = `${process.env.REACT_APP_API_URL}/likes`
+    console.log(JSON.stringify({idUser: idUser, idPost: idPost}))
     fetch(url, {
       method: "POST",
       body: JSON.stringify({idUser: idUser, idPost: idPost, token: store.getState().token}),
@@ -134,18 +145,18 @@ export default function Post(props) {
     })
       .then((response) => response.json())
       .then(response => {
-        let deepCopy = JSON.parse(JSON.stringify(post));
-        deepCopy.likes++;
-        deepCopy.liked = 1;
-        setPost(deepCopy);
+        let deepCopy = JSON.parse(JSON.stringify(post))
+        deepCopy.likes++
+        deepCopy.liked = 1
+        setPost(deepCopy)
 
-        // animateHeartIcon();
+        // animateHeartIcon()
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
   }
 
   function dislikePost(idUser, idPost, index) {
-    const url = `${process.env.REACT_APP_API_URL}/likes`;
+    const url = `${process.env.REACT_APP_API_URL}/likes`
     fetch(url, {
       method: "DELETE",
       body: JSON.stringify({idUser: idUser, idPost: idPost, token: store.getState().token}),
@@ -155,19 +166,19 @@ export default function Post(props) {
     })
       .then((response) => response.json())
       .then((response) => {
-        let deepCopy = JSON.parse(JSON.stringify(post));
-        deepCopy.likes--;
-        deepCopy.liked = 0;
-        setPost(deepCopy);
+        let deepCopy = JSON.parse(JSON.stringify(post))
+        deepCopy.likes--
+        deepCopy.liked = 0
+        setPost(deepCopy)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
   }
 
   function reportPost() {
     if (!allCorrect())
       return
 
-    const url = `${process.env.REACT_APP_API_URL}/reports`;
+    const url = `${process.env.REACT_APP_API_URL}/reports`
     const obj = {
       idPost: post.id,
       idReporter: store.getState().id,
@@ -196,7 +207,7 @@ export default function Post(props) {
   }
 
   function createComment() {
-    const url = `${process.env.REACT_APP_API_URL}/comments/${post.id}`;
+    const url = `${process.env.REACT_APP_API_URL}/comments/${post.id}`
     const obj = {
       idUser: store.getState().id,
       content: commentInput,
@@ -212,18 +223,50 @@ export default function Post(props) {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message);
+        enqueueSnackbar(response.message)
       })
       .catch(err => console.log(err))
       .finally(() => {
-        setCommentInput('');
-        setCommentInputVisible(false);
+        setCommentInput('')
+        setCommentInputVisible(false)
 
-        let deepCopy = JSON.parse(JSON.stringify(post));
-        deepCopy.comments++;
-        setPost(deepCopy);
-        getComments(props.post.id);
+        let deepCopy = JSON.parse(JSON.stringify(post))
+        deepCopy.comments++
+        setPost(deepCopy)
+        getComments(props.post.id)
       })
+  }
+
+  function getChannels() {
+    setLoadingChannels(true)
+    const url = `${process.env.REACT_APP_API_URL}/channels?idUser=${store.getState().id}&token=${store.getState().token}`
+    fetch(url)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+        setChannels(response)
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoadingChannels(false))
+  }
+
+  function onShareClicked() {
+    setShareDialogOpen(true)
+    getChannels()
+  }
+
+  function sharePost (idUser, idChannel) {
+    const obj = {
+      message: `LINKTOPOST|${post.id}`,
+      idSender: store.getState().id,
+      idReciever: idUser,
+      idChannel: idChannel,
+      createdAt: new Date()
+    }
+
+    socket.emit('message-from-user', obj)
+
+    setShareDialogOpen(false)
   }
 
   function handleClickPhoto() {
@@ -241,7 +284,7 @@ export default function Post(props) {
   }
 
   function getButtonClasses() {
-    return (allCorrect()) ? 'post__dialog__button' : 'post__dialog__button post__dialog__button--disabled'
+    return (allCorrect()) ? 'post__report__button' : 'post__report__button post__report__button--disabled'
   }
 
   return (
@@ -288,7 +331,7 @@ export default function Post(props) {
           }
           <SmsOutlinedIcon className="post__icon" sx={{fontSize: 30}}
                            onClick={() => setCommentInputVisible(!commentInputVisible)}/>
-          <ShareIcon className="post__icon" sx={{fontSize: 30}}/>
+          <ShareIcon className="post__icon" sx={{fontSize: 30}} onClick={onShareClicked}/>
         </div>
 
         <div className="post__stats">
@@ -321,7 +364,7 @@ export default function Post(props) {
                   >
                     {word}{" "}
                   </span>
-                );
+                )
               else return <span key={index}>{word} </span>
             })}
           </span>
@@ -359,14 +402,14 @@ export default function Post(props) {
       </>
       }
 
-      <Dialog className="post__dialog" open={reportDialogOpen} onClose={() => setReportDialogOpen(false)}>
-        <DialogTitle className="post__dialog__title">Report post</DialogTitle>
+      <Dialog className="post__report" open={reportDialogOpen} onClose={() => setReportDialogOpen(false)}>
+        <DialogTitle className="post__report__title">Report post</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Type here what is the reason, that You want to report this post
           </DialogContentText>
           <TextField
-            className="post__dialog__input"
+            className="post__report__input"
             autoFocus
             label="Reason"
             fullWidth
@@ -383,7 +426,7 @@ export default function Post(props) {
           />
         </DialogContent>
         <DialogActions>
-          <LoadingButton className="post__dialog__button post__dialog__button--outlined" loading={false}
+          <LoadingButton className="post__report__button post__report__button--outlined" loading={false}
                          onClick={setReportDialogOpen.bind(this, false)} variant="outlined" disableRipple>
             Cancel
           </LoadingButton>
@@ -392,6 +435,30 @@ export default function Post(props) {
                          onClick={reportPost} variant="contained" disableRipple disabled={!allCorrect()}
                          className={getButtonClasses()}>
             Report
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog className="post__share" open={shareDialogOpen} onClose={() => setShareDialogOpen(false)}>
+        <DialogTitle className="post__share__title">Share post</DialogTitle>
+        <DialogContent className="post__share__content">
+          {loadingChannels && channels.length === 0 &&
+            <CircularProgress className="post__share__indicator" size={60}/>
+          }
+
+          {channels.map((channel, idx) =>
+            <div className="post__share__channel" key={idx}>
+              <Avatar src={channel.photo}/>
+              <div className="post__share__channel__username">{channel.username}</div>
+              <SendIcon className="post__share__channel__button"
+                        onClick={sharePost.bind(this, channel.idUser, channel.idChannel)}/>
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <LoadingButton className="post__share__button post__share__button--outlined" loading={false}
+                         onClick={() => setShareDialogOpen( false)} variant="outlined" disableRipple>
+            Cancel
           </LoadingButton>
         </DialogActions>
       </Dialog>
