@@ -32,9 +32,9 @@ export default function SearchView() {
 
   useEffect(() => {
     clearTimeout(time)
-    if(tab == 1) {
+    if (tab == 1) {
       getAccounts()
-    } else if(tab == 2) {
+    } else if (tab == 2) {
       getTags()
     }
 
@@ -43,9 +43,9 @@ export default function SearchView() {
   useEffect(() => {
     console.log(query, tab)
     clearTimeout(time)
-    if(tab == 1) {
+    if (tab == 1) {
       setTime(setTimeout(getAccounts, 250))
-    } else if(tab == 2) {
+    } else if (tab == 2) {
       setTime(setTimeout(getTags, 250))
     }
 
@@ -89,21 +89,23 @@ export default function SearchView() {
         </div>
 
         <TabContext value={tab}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
+          <Box sx={{borderBottom: 1, borderColor: 'divider', width: '100%'}}>
             <Tabs value={tab} onChange={handleChange}>
               <Tab label="Accounts" value="1" sx={{width: '50%'}}/>
               <Tab label="Tags" value="2" sx={{width: '50%'}}/>
             </Tabs>
           </Box>
-          <TabPanel value="1" style={{width: '100%', padding: 0}    }>
+          <TabPanel value="1" style={{width: '100%', padding: 0}}>
             {accounts.map((user, index) =>
               <User key={index} user={user}/>
             )}
           </TabPanel>
 
-          <TabPanel value="2" style={{width: '100%'}}>
+          <TabPanel value="2" sx={{width: '100%', padding: '4px 24px'}}>
             {tags.map((tag, index) =>
-              <div key={index}>{tag}</div>
+              <div key={index} className="search__tag">
+                <span onClick={() => history.push(`tag/${tag.replace('#', '')}`)}>{tag}</span>
+              </div>
             )}
           </TabPanel>
         </TabContext>
