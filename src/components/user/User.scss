@@ -1,0 +1,28 @@
+@import '../../styles/variables.module';
+
+.user {
+  display: flex;
+  gap: 10px;
+  padding: 12px 24px;
+
+  &__details {
+    flex-grow: 1;
+  }
+
+  &__username {
+    font-weight: 700;
+  }
+
+  &__followers-amount {
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__name, &__label {
+    margin-top: 2px;
+    color: #999;
+    font-weight: 400;
+    font-size: 14px;
+  }
+
+}

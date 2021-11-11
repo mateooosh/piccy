@@ -4,16 +4,19 @@ import {useSelector, useStore} from "react-redux"
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
 import {useHistory} from "react-router-dom"
 import {io} from "socket.io-client"
-import {Avatar, Badge, Divider, ListItemIcon, MenuItem, Menu, IconButton} from "@mui/material"
+import {Avatar, Badge, Divider, ListItemIcon, MenuItem, Menu, IconButton, Popover} from "@mui/material"
 import NewPost from "../new-post/NewPost"
-import {Logout, Settings} from "@mui/icons-material"
+import {Logout, Settings, Search, Close} from "@mui/icons-material"
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined'
+import {useSnackbar} from "notistack"
+import SendIcon from "@mui/icons-material/Send";
 
 export default function Navbar() {
 
   const store = useStore()
   const history = useHistory()
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+  const {enqueueSnackbar} = useSnackbar();
 
   const notificationAmount = useSelector(state => state.notificationAmount)
 
@@ -25,7 +28,6 @@ export default function Navbar() {
   const handleClose = () => {
     setAnchorEl(null)
   }
-
 
   const [pageScrolled, setPageScrolled] = useState(false)
 
@@ -47,6 +49,7 @@ export default function Navbar() {
     socket.emit('log-out', store.getState().username)
     store.dispatch({type: 'resetStore'})
     history.push('/')
+    enqueueSnackbar('You have been logged out')
   }
 
   return (
@@ -55,6 +58,8 @@ export default function Navbar() {
       <img className="navbar__logo" src="piccy.svg" alt="Piccy" onClick={() => history.push('')}/>
       <div className="navbar__actions">
         <NewPost/>
+
+        <Search onClick={() => history.push('/search')} className="navbar__actions__icon"/>
 
         <Badge badgeContent={notificationAmount} color="primary"
                sx={{"& .MuiBadge-badge": {color: 'white'}}}
@@ -73,6 +78,7 @@ export default function Navbar() {
 
       </div>
 
+      {/*account*/}
       <Menu
         className="menu"
         anchorEl={anchorEl}

@@ -18,6 +18,7 @@ import SettingsView from "../views/SettingsView/SettingsView"
 import {io} from "socket.io-client"
 import MessagesView from "../views/MessagesView/MessagesView"
 import {useSnackbar} from "notistack"
+import SearchView from "../views/SearchView/SearchView";
 
 export default function Navigation() {
   const store = useStore()
@@ -76,6 +77,9 @@ export default function Navigation() {
             </Route>
             <Route path="/messages">
               <MessagesView/>
+            </Route>
+            <Route path="/search">
+              <SearchView/>
             </Route>
             <Route path="/:username">
               <ProfileView/>

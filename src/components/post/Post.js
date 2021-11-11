@@ -267,6 +267,7 @@ export default function Post(props) {
     socket.emit('message-from-user', obj)
 
     setShareDialogOpen(false)
+    enqueueSnackbar('Post has been shared')
   }
 
   function handleClickPhoto() {
