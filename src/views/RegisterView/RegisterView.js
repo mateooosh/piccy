@@ -55,7 +55,6 @@ export default function RegisterView() {
       .then(response => response.json())
       .then(response => {
         if(response.created) {
-          alert(response.created)
           history.push('/')
         }
         else {

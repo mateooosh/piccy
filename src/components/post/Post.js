@@ -11,7 +11,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField
+  TextField,
+  Skeleton
 } from "@mui/material"
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -23,7 +24,7 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
 
 import {t} from "../../translations/translations"
 import ActionMenu from "../action-menu/ActionMenu"
-import {LoadingButton, Skeleton} from "@mui/lab"
+import {LoadingButton} from "@mui/lab"
 import {useHistory} from "react-router-dom"
 import SendIcon from "@mui/icons-material/Send"
 import {useSnackbar} from "notistack"

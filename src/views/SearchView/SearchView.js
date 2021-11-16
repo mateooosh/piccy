@@ -8,8 +8,8 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import {Box, Tabs} from "@mui/material"
-import User from "../../components/user/User";
+import {Box, CircularProgress, Tabs} from "@mui/material"
+import User from "../../components/user/User"
 
 export default function SearchView() {
 
@@ -19,7 +19,10 @@ export default function SearchView() {
   const [query, setQuery] = useState('')
 
   const [accounts, setAccounts] = useState([])
+  const [accountsLoading, setAccountsLoading] = useState(true)
+
   const [tags, setTags] = useState([])
+  const [tagsLoading, setTagsLoading] = useState(true)
 
   const [time, setTime] = useState(setTimeout(() => {
   }, 0))
@@ -63,6 +66,7 @@ export default function SearchView() {
         setAccounts(response)
       })
       .catch(err => console.log(err))
+      .finally(() => setAccountsLoading(false))
   }
 
   function getTags() {
@@ -75,6 +79,11 @@ export default function SearchView() {
         setTags(response)
       })
       .catch(err => console.log(err))
+      .finally(() => setTagsLoading(false))
+  }
+
+  function getCloseIcon() {
+    return query.length === 0 ? null : <Close className="search__reset" onClick={() => setQuery('')}/>
   }
 
 
@@ -85,7 +94,7 @@ export default function SearchView() {
           <input value={query}
                  onChange={e => setQuery(e.target.value)}
                  className="search__input" type="text" placeholder="Type here..."/>
-          <Close className="search__reset" onClick={() => setQuery('')}/>
+          {getCloseIcon()}
         </div>
 
         <TabContext value={tab}>
@@ -95,18 +104,26 @@ export default function SearchView() {
               <Tab label="Tags" value="2" sx={{width: '50%'}}/>
             </Tabs>
           </Box>
-          <TabPanel value="1" style={{width: '100%', padding: 0}}>
+          <TabPanel value="1" style={{width: '100%', padding: 0, display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
             {accounts.map((user, index) =>
               <User key={index} user={user}/>
             )}
+
+            {accountsLoading &&
+            <CircularProgress className="search__indicator" size={60}/>
+            }
           </TabPanel>
 
-          <TabPanel value="2" sx={{width: '100%', padding: '4px 24px'}}>
+          <TabPanel value="2" sx={{width: '100%', padding: '4px 24px', display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
             {tags.map((tag, index) =>
               <div key={index} className="search__tag">
                 <span onClick={() => history.push(`tag/${tag.replace('#', '')}`)}>{tag}</span>
               </div>
             )}
+
+            {tagsLoading &&
+            <CircularProgress className="search__indicator" size={60}/>
+            }
           </TabPanel>
         </TabContext>
       </div>

@@ -1,24 +1,37 @@
 @import '../../styles/variables.module';
 
 .tags {
-  display: grid;
-  grid-template-columns: repeat(4, calc(100% / 4));
-  //grid-gap: 4px;
-  overflow-y: auto;
+  &__posts {
+    display: grid;
+    grid-template-columns: repeat(4, calc(100% / 4));
+    //grid-gap: 4px;
+    overflow-y: auto;
 
-  @media(max-width: 900px) {
-    grid-template-columns: repeat(3, calc(100% / 3));
-  }
+    @media(max-width: 900px) {
+      grid-template-columns: repeat(3, calc(100% / 3));
+    }
 
-  @media(max-width: 600px) {
-    grid-template-columns: repeat(2, calc(100% / 2));
-  }
+    @media(max-width: 600px) {
+      grid-template-columns: repeat(2, calc(100% / 2));
+    }
 
-  @media(max-width: 400px) {
-    grid-template-columns: repeat(1, 100%);
+    @media(max-width: 400px) {
+      grid-template-columns: repeat(1, 100%);
+    }
   }
 
   &__post {
     width: 100%;
+    cursor: pointer;
+  }
+
+  &__tag {
+    padding: 24px 24px;
+
+    & > span {
+      font-size: 20px;
+      font-weight: 600;
+      color: $hashtag;
+    }
   }
 }

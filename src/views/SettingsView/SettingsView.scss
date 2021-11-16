@@ -1,6 +1,134 @@
 @import '../../styles/variables.module';
 
-.settings {
+.MuiAccordion-root {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #f2f2f2;
 
+  &:not(:last-child) {
+    border-bottom: 0;
+  }
+
+  &:before {
+    display: none;
+  }
 }
+
+.MuiAccordionDetails-root{
+  background-color: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  flex: 1;
+  width: 100%;
+  margin: 20px auto;
+
+  @media(max-width: 810px) {
+    margin: 0;
+  }
+
+
+
+  &__accordion {
+    &__summary {
+      &>div>div:nth-of-type(1) {
+        width: 70%;
+        flex-shrink: 0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      &>div>div:nth-child(2) {
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      &__icon {
+        color: black;
+        font-size: 24px;
+      }
+    }
+
+  }
+
+  //&__nav {
+  //  width: 260px;
+  //  max-width: 260px;
+  //  min-width: 260px;
+  //  border-right: 1px solid rgba(0, 0, 0, 0.12);;
+  //
+  //  &__icon {
+  //    color: black;
+  //    font-size: 28px;
+  //  }
+  //
+  //  &__label {
+  //    font-size: 16px;
+  //    padding: 10px 0;
+  //  }
+  //}
+  //
+  &__details {
+    padding: 20px;
+    font-weight: 600;
+    //font-size: 17px;
+    line-height: 1.7;
+
+    &--no-padding {
+      padding: 0;
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 10px 0;
+      gap: 10px;
+    }
+
+    &__input {
+      width: 100%;
+      margin: 16px 0;
+    }
+
+    &__attachment {
+      margin-top: 20px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    }
+    
+    &__option {
+      padding: 10px 16px;
+    }
+
+    &__button {
+      color: white;
+      text-transform: none;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: all .2s;
+
+      &--danger {
+        background-color: $danger;
+        &:active, &:hover {
+          background-color: $danger;
+        }
+      }
+
+      &--outlined {
+        color: #808080;
+        border-color: #ccc;
+
+        &:hover {
+          border-color: #ccc;
+          background-color: #eee;
+        }
+      }
+    }
+  }
+}
+
 

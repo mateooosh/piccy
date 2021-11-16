@@ -26,10 +26,15 @@ export default function TagView() {
 
   return (
     <div className="tags">
+      <div className="tags__tag">
+        <span>{`#${tag}`}</span>
+      </div>
+      <div className="tags__posts">
       {posts.map((post, idx) =>
         <img src={post.photo} key={idx} className="tags__post"
         onClick={() => history.push(`/post/${post.id}`)}/>
       )}
+        </div>
     </div>
   )
 }

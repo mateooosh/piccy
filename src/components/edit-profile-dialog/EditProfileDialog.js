@@ -1,11 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import './EditProfileDialog.scss'
 import {useStore} from "react-redux"
-import {Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@mui/material"
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  TextField,
+  useMediaQuery, useTheme
+} from "@mui/material"
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from 'notistack'
 import {useHistory} from "react-router-dom"
-import ImagePicker from "../image-picker/ImagePicker";
+import ImagePicker from "../image-picker/ImagePicker"
 
 export default function EditProfileDialog({open, setOpen, profile, getProfile}) {
   const history = useHistory()
@@ -23,6 +33,9 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
   const [src, setSrc] = useState(null)
 
   const [loading, setLoading] = useState(false)
+
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   useEffect(() => {
     if (profile) {
@@ -44,8 +57,8 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
   function saveChanges() {
     const url = `${process.env.REACT_APP_API_URL}/users/${store.getState().id}`
 
-    const index = getAvatar().indexOf(',')
-    let base64 = getAvatar().slice(index + 1, (getAvatar().length))
+    const index = getAvatar()?.indexOf(',')
+    let base64 = (index && index !== -1) ? getAvatar().slice(index + 1, (getAvatar().length)) : null
 
     const obj = {
       name: name,
@@ -87,7 +100,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
   }
 
   function getAvatar() {
-    return croppedImage ? croppedImage : profile.photo
+    return croppedImage ? croppedImage : profile.photo ? profile.photo : null
   }
 
   return (
@@ -96,6 +109,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
       keepMounted
       onClose={closeDialog}
       className="edit"
+      fullScreen={fullScreen}
     >
 
 
@@ -143,14 +157,14 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
           <TextField className="edit__input"
                      label="Name"
                      variant="standard"
-                     value={name}
+                     value={name || ''}
                      onChange={e => setName(e.target.value)}
           />
 
           <TextField className="edit__input"
                      label="Description"
                      variant="standard"
-                     value={description}
+                     value={description || ''}
                      onChange={e => setDescription(e.target.value)}
                      multiline
           />

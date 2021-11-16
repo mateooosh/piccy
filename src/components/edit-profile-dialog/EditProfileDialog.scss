@@ -29,6 +29,11 @@
 
   &__input {
     margin: 16px 24px;
-    width: 500px;
+    width: 480px;
+
+    @media(max-width: 599px) {
+      width: 90%;
+      margin: 16px 0;
+    }
   }
 }
