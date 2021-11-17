@@ -12,6 +12,8 @@ import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import {validation} from "../../functions/functions";
 
 export default function SettingsView() {
   const store = useStore()
@@ -29,6 +31,8 @@ export default function SettingsView() {
   // }
 
   const [bugDescription, setBugDescription] = useState('')
+  const [oldPassword, setOldPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
 
   const [expanded, setExpanded] = React.useState(false)
 
@@ -38,6 +42,7 @@ export default function SettingsView() {
 
   const [loadingDeleteAccount, setLoadingDeleteAccount] = useState(false)
   const [loadingReportBug, setLoadingReportBug] = useState(false)
+  const [loadingResetPassword, setLoadingResetPassword] = useState(false)
 
   const [attachment, setAttachment] = useState(null)
 
@@ -110,6 +115,52 @@ export default function SettingsView() {
     store.dispatch({type: "langSet", payload: lang})
   }
 
+  function resetPassword() {
+    const url = `${process.env.REACT_APP_API_URL}/reset/password`;
+    const obj = {
+      idUser: store.getState().id,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      token: store.getState().token
+    }
+
+    setLoadingResetPassword(true);
+    fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(obj),
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response.message)
+        enqueueSnackbar(response.message)
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        setLoadingResetPassword(false)
+        setNewPassword('')
+        setOldPassword('')
+      })
+  }
+
+  function helperTextOldPassword() {
+    return hasError(oldPassword) ? 'Old password must be at least 6 characters long' : ''
+  }
+
+  function helperTextNewPassword() {
+    return hasError(newPassword) ? 'New password must be at least 6 characters long' : ''
+  }
+
+  function hasError(string) {
+    return !validation.min6Chars(string) && string.length > 0
+  }
+
+  function activeButton() {
+    return validation.min6Chars(oldPassword) && validation.min6Chars(newPassword);
+  }
+
   return (
     <div className="settings">
       <div>
@@ -153,7 +204,7 @@ export default function SettingsView() {
               <div>
                 Describe some observation, event, happening or condition we need to resolve
               </div>
-              <TextField className="settings__details__input"
+              <TextField className="settings__details__input settings__details__input--margin"
                          label="Bug description"
                          variant="standard"
                          value={bugDescription}
@@ -214,117 +265,56 @@ export default function SettingsView() {
             </ListItemButton>
           </AccordionDetails>
         </Accordion>
+
+        <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon/>}
+            className="settings__accordion__summary"
+            id="panel4bh-header"
+          >
+            <div>
+              <LockOutlinedIcon className="settings__accordion__summary__icon"/>
+              Reset password
+            </div>
+          </AccordionSummary>
+          <AccordionDetails className="settings__details">
+            <TextField className="settings__details__input"
+                       label="Old password"
+                       variant="standard"
+                       type="password"
+                       value={oldPassword}
+                       onChange={e => setOldPassword(e.target.value)}
+                       error={hasError(oldPassword)}
+                       helperText={helperTextOldPassword()}
+            />
+
+            <TextField className="settings__details__input settings__details__input--margin"
+                       label="New password"
+                       variant="standard"
+                       type="password"
+                       value={newPassword}
+                       onChange={e => setNewPassword(e.target.value)}
+                       error={hasError(newPassword)}
+                       helperText={helperTextNewPassword()}
+            />
+
+            <div className="settings__details__actions">
+              {activeButton() ? (
+                <LoadingButton onClick={resetPassword} variant="contained" disableRipple loading={loadingResetPassword}
+                               className="settings__details__button">
+                  Reset password
+                </LoadingButton>
+              ) : (
+                <LoadingButton variant="outlined" disableRipple
+                               className="settings__details__button   settings__details__button--outlined">
+                  Reset password
+                </LoadingButton>
+              )}
+            </div>
+          </AccordionDetails>
+        </Accordion>
       </div>
     </div>
 
   )
-
-//   function getContent() {
-//     switch (selectedIndex) {
-//       case 0:
-//         return (
-//           <div>
-//             <div>
-//               Are you sure You want to delete your account? Your every post, comment, message and many, many others will
-//               be removed. It will not be possible to restore it.
-//             </div>
-//             <div className="settings__content__actions">
-//               <LoadingButton onClick={deleteAccount} variant="contained" disableRipple loading={loadingDeleteAccount}
-//                              className="settings__content__button settings__content__button--danger">
-//                 Delete account
-//               </LoadingButton>
-//             </div>
-//           </div>
-//         )
-//         break
-//       case 1:
-//         return (
-//           <div>
-//             <div>
-//               Describe some observation, event, happening or condition we need to resolve
-//             </div>
-//
-//             <div className="settings__content__actions">
-//               <LoadingButton className=" settings__content__button--outlined settings__content__button" loading={false}
-//                              variant="outlined" disableRipple>
-//                 Attach screenshot
-//               </LoadingButton>
-//               <LoadingButton onClick={reportBug} variant="contained" disableRipple loading={loadingReportBug}
-//                              className="settings__content__button">
-//                 Report
-//               </LoadingButton>
-//             </div>
-//           </div>
-//         )
-//         break
-//
-//       default:
-//         return null
-//     }
-//   }
-//
-//   return (
-//     <div className="settings">
-//       <List component="nav" className="settings__nav">
-//         <ListItemButton
-//           selected={selectedIndex === 0}
-//           onClick={(event) => handleListItemClick(event, 0)}
-//         >
-//           <ListItemIcon>
-//             <PersonRemoveRounded className="settings__nav__icon"/>
-//           </ListItemIcon>
-//           <div className="settings__nav__label">Delete account</div>
-//         </ListItemButton>
-//         <Divider/>
-//         <ListItemButton
-//           selected={selectedIndex === 1}
-//           onClick={(event) => handleListItemClick(event, 1)}
-//         >
-//           <ListItemIcon>
-//             <BugReportOutlined className="settings__nav__icon"/>
-//           </ListItemIcon>
-//           <div className="settings__nav__label">Report bug</div>
-//         </ListItemButton>
-//         <Divider/>
-//
-//         <ListItemButton
-//           selected={selectedIndex === 2}
-//           onClick={(event) => handleListItemClick(event, 2)}
-//         >
-//           <ListItemIcon>
-//             <LanguageOutlined className="settings__nav__icon"/>
-//           </ListItemIcon>
-//           <div className="settings__nav__label">Language</div>
-//         </ListItemButton>
-//         <Divider/>
-//
-//         <ListItemButton
-//           selected={selectedIndex === 3}
-//           onClick={(event) => handleListItemClick(event, 3)}
-//         >
-//           <ListItemIcon>
-//             <LockOutlined className="settings__nav__icon"/>
-//           </ListItemIcon>
-//           <div className="settings__nav__label">Reset password</div>
-//         </ListItemButton>
-//         <Divider/>
-//
-//         <ListItemButton
-//           selected={selectedIndex === 4}
-//           onClick={(event) => handleListItemClick(event, 4)}
-//         >
-//           <ListItemIcon>
-//             <Logout className="settings__nav__icon"/>
-//           </ListItemIcon>
-//           <div className="settings__nav__label">Logout</div>
-//         </ListItemButton>
-//
-//       </List>
-//
-//       <div className="settings__content">
-//         {getContent()}
-//       </div>
-//
-//     </div>
-//   )
 }

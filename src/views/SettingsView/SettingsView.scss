@@ -91,7 +91,9 @@
 
     &__input {
       width: 100%;
-      margin: 16px 0;
+      &--margin {
+        margin: 16px 0;
+      }
     }
 
     &__attachment {
