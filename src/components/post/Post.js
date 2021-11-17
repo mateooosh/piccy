@@ -21,6 +21,7 @@ import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import ShareIcon from '@mui/icons-material/Share'
 import ReportGmailerrorredRoundedIcon from '@mui/icons-material/ReportGmailerrorredRounded'
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 
 import {t} from "../../translations/translations"
 import ActionMenu from "../action-menu/ActionMenu"
@@ -61,8 +62,10 @@ export default function Post(props) {
 
   //sharing posts
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
-  const [sharePostLoading, setSharePostLoading] = useState(false)
   const [loadingChannels, setLoadingChannels] = useState(false)
+
+  // removing post
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false)
 
 
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
@@ -86,13 +89,17 @@ export default function Post(props) {
       setReason('')
   }, [reportDialogOpen])
 
+  useEffect(() => {
+    if (removeDialogOpen)
+      setAnchorEl(null)
+  }, [removeDialogOpen])
+
 
   useEffect(() => {
     setPost(props.post)
     let arr = [
       {
-        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><ReportGmailerrorredRoundedIcon
-          onClick={handleClick}/>Report post</div>,
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><ReportGmailerrorredRoundedIcon/>Report post</div>,
         onClick: setReportDialogOpen
       },
       {
@@ -101,7 +108,10 @@ export default function Post(props) {
         onClick: () => null
       }]
     if (props.post.username === store.getState().username) {
-      arr.unshift({title: 'Remove post', onClick: () => null})
+      arr.unshift({
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><DeleteOutlinedIcon/>Remove post</div>,
+        onClick: setRemoveDialogOpen
+      })
     }
     setActions(arr)
 
@@ -205,6 +215,23 @@ export default function Post(props) {
         setReportDialogOpen(false)
         setReportPostLoading(false)
       })
+  }
+
+  function removePost() {
+    console.log('remove')
+    setRemoveDialogOpen(false)
+
+    const url = `${process.env.REACT_APP_API_URL}/posts/${post.id}`
+    fetch(url, {
+      method: 'DELETE'
+    })
+      .then(response => response.json())
+      .then(response => {
+        setRemoveDialogOpen(false)
+        enqueueSnackbar(response.message)
+        history.push('/')
+      })
+      .catch(() => enqueueSnackbar('Something went wrong'))
   }
 
   function createComment() {
@@ -437,6 +464,27 @@ export default function Post(props) {
                          onClick={reportPost} variant="contained" disableRipple disabled={!allCorrect()}
                          className={getButtonClasses()}>
             Report
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog className="post__remove" open={removeDialogOpen} onClose={() => setRemoveDialogOpen(false)}>
+        <DialogTitle className="post__remove__title">Remove post</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Type here what is the reason, that You want to report this post
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <LoadingButton className="post__remove__button post__remove__button--outlined" loading={false}
+                         onClick={setRemoveDialogOpen.bind(this, false)} variant="outlined" disableRipple>
+            Cancel
+          </LoadingButton>
+
+          <LoadingButton loading={reportPostLoading}
+                         onClick={removePost} variant="contained" disableRipple
+                         className="post__remove__button post__remove__button--danger">
+            Remove
           </LoadingButton>
         </DialogActions>
       </Dialog>
