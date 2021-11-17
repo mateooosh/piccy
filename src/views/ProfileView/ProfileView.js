@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react'
 import './ProfileView.scss'
 
 import {useStore} from "react-redux"
-import {Avatar, Button, CircularProgress} from "@mui/material"
+import {Avatar, Button, CircularProgress, Dialog, DialogContent, DialogTitle} from "@mui/material"
 import {useHistory, useParams} from "react-router-dom"
+import User from "../../components/user/User";
 
 export default function ProfileView() {
 
@@ -15,6 +16,11 @@ export default function ProfileView() {
   const [profile, setProfile] = useState(null)
   const [posts, setPosts] = useState([])
 
+  const [follows, setFollows] = useState([])
+  const [titleOfDialog, setTitleOfDialog] = useState('')
+  const [emptyFollows, setEmptyFollows] = useState(false)
+  const [loadingFollows, setLoadingFollows] = useState(false)
+  const [followsDialogOpen, setFollowsDialogOpen] = useState(false)
 
   useEffect(() => {
     //if this is my account
@@ -45,6 +51,46 @@ export default function ProfileView() {
         .finally(() => setLoading(false))
     }
   }, [])
+
+  useEffect(() => {
+    if (!followsDialogOpen) {
+      setFollows([])
+      setTitleOfDialog('')
+      setEmptyFollows(false)
+    }
+  }, [followsDialogOpen])
+
+  function onFollowersClick() {
+    setFollowsDialogOpen(true)
+    setTitleOfDialog('Followers')
+    getFollows('followers')
+  }
+
+  function onFollowingClick() {
+    setFollowsDialogOpen(true)
+    setTitleOfDialog('Following')
+    getFollows('following')
+  }
+
+  function getFollows(type) {
+    let url = `${process.env.REACT_APP_API_URL}/${type}/${profile.id}?token=${store.getState().token}`
+
+    setFollows([])
+    setLoadingFollows(true)
+    setEmptyFollows(false)
+    fetch(url)
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        setFollows(response)
+        if(response.length === 0)
+          setEmptyFollows(true)
+        else
+          setEmptyFollows(false)
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setLoadingFollows(false))
+  }
 
   //follow user
   function follow(idUser, idFollower) {
@@ -108,12 +154,12 @@ export default function ProfileView() {
               <div className="profile__stats__type">Posts</div>
             </div>
 
-            <div>
+            <div  onClick={onFollowersClick}>
               <div className="profile__stats__amount">{profile.followers}</div>
               <div className="profile__stats__type">Followers</div>
             </div>
 
-            <div>
+            <div  onClick={onFollowingClick}>
               <div className="profile__stats__amount">{profile.following}</div>
               <div className="profile__stats__type">Following</div>
             </div>
@@ -157,6 +203,26 @@ export default function ProfileView() {
           </div>
         </>
         }
+
+        <Dialog className="profile__dialog" open={followsDialogOpen} onClose={() => setFollowsDialogOpen(false)}
+                fullWidth maxWidth="xs">
+          <DialogTitle className="profile__dialog__title">{titleOfDialog}</DialogTitle>
+          <DialogContent className="profile__dialog__content">
+            {loadingFollows && follows.length === 0 &&
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <CircularProgress className="profile__dialog__indicator" size={60}/>
+            </div>
+            }
+
+            {follows.map((user, idx) =>
+              <User user={user} key={idx}/>
+            )}
+
+            {emptyFollows &&
+            <div className="profile__dialog__error">No users found</div>
+            }
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

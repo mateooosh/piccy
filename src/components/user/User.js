@@ -15,7 +15,7 @@ export default function User({user}) {
 
   return (
     <div className="user" onClick={pushToAccount}>
-      <Avatar className="user__avatar" src={user.photo}/>
+      <Avatar className="user__avatar" src={user.photo || user.userPhoto}/>
       <div className="user__details">
         <div className="user__username">{user.username}</div>
         <div className="user__name">{user.name}</div>

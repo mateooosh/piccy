@@ -1,10 +1,10 @@
 @import '../../styles/variables.module';
 
 .tags {
+  overflow-y: auto;
   &__posts {
     display: grid;
     grid-template-columns: repeat(4, calc(100% / 4));
-    //grid-gap: 4px;
     overflow-y: auto;
 
     @media(max-width: 900px) {

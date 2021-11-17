@@ -373,7 +373,8 @@ export default function Post(props) {
         </div>
 
         <div className="post__bottom">
-          <span className="post__bottom__username">{post.username} </span>
+          <span className="post__bottom__username"
+                onClick={() => history.push(`/${post.username === store.getState().username ? 'account' : post.username}`)}>{post.username} </span>
           <span className="post__bottom__description">
             {post.description.split(" ").map((word, index) => {
               if (word.charAt(0) === "#")
@@ -381,6 +382,7 @@ export default function Post(props) {
                   <span
                     key={index}
                     style={{color: variables['primary-main'], fontWeight: '600'}}
+                    onClick={() => history.push(`/tag/${word.replace('#', '')}`)}
                   >
                     {word}{" "}
                   </span>
@@ -390,6 +392,7 @@ export default function Post(props) {
                   <span
                     key={index}
                     style={{color: variables['primary-main'], fontWeight: '600'}}
+                    onClick={() => history.push(`/${word === store.getState().username ? 'account' : post.username}`)}
                   >
                     {word}{" "}
                   </span>
