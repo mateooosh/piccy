@@ -55,7 +55,7 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
       onClose={() => setOpen(false)}
       className="new-post"
     >
-      <DialogTitle>Create new post</DialogTitle>
+      <DialogTitle style={{fontWeight: '600'}}>Create new post</DialogTitle>
       <DialogContent style={{margin: 'auto', width: '100%', padding: 0, display: 'flex', flexDirection: 'column'}}>
         {croppedImage !== null &&
         <img src={croppedImage} width='100%'/>

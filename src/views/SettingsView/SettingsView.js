@@ -253,6 +253,10 @@ export default function SettingsView() {
               selected={lang === 'en'}
               onClick={() => handleLangChange('en')}
             >
+              <img
+                src="https://flagcdn.com/gb.svg"
+                width="40"
+                alt="England"/>
               English
             </ListItemButton>
             <Divider/>
@@ -261,6 +265,10 @@ export default function SettingsView() {
               selected={lang === 'pl'}
               onClick={() => handleLangChange('pl')}
             >
+              <img
+                src="https://flagcdn.com/pl.svg"
+                width="40"
+                alt="England"/>
               Polish
             </ListItemButton>
           </AccordionDetails>

@@ -148,6 +148,17 @@ export default function ProfileView() {
       .catch((err) => console.log(err))
   }
 
+  function pushToMessages() {
+    history.push({
+      pathname: '/messages',
+      state: {
+        idUser: profile.id,
+        avatar: profile.photo,
+        username: profile.username
+      }
+    })
+  }
+
 
   return (
     <div style={{width: '100%', overflowY: 'auto'}}>
@@ -198,7 +209,7 @@ export default function ProfileView() {
               </Button>
             )}
 
-            <Button variant="contained" disableRipple className="profile__actions__button">
+            <Button onClick={pushToMessages} variant="contained" disableRipple className="profile__actions__button">
               Message
             </Button>
           </div>

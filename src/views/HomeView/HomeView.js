@@ -4,6 +4,7 @@ import './HomeView.scss'
 import {useStore} from "react-redux"
 import Post from "../../components/post/Post"
 import {CircularProgress} from "@mui/material"
+import NewPost from "../../components/new-post/NewPost";
 
 export default function HomeView() {
 
@@ -48,6 +49,8 @@ export default function HomeView() {
   return (
     <div className="home">
       <div className="home__posts">
+        <NewPost/>
+
         {loading &&
         <CircularProgress className="home__indicator" size={60}/>
         }

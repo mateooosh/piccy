@@ -1,19 +1,18 @@
 @import '../../styles/variables.module';
 
 .new-post-button {
-  height: 28px;
-  &__icon {
-    color: black;
-    font-size: 28px;
-    transition: .2s all;
-    padding: 0;
+  &__button {
+    color: white;
+    text-transform: none;
+    font-weight: 700;
+    font-size: 16px;
 
-    span {
-      padding: 0;
-    }
+    &--disabled {
+      background-color: #ccc;
 
-    &:hover {
-      transform: scale(1.1);
+      &:hover {
+        background-color: #c0c0c0;
+      }
     }
   }
 }

@@ -117,7 +117,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
 
       {!!profile &&
       <>
-        <DialogTitle>Edit profile</DialogTitle>
+        <DialogTitle style={{fontWeight: '600'}}>Edit profile</DialogTitle>
         <DialogContent className="edit__content">
           {getAvatar() !== null ? (
             <>

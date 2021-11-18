@@ -4,17 +4,18 @@ import './MessagesView.scss'
 import {useStore} from "react-redux"
 import variables from "../../styles/variables.module.scss"
 import {io} from "socket.io-client"
-import {Avatar, CircularProgress, TextField} from "@mui/material"
+import {Avatar, Chip, CircularProgress, TextField} from "@mui/material"
 import MessageItem from "../../components/message-item/MessageItem"
 import SendIcon from '@mui/icons-material/Send'
 import MessagesDrawer from "../../components/messages-drawer/MessagesDrawer"
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
-import {useHistory} from "react-router-dom"
+import {useHistory, useLocation} from "react-router-dom"
 
-export default function MessagesView() {
+export default function MessagesView(props) {
 
   const store = useStore()
   const history = useHistory()
+  const location = useLocation()
 
   const messagesRef = useRef()
 
@@ -25,8 +26,10 @@ export default function MessagesView() {
   const [activeUserId, setActiveUserId] = useState(null)
   const [idChannel, setIdChannel] = useState(null)
   const [messages, setMessages] = useState([])
-  const [userChattingWith, setUserChattingWith] = useState({})
-  const [loadingMessages, setLoadingMessages] = useState(false)
+  const [userChattingWith, setUserChattingWith] = useState(null)
+  const [loadingMessages, setLoadingMessages] = useState(true)
+
+  const [firstAttempt, setFirstAttempt] = useState(true)
 
   const [input, setInput] = useState('')
 
@@ -49,9 +52,18 @@ export default function MessagesView() {
     getChannels()
     socket.on(`message-to-user-${store.getState().id}`, handler)
 
-    if(window.innerWidth <= 620) {
+    if (window.innerWidth <= 620 && !location?.state?.idUser) {
       setDrawerOpen(true)
     }
+
+    // if(location.state?.idUser) {
+    //   setNewChannel({
+    //     idUser: location.state.idUser,
+    //     photo: location.state.avatar || null,
+    //     lastMessage: '',
+    //     username: location.state.username
+    //   })
+    // }
 
     return () => {
       socket.off(`message-to-user-${store.getState().id}`, handler)
@@ -60,6 +72,7 @@ export default function MessagesView() {
 
   useEffect(() => {
     setInput('')
+    console.log('active', activeUserId)
 
     if (activeUserId) {
       getMessages(activeUserId)
@@ -85,6 +98,8 @@ export default function MessagesView() {
   function getMessages(id) {
     setMessages([])
 
+    console.log('id', id)
+
     const url = `${process.env.REACT_APP_API_URL}/messages/${id}?myIdUser=${store.getState().id}&token=${store.getState().token}`
 
     setLoadingMessages(true)
@@ -94,6 +109,7 @@ export default function MessagesView() {
         console.log('messages:', response)
         setMessages(response.messages)
         setUserChattingWith(findUserChattingWith(response.users))
+        setIdChannel(response.idChannel)
         markAsRead(store.getState().id, response.idChannel)
         markAsReadOnApp(store.getState().id, response.idChannel)
         scrollToEnd('auto')
@@ -106,7 +122,10 @@ export default function MessagesView() {
 
   function scrollToEnd(behavior) {
     setTimeout(() => {
-      const arr = messagesRef.current.children
+      const arr = messagesRef?.current?.children
+      if (arr?.length === 0)
+        return
+
       arr[arr.length - 1].scrollIntoView({behavior: behavior})
     }, 100)
   }
@@ -118,8 +137,31 @@ export default function MessagesView() {
       .then(response => {
         console.log(response)
         setChannels(response)
-        if(response.length > 0) {
-          setActiveUserId(response[0].idUser)
+        if (response.length > 0) {
+          if (location.state?.idUser && firstAttempt) {
+            setActiveUserId(location.state?.idUser)
+            setFirstAttempt(false)
+          } else if (firstAttempt) {
+            setActiveUserId(response[0].idUser)
+            setFirstAttempt(false)
+          }
+        }
+
+        const index = response.findIndex(channel => channel.idUser == location.state?.idUser)
+        if (index === -1 && location.state?.idUser) {
+          setChannels(old => [{
+            createdAt: null,
+            idChannel: null,
+            idUser: location.state?.idUser,
+            lastMessage: '',
+            name: null,
+            photo: location.state?.avatar,
+            status: 0,
+            username: location.state?.username
+          },
+            ...old])
+
+          // getMessages(channels.idUser)
         }
       })
       .catch(err => console.log(err))
@@ -129,7 +171,7 @@ export default function MessagesView() {
   function sendMessage() {
     console.log('send', input)
 
-    if(activeUserId === null)
+    if (activeUserId === null)
       return
 
     const obj = {
@@ -150,6 +192,9 @@ export default function MessagesView() {
 
   function markAsReadOnApp(idUser, idChannel) {
     console.log('mark as read', channels)
+    if (messages.length === 0)
+      return
+
     let obj = channels.find(elem => elem.idChannel == idChannel)
     let index = channels.indexOf(obj)
 
@@ -181,8 +226,8 @@ export default function MessagesView() {
           <div key={idx} className={getClasses(channel.idUser)}
                onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)}>
             <Avatar src={channel.photo} sx={{width: 50, height: 50}}/>
-            <div>
-              <div className="messages__nav__user__username">{channel.username}</div>
+            <div style={{flexGrow: 1}}>
+              <div className="messages__nav__user__username">{channel.username}:{channel.idUser}</div>
               <div className="messages__nav__user__lastMessage">
                 {channel.status == 0 ? (
                   channel.lastMessage
@@ -191,6 +236,10 @@ export default function MessagesView() {
                 )}
               </div>
             </div>
+            {channel.status == 1 ? (
+              <Chip onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)} label="New" color="primary"
+                    style={{color: 'white'}}/>
+            ) : null}
           </div>
         )}
 
@@ -205,7 +254,7 @@ export default function MessagesView() {
     <div className="messages">
       {getChannelsView('messages__nav')}
       <div className="messages__channel">
-        {messages.length > 0 &&
+        {!!userChattingWith && !loadingMessages &&
         <div className="messages__channel__avatar" onClick={() => history.push(`/${userChattingWith.username}`)}>
           <Avatar src={userChattingWith.photo}/>
           <div>{userChattingWith.username}</div>

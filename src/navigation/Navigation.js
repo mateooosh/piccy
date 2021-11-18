@@ -64,7 +64,7 @@ export default function Navigation() {
   return (
     <Router>
       {logged ? (
-        <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
           <Navbar/>
           <Switch>
             <Route path="/post/:id">
