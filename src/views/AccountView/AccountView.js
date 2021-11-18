@@ -15,6 +15,8 @@ export default function AccountView() {
   const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState(null)
   const [posts, setPosts] = useState([])
+  const [loadingPosts, setLoadingPosts] = useState(false)
+  const [emptyPosts, setEmptyPosts] = useState(false)
 
   const [follows, setFollows] = useState([])
   const [titleOfDialog, setTitleOfDialog] = useState('')
@@ -78,12 +80,18 @@ export default function AccountView() {
         setProfile(response[0])
         console.log(response[0])
         setLoading(false)
+        setLoadingPosts(true)
+        setEmptyPosts(false)
         fetch(`${process.env.REACT_APP_API_URL}/posts?idUser=${store.getState().id}&onlyUserPosts=true&token=${store.getState().token}`)
           .then(response => response.json())
           .then(response => {
             setPosts(response)
+            if(response.length === 0) {
+              setEmptyPosts(true)
+            }
           })
           .catch(err => console.log(err))
+          .finally(() => setLoadingPosts(false))
       })
       .catch(err => console.log(err))
   }
@@ -141,6 +149,14 @@ export default function AccountView() {
                      onClick={() => history.push(`/post/${post.id}`)}/>
               )}
             </div>
+
+            {loadingPosts &&
+            <CircularProgress className="account__indicator" size={60}/>
+            }
+
+            {emptyPosts &&
+            <div className="account__posts__empty">User has no posts</div>
+            }
           </div>
         </>
         }
@@ -156,7 +172,7 @@ export default function AccountView() {
             }
 
             {follows.map((user, idx) =>
-              <User user={user} key={idx}/>
+              <User user={user} key={idx} setFollowsDialogOpen={setFollowsDialogOpen}/>
             )}
             {emptyFollows &&
               <div className="profile__dialog__error">No users found</div>

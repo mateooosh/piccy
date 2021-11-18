@@ -381,7 +381,7 @@ export default function Post(props) {
                 return (
                   <span
                     key={index}
-                    style={{color: variables['primary-main'], fontWeight: '600'}}
+                    className="post__bottom__description__tag"
                     onClick={() => history.push(`/tag/${word.replace('#', '')}`)}
                   >
                     {word}{" "}
@@ -391,7 +391,7 @@ export default function Post(props) {
                 return (
                   <span
                     key={index}
-                    style={{color: variables['primary-main'], fontWeight: '600'}}
+                    className="post__bottom__description__tag"
                     onClick={() => history.push(`/${word === store.getState().username ? 'account' : post.username}`)}
                   >
                     {word}{" "}

@@ -57,7 +57,7 @@ export default function Navbar() {
 
       <img className="navbar__logo" src="piccy.svg" alt="Piccy" onClick={() => history.push('')}/>
       <div className="navbar__actions">
-        <NewPost/>
+        {/*<NewPost/>*/}
 
         <Search onClick={() => history.push('/search')} className="navbar__actions__icon"/>
 

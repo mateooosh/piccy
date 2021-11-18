@@ -82,7 +82,11 @@
     }
 
     &__description {
-
+      &__tag, &__user {
+        color: $hashtag;
+        font-weight: 600;
+        cursor: pointer;
+      }
     }
 
     &__input {

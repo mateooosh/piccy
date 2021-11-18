@@ -4,12 +4,14 @@ import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {Avatar} from "@mui/material";
 
-export default function User({user}) {
+export default function User({user, setFollowsDialogOpen}) {
 
   const store = useStore()
   const history = useHistory()
 
   function pushToAccount() {
+    console.log('push', `/${user.username}`)
+    setFollowsDialogOpen(false)
     history.push(`/${user.username}`)
   }
 

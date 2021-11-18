@@ -15,6 +15,8 @@ export default function ProfileView() {
   const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState(null)
   const [posts, setPosts] = useState([])
+  const [loadingPosts, setLoadingPosts] = useState(false)
+  const [emptyPosts, setEmptyPosts] = useState(false)
 
   const [follows, setFollows] = useState([])
   const [titleOfDialog, setTitleOfDialog] = useState('')
@@ -30,6 +32,8 @@ export default function ProfileView() {
       return
     } else {
       setLoading(true)
+      setProfile(null)
+      setPosts([])
       // get information about profile
       const url = `${process.env.REACT_APP_API_URL}/users?username=${username}&myIdUser=${store.getState().id}&token=${store.getState().token}`
       fetch(url)
@@ -37,6 +41,9 @@ export default function ProfileView() {
         .then((response) => {
           console.log(response)
           setProfile(response[0])
+          setLoadingFollows(true)
+          setEmptyFollows(false)
+          setLoadingPosts(true)
 
           // get user's posts
           fetch(`${process.env.REACT_APP_API_URL}/posts?username=${username}&onlyUserPosts=true&token=${store.getState().token}`)
@@ -44,13 +51,17 @@ export default function ProfileView() {
             .then((response) => {
               console.log(response)
               setPosts(response)
+              if(response.length === 0) {
+                setEmptyPosts(true)
+              }
             })
             .catch((err) => console.log(err))
+            .finally(() => setLoadingPosts(false))
         })
         .catch((err) => console.log(err))
         .finally(() => setLoading(false))
     }
-  }, [])
+  }, [username])
 
   useEffect(() => {
     if (!followsDialogOpen) {
@@ -200,6 +211,14 @@ export default function ProfileView() {
                      onClick={() => history.push(`/post/${post.id}`)}/>
               )}
             </div>
+
+            {loadingPosts &&
+            <CircularProgress className="profile__indicator" size={60}/>
+            }
+
+            {emptyPosts &&
+            <div className="profile__posts__empty">User has no posts</div>
+            }
           </div>
         </>
         }
@@ -215,7 +234,7 @@ export default function ProfileView() {
             }
 
             {follows.map((user, idx) =>
-              <User user={user} key={idx}/>
+              <User user={user} key={idx} setFollowsDialogOpen={setFollowsDialogOpen}/>
             )}
 
             {emptyFollows &&

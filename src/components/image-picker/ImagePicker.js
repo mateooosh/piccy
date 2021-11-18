@@ -17,8 +17,6 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
 
-
-
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
@@ -38,7 +36,9 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
         croppedAreaPixels,
         rotation
       )
+
       setCroppedImage(croppedImage)
+
       resetState()
     } catch (e) {
       console.error(e)
@@ -75,9 +75,10 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
 
       <Dialog
         open={photoCroppingIsOpen}
-        keepMounted
+        // keepMounted
         onClose={resetState}
         fullScreen
+        style={{zIndex: 100000}}
       >
         <DialogTitle>Photo cropping</DialogTitle>
         <DialogContent style={{margin: 'auto', width: '100%', padding: 0}}>
@@ -123,8 +124,6 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
           </Button>
         </DialogActions>
       </Dialog>
-
-
     </div>
   )
 }
