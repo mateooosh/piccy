@@ -117,7 +117,7 @@ export default function Navbar() {
           <Avatar className="menu__avatar" src={store.getState().avatar}/>My account
         </MenuItem>
         <Divider/>
-        <MenuItem className="menu__item">
+        <MenuItem className="menu__item" onClick={() => history.push('/admin')}>
           <ListItemIcon className="menu__item__icon">
             <AdminPanelSettingsOutlinedIcon/>
           </ListItemIcon>

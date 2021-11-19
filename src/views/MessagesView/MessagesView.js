@@ -227,7 +227,7 @@ export default function MessagesView(props) {
                onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)}>
             <Avatar src={channel.photo} sx={{width: 50, height: 50}}/>
             <div style={{flexGrow: 1}}>
-              <div className="messages__nav__user__username">{channel.username}:{channel.idUser}</div>
+              <div className="messages__nav__user__username">{channel.username}</div>
               <div className="messages__nav__user__lastMessage">
                 {channel.status == 0 ? (
                   channel.lastMessage

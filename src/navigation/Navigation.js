@@ -20,6 +20,7 @@ import MessagesView from "../views/MessagesView/MessagesView"
 import {useSnackbar} from "notistack"
 import SearchView from "../views/SearchView/SearchView";
 import TagView from "../views/TagView/TagView";
+import AdminDashboard from "../views/AdminDashboard/AdminDashboard";
 
 export default function Navigation() {
   const store = useStore()
@@ -65,30 +66,41 @@ export default function Navigation() {
     <Router>
       {logged ? (
         <div style={{display: 'flex', flexDirection: 'column'}}>
-          <Navbar/>
+
           <Switch>
             <Route path="/post/:id">
+              <Navbar/>
               <PostView/>
             </Route>
             <Route path="/account">
+              <Navbar/>
               <AccountView/>
             </Route>
             <Route path="/settings">
+              <Navbar/>
               <SettingsView/>
             </Route>
             <Route path="/messages">
+              <Navbar/>
               <MessagesView/>
             </Route>
             <Route path="/search">
+              <Navbar/>
               <SearchView/>
             </Route>
             <Route path="/tag/:tag">
+              <Navbar/>
               <TagView/>
             </Route>
+            <Route path="/admin">
+              <AdminDashboard/>
+            </Route>
             <Route path="/:username">
+              <Navbar/>
               <ProfileView/>
             </Route>
             <Route path="/">
+              <Navbar/>
               <HomeView/>
             </Route>
           </Switch>

@@ -1,0 +1,62 @@
+@import '../../styles/variables.module';
+
+.dashboard {
+  height: 100vh;
+  display: flex;
+
+  //display: flex;
+  &__nav {
+    width: 300px;
+    height: 100%;
+    //background-color: aquamarine;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    //border-radius: 10px;
+    //box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    //justify-content: flex-start;
+
+    &__logo {
+      margin: 25px 50px;
+      cursor: pointer;
+    }
+
+    &__profile {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      align-items: center;
+    }
+
+    &__username {
+      font-weight: 700;
+      margin: 8px 0 4px;
+    }
+
+    &__email {
+      color: #666;
+      font-weight: 500;
+    }
+
+    &__avatar {
+      width: 100px;
+      height: 100px;
+      transition: all .2s;
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  &__content {
+    flex-grow: 1;
+    height: 100%;
+    //background-color: #e5e5e5;
+  }
+}
+
+.Mui-selected {
+  background-color: rgba(41, 171, 156, 0.4) !important;
+}
+
