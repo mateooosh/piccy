@@ -7,6 +7,8 @@
   //display: flex;
   &__nav {
     width: 300px;
+    max-width: 300px;
+    min-width: 300px;
     height: 100%;
     //background-color: aquamarine;
     display: flex;

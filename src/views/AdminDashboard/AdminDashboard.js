@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import './AdminDashboard.scss'
 
 import {useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
   Avatar,
+  CircularProgress,
+  Collapse,
   Divider,
   List,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
-  Collapse,
-  CircularProgress
+  ListItemText
 } from "@mui/material"
 
 import ExpandLess from '@mui/icons-material/ExpandLess'
@@ -21,6 +21,7 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 import ReportIcon from '@mui/icons-material/Report'
 import BugReportIcon from '@mui/icons-material/BugReport'
 import AdminUsers from "../../components/admin-users/AdminUsers";
+import AdminPosts from "../../components/admin-posts/AdminPosts";
 
 export default function AdminDashboard() {
 
@@ -127,10 +128,14 @@ export default function AdminDashboard() {
       </div>
       <div className="dashboard__content">
         {selected === 'Users' &&
-          <AdminUsers/>
+        <AdminUsers/>
         }
 
-        {selected !== 'Users' &&
+        {selected === 'Posts' &&
+        <AdminPosts/>
+        }
+
+        {selected !== 'Users' && selected !== 'Posts' &&
         <div>{selected}</div>
         }
       </div>

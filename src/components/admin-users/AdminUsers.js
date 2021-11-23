@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AdminUsers.scss'
 import {useStore} from "react-redux"
-import {useTheme} from '@mui/material/styles'
 import {useHistory} from "react-router-dom"
 import {
   Avatar,
@@ -14,19 +13,17 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableRow,
-  Box,
   TableFooter,
-  TablePagination
+  TableHead,
+  TablePagination,
+  TableRow
 } from "@mui/material"
-import {KeyboardArrowLeft, KeyboardArrowRight, PersonRemoveRounded} from "@mui/icons-material"
+import {PersonRemoveRounded} from "@mui/icons-material"
 
-import FirstPageIcon from '@mui/icons-material/FirstPage'
-import LastPageIcon from '@mui/icons-material/LastPage'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from "notistack"
+import TablePaginationActions from "../table-pagination-actions/TablePaginationActions";
 
 export default function AdminUsers() {
 
@@ -36,6 +33,7 @@ export default function AdminUsers() {
 
   const [query, setQuery] = useState('')
   const [users, setUsers] = useState([])
+  const [usersResult, setUsersResult] = useState([])
   const [usersLoading, setUsersLoading] = useState(false)
   const [isLoadingDeleting, setIsLoadingDeleting] = useState(false)
 
@@ -44,6 +42,7 @@ export default function AdminUsers() {
 
   function closeDeleteAccountDialog() {
     setDeleteAccountDialogIsOpen(false)
+    setIdUserToDelete(null)
   }
 
   function onDeleteAccountClick(idUser) {
@@ -55,7 +54,7 @@ export default function AdminUsers() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - usersResult.length) : 0
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -78,10 +77,14 @@ export default function AdminUsers() {
 
   useEffect(() => {
     setPage(0)
-  }, [query])
+    setUsersResult(users.filter(filterUsers))
+  }, [query, users])
 
   function filterUsers(user) {
-    return user.username.includes(query) || user.name.includes(query) || user.email.includes(query) || user.id.toString().includes(query)
+    return user.username.toLowerCase().includes(query.toLowerCase()) ||
+      user.name.toLowerCase().includes(query.toLowerCase()) ||
+      user.email.toLowerCase().includes(query.toLowerCase()) ||
+      user.id.toString().includes(query)
   }
 
   function getUsers() {
@@ -138,8 +141,8 @@ export default function AdminUsers() {
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-              ? users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : users
+              ? usersResult.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : usersResult
           ).filter(filterUsers).map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
@@ -177,7 +180,7 @@ export default function AdminUsers() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
               colSpan={5}
-              count={users.length}
+              count={usersResult.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
@@ -222,56 +225,5 @@ export default function AdminUsers() {
         </DialogActions>
       </Dialog>
     </div>
-  )
-}
-
-
-function TablePaginationActions(props) {
-  const theme = useTheme()
-  const {count, page, rowsPerPage, onPageChange} = props
-
-  const handleFirstPageButtonClick = (event) => {
-    onPageChange(event, 0)
-  }
-
-  const handleBackButtonClick = (event) => {
-    onPageChange(event, page - 1)
-  }
-
-  const handleNextButtonClick = (event) => {
-    onPageChange(event, page + 1)
-  }
-
-  const handleLastPageButtonClick = (event) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
-  }
-
-  return (
-    <Box sx={{flexShrink: 0, ml: 2.5}}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-      >
-        {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-      >
-        {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
-      </IconButton>
-    </Box>
   )
 }
