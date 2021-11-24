@@ -16,7 +16,7 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow
+  TableRow, Tooltip
 } from "@mui/material"
 import {PersonRemoveRounded} from "@mui/icons-material"
 
@@ -71,6 +71,7 @@ export default function AdminUsers() {
     return () => {
       setQuery('')
       setUsers([])
+      setUsersResult([])
       setUsersLoading(false)
     }
   }, [])
@@ -159,12 +160,16 @@ export default function AdminUsers() {
                 {row.email}
               </TableCell>
               <TableCell align="center" sx={{minWidth: 120}}>
-                <IconButton onClick={() => history.push(`/${row.username}`)}>
-                  <RemoveRedEyeIcon/>
-                </IconButton>
-                <IconButton onClick={() => onDeleteAccountClick(row.id)}>
-                  <PersonRemoveRounded/>
-                </IconButton>
+                <Tooltip title="Go to user">
+                  <IconButton onClick={() => history.push(`/${row.username}`)}>
+                    <RemoveRedEyeIcon/>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete account">
+                  <IconButton onClick={() => onDeleteAccountClick(row.id)}>
+                    <PersonRemoveRounded/>
+                  </IconButton>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}

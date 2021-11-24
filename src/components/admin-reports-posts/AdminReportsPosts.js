@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import './AdminPosts.scss'
+import './AdminReportsPosts.scss'
 import {useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
-  Avatar,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,19 +13,20 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableRow,
-  Box,
   TableFooter,
-  TablePagination, Tooltip
+  TableHead,
+  TablePagination,
+  TableRow,
+  Tooltip
 } from "@mui/material"
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from "notistack"
 import TablePaginationActions from "../table-pagination-actions/TablePaginationActions";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-export default function AdminPosts() {
+export default function AdminReportsPosts() {
 
   const store = useStore()
   const history = useHistory()
@@ -64,12 +65,11 @@ export default function AdminPosts() {
   }
 
   useEffect(() => {
-    getPosts()
+    getReportedPosts()
 
     return () => {
       setQuery('')
       setPosts([])
-      setPostsResult([])
     }
   }, [])
 
@@ -78,8 +78,13 @@ export default function AdminPosts() {
     setPostsResult(posts.filter(filterPosts))
   }, [query, posts])
 
-  function filterPosts(post) {
-    return post.username.toLowerCase().includes(query.toLowerCase()) || formatDate(post.uploadDate).includes(query) || post.id.toString().includes(query)
+  function filterPosts(report) {
+    return report.reporter.toLowerCase().includes(query.toLowerCase()) ||
+      formatDate(report.date).includes(query) ||
+      report.id.toString().includes(query) ||
+      report.reason.toLowerCase().includes(query.toLowerCase()) ||
+      report.status.toLowerCase().includes(query.toLowerCase())
+    // return true
   }
 
   function formatDate(date) {
@@ -91,12 +96,12 @@ export default function AdminPosts() {
     return dd + '-' + mm + '-' + yyyy
   }
 
-  function getPosts() {
-    const url = `${process.env.REACT_APP_API_URL}/admin/posts?token=${store.getState().token}`
+  function getReportedPosts() {
+    const url = `${process.env.REACT_APP_API_URL}/admin/reports/posts?token=${store.getState().token}`
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        console.log('posts: ', response)
+        console.log('reported posts: ', response)
         setPosts(response)
       })
       .catch(err => console.log(err))
@@ -114,7 +119,7 @@ export default function AdminPosts() {
       .then(response => response.json())
       .then(response => {
         enqueueSnackbar(response.message)
-        getPosts()
+        getReportedPosts()
       })
       .catch(() => enqueueSnackbar('Something went wrong!'))
       .finally(() => {
@@ -123,9 +128,34 @@ export default function AdminPosts() {
       })
   }
 
+  function markAsClosed(id) {
+    console.log('mark as closed, ', id)
+
+    const url = `${process.env.REACT_APP_API_URL}/admin/reports/posts`
+
+    const obj = {
+      id: id,
+      status: 'closed'
+    }
+
+    fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(obj),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(response => response.json())
+      .then(response => {
+        enqueueSnackbar(response.message)
+        getReportedPosts()
+      })
+      .catch(() => enqueueSnackbar('Something went wrong!'))
+  }
+
   return (
     <div className="admin-posts">
-      <h2 className="admin-posts__title">Posts</h2>
+      <h2 className="admin-posts__title">Reported posts</h2>
 
       <input value={query}
              onChange={e => setQuery(e.target.value)}
@@ -136,10 +166,10 @@ export default function AdminPosts() {
           <TableRow>
             <TableCell sx={{fontWeight: 700}}>ID</TableCell>
             <TableCell sx={{fontWeight: 700}} align="left">Photo</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="left">Uploader</TableCell>
-            <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">Upload date</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="left">Caption</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="center">Likes</TableCell>
+            <TableCell sx={{fontWeight: 700}} align="left">Reporter</TableCell>
+            <TableCell sx={{fontWeight: 700}} align="left">Reason</TableCell>
+            <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">Date</TableCell>
+            <TableCell sx={{fontWeight: 700}} align="center">Status</TableCell>
             <TableCell sx={{fontWeight: 700}} align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -156,40 +186,27 @@ export default function AdminPosts() {
                 <img className="admin-posts__img" src={row.photo} width={50}/>
               </TableCell>
               <TableCell>
-                {row.username}
-              </TableCell>
-              <TableCell align="center">
-                {formatDate(row.uploadDate)}
+                {row.reporter}
               </TableCell>
               <TableCell>
-                {row.description.split(" ").map((word, index) => {
-                  if (word.charAt(0) === "#")
-                    return (
-                      <span
-                        key={index}
-                        className="admin-posts__tag"
-                      >
-                    {word}{" "}
-                  </span>
-                    )
-                  else if (word.charAt(0) === "@")
-                    return (
-                      <span
-                        key={index}
-                        className="admin-posts__tag"
-                      >
-                    {word}{" "}
-                  </span>
-                    )
-                  else return <span key={index}>{word} </span>
-                })}
+                {row.reason}
               </TableCell>
               <TableCell align="center">
-                {row.likes}
+                {formatDate(row.date)}
+              </TableCell>
+              <TableCell align="center">
+                {row.status == 'new' &&
+                <Chip label="New" color="primary"
+                      style={{color: 'white'}}/>
+                }
+
+                {row.status === 'closed' &&
+                <Chip label="Closed" color="primary" variant="outlined"/>
+                }
               </TableCell>
               <TableCell align="center" sx={{minWidth: 120}}>
                 <Tooltip title="Go to post">
-                  <IconButton onClick={() => history.push(`/post/${row.id}`)}>
+                  <IconButton onClick={() => history.push(`/post/${row.idPost}`)}>
                     <RemoveRedEyeIcon/>
                   </IconButton>
                 </Tooltip>
@@ -198,6 +215,14 @@ export default function AdminPosts() {
                     <DeleteForeverIcon/>
                   </IconButton>
                 </Tooltip>
+
+                {row.status === 'new' &&
+                <Tooltip title="Mark as closed">
+                  <IconButton onClick={() => markAsClosed(row.id)}>
+                    <CheckCircleIcon/>
+                  </IconButton>
+                </Tooltip>
+                }
               </TableCell>
             </TableRow>
           ))}

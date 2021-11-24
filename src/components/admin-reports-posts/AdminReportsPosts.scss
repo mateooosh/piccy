@@ -1,0 +1,68 @@
+@import '../../styles/variables.module';
+
+.admin-posts {
+  &__title {
+    margin-left: 16px;
+  }
+
+  &__button {
+    color: white;
+    text-transform: none;
+    font-weight: 700;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: all .2s;
+
+    &--disabled {
+      color: $primary;
+    }
+
+    &--danger {
+      background-color: $danger;
+
+      &:active, &:hover {
+        background-color: $danger;
+      }
+    }
+
+    &--outlined {
+      color: #808080;
+      border-color: #ccc;
+
+      &:hover {
+        border-color: #ccc;
+        background-color: #eee;
+      }
+    }
+  }
+
+  &__input {
+    border-radius: 12px;
+    background-color: #eee;
+    padding: 10px 16px;
+    outline: none;
+    border: none;
+    font-size: 14px;
+    width: 300px;
+    margin: 10px 16px 20px;
+  }
+
+  &__img {
+    border-radius: 5px;
+    transition: all .2s;
+
+    &:hover{
+      cursor: pointer;
+      transform: scale(2)
+    }
+  }
+
+  &__tag {
+    color: $hashtag;
+    font-weight: 600;
+  }
+}
+
+.MuiTableCell-root {
+  padding: 10px 16px;
+}

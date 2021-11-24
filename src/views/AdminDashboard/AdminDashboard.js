@@ -22,6 +22,7 @@ import ReportIcon from '@mui/icons-material/Report'
 import BugReportIcon from '@mui/icons-material/BugReport'
 import AdminUsers from "../../components/admin-users/AdminUsers";
 import AdminPosts from "../../components/admin-posts/AdminPosts";
+import AdminReportsPosts from "../../components/admin-reports-posts/AdminReportsPosts";
 
 export default function AdminDashboard() {
 
@@ -135,8 +136,8 @@ export default function AdminDashboard() {
         <AdminPosts/>
         }
 
-        {selected !== 'Users' && selected !== 'Posts' &&
-        <div>{selected}</div>
+        {selected === 'Reports|Posts' &&
+        <AdminReportsPosts/>
         }
       </div>
     </div>
