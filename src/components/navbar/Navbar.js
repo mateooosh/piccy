@@ -19,6 +19,8 @@ export default function Navbar() {
   const {enqueueSnackbar} = useSnackbar();
 
   const notificationAmount = useSelector(state => state.notificationAmount)
+  const avatar = useSelector(state => state.avatar)
+  const role = useSelector(state => state.role)
 
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
@@ -68,7 +70,7 @@ export default function Navbar() {
         {/*<AccountCircleOutlinedIcon className="navbar__actions__icon" onClick={() => history.push('/account')}/>*/}
         <IconButton onClick={handleClick} style={{padding: 0}}>
           <Avatar className="navbar__actions__avatar"
-                  src={store.getState().avatar}/>
+                  src={avatar}/>
         </IconButton>
 
         {/*<SettingsSharpIcon className="navbar__actions__icon" onClick={() => history.push('/settings')}/>*/}
@@ -114,15 +116,17 @@ export default function Navbar() {
         }}
       >
         <MenuItem className="menu__item" onClick={() => history.push('/account')}>
-          <Avatar className="menu__avatar" src={store.getState().avatar}/>My account
+          <Avatar className="menu__avatar" src={avatar}/>My account
         </MenuItem>
         <Divider/>
-        <MenuItem className="menu__item" onClick={() => history.push('/admin')}>
-          <ListItemIcon className="menu__item__icon">
-            <AdminPanelSettingsOutlinedIcon/>
-          </ListItemIcon>
-          Admin dashboard
-        </MenuItem>
+        {role === 'ADMIN' &&
+          <MenuItem className="menu__item" onClick={() => history.push('/admin')}>
+            <ListItemIcon className="menu__item__icon">
+              <AdminPanelSettingsOutlinedIcon/>
+            </ListItemIcon>
+            Admin dashboard
+          </MenuItem>
+        }
         <MenuItem className="menu__item" onClick={() => history.push('/settings')}>
           <ListItemIcon className="menu__item__icon">
             <Settings/>

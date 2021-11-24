@@ -4,7 +4,7 @@ import {useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
   Avatar,
-  Button,
+  Button, Chip, CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -34,7 +34,7 @@ export default function AdminUsers() {
   const [query, setQuery] = useState('')
   const [users, setUsers] = useState([])
   const [usersResult, setUsersResult] = useState([])
-  const [usersLoading, setUsersLoading] = useState(false)
+  const [usersLoading, setUsersLoading] = useState(true)
   const [isLoadingDeleting, setIsLoadingDeleting] = useState(false)
 
   const [deleteAccountDialogIsOpen, setDeleteAccountDialogIsOpen] = useState(false)
@@ -85,6 +85,7 @@ export default function AdminUsers() {
     return user.username.toLowerCase().includes(query.toLowerCase()) ||
       user.name.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase()) ||
+      user.role.toLowerCase().includes(query.toLowerCase()) ||
       user.id.toString().includes(query)
   }
 
@@ -130,74 +131,85 @@ export default function AdminUsers() {
              onChange={e => setQuery(e.target.value)}
              className="admin-users__input" type="text" placeholder="Type here query..."/>
 
-      <Table sx={{minWidth: 500}}>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{fontWeight: 700}}>ID</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="left">Username</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="left">Name</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="left">E-mail</TableCell>
-            <TableCell sx={{fontWeight: 700}} align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-              ? usersResult.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : usersResult
-          ).filter(filterUsers).map((row) => (
-            <TableRow key={row.id}>
-              <TableCell component="th" scope="row">
-                {row.id}
-              </TableCell>
-              <TableCell sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                <Avatar className="user__avatar" src={row.photo || row.userPhoto}/>
-                {row.username}
-              </TableCell>
-              <TableCell>
-                {row.name}
-              </TableCell>
-              <TableCell>
-                {row.email}
-              </TableCell>
-              <TableCell align="center" sx={{minWidth: 120}}>
-                <Tooltip title="Go to user">
-                  <IconButton onClick={() => history.push(`/${row.username}`)}>
-                    <RemoveRedEyeIcon/>
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete account">
-                  <IconButton onClick={() => onDeleteAccountClick(row.id)}>
-                    <PersonRemoveRounded/>
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
+      {usersLoading ? (
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
+          <CircularProgress size={60}/>
+        </div>
+      ) : (
+        <Table sx={{minWidth: 500}}>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{fontWeight: 700}}>ID</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">Username</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">Name</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">E-mail</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">Role</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">Actions</TableCell>
             </TableRow>
-          ))}
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+                ? usersResult.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : usersResult
+            ).map((row) => (
+              <TableRow key={row.id}>
+                <TableCell component="th" scope="row">
+                  {row.id}
+                </TableCell>
+                <TableCell sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                  <Avatar className="user__avatar" src={row.photo || row.userPhoto}/>
+                  {row.username}
+                </TableCell>
+                <TableCell>
+                  {row.name}
+                </TableCell>
+                <TableCell>
+                  {row.email}
+                </TableCell>
+                <TableCell align="center">
+                  <Chip label={row.role} color="primary"
+                        style={{color: 'white'}}/>
+                </TableCell>
+                <TableCell align="center" sx={{minWidth: 120}}>
+                  <Tooltip title="Go to user">
+                    <IconButton onClick={() => history.push(`/${row.username}`)}>
+                      <RemoveRedEyeIcon/>
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete account">
+                    <IconButton onClick={() => onDeleteAccountClick(row.id)}>
+                      <PersonRemoveRounded color="error"/>
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
 
-          {emptyRows > 0 && (
-            <TableRow style={{height: 53 * emptyRows}}>
-              <TableCell colSpan={6}/>
+            {emptyRows > 0 && (
+              <TableRow style={{height: 53 * emptyRows}}>
+                <TableCell colSpan={6}/>
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                colSpan={6}
+                count={usersResult.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-              colSpan={5}
-              count={usersResult.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableFooter>
+        </Table>
+      )}
 
       <Dialog
         open={deleteAccountDialogIsOpen}

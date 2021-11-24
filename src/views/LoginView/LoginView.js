@@ -6,6 +6,7 @@ import {LoadingButton} from "@mui/lab"
 import {validation} from '../../functions/functions'
 import {Link, useHistory} from "react-router-dom"
 import {useStore} from "react-redux"
+import {useSnackbar} from "notistack";
 
 export default function LoginView() {
   const [username, setUsername] = useState('')
@@ -14,6 +15,7 @@ export default function LoginView() {
 
   const store = useStore()
   const history = useHistory()
+  const {enqueueSnackbar} = useSnackbar()
 
   useEffect(() => {
     return() => {
@@ -54,10 +56,13 @@ export default function LoginView() {
         store.dispatch({type: "usernameSet", payload: response.username})
         store.dispatch({type: "idSet", payload: response.id})
         store.dispatch({type: "avatarSet", payload: response.photo})
+        store.dispatch({type: "roleSet", payload: response.role})
         store.dispatch({type: "logged/true"})
         history.push('/')
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        enqueueSnackbar('Wrong credentials! Try again.')
+      })
       .finally(() => setLoading(false))
   }
 

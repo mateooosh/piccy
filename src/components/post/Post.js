@@ -208,7 +208,7 @@ export default function Post(props) {
       .then(response => response.json())
       .then(response => {
         console.log(response.message)
-        alert(response.message)
+        enqueueSnackbar(response.message)
       })
       .catch(err => console.log(err))
       .finally(() => {

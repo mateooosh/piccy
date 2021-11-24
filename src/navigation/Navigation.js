@@ -27,6 +27,7 @@ export default function Navigation() {
   const { enqueueSnackbar } = useSnackbar()
 
   const logged = useSelector(state => state.logged)
+  const role = useSelector(state => state.role)
 
   const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
 
@@ -92,9 +93,11 @@ export default function Navigation() {
               <Navbar/>
               <TagView/>
             </Route>
+            {role === 'ADMIN' &&
             <Route path="/admin">
               <AdminDashboard/>
             </Route>
+            }
             <Route path="/:username">
               <Navbar/>
               <ProfileView/>

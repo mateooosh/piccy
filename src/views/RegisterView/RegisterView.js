@@ -6,10 +6,12 @@ import {LoadingButton} from "@mui/lab"
 import {validation} from '../../functions/functions'
 import {Link, useHistory} from "react-router-dom"
 import {useStore} from "react-redux"
+import {useSnackbar} from "notistack";
 
 export default function RegisterView() {
   const store = useStore()
   const history = useHistory()
+  const {enqueueSnackbar} = useSnackbar()
 
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -58,7 +60,7 @@ export default function RegisterView() {
           history.push('/')
         }
         else {
-          alert(response.message)
+          enqueueSnackbar(response.message)
         }
       })
       .catch(err => console.log(err))

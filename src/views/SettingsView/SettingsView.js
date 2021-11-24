@@ -74,11 +74,15 @@ export default function SettingsView() {
 
   function reportBug() {
     const url = `${process.env.REACT_APP_API_URL}/report/bug`
+
+    const index = attachment?.indexOf(',')
+    let base64 = (index && index !== -1) ? attachment.slice(index + 1, (attachment.length)) : null
+
     const obj = {
       idReporter: store.getState().id,
       description: bugDescription,
       token: store.getState().token,
-      attachment: attachment
+      attachment: base64
     }
 
     setLoadingReportBug(true)

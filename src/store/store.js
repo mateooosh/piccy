@@ -8,7 +8,8 @@ const initialState = {
   id: 39,
   lang: 'en',
   notificationAmount: 0,
-  avatar: null
+  avatar: null,
+  role: 'ADMIN'
 }
 
 function Reducer(state = initialState, action) {
@@ -51,11 +52,17 @@ function Reducer(state = initialState, action) {
     case "avatarReset":
       return { ...state, avatar: '' }
 
+    case "roleSet":
+      return { ...state, role: action.payload }
+
+    case "roleReset":
+      return { ...state, role: '' }
+
     case "notificationAmountSet":
       return { ...state, notificationAmount: action.payload }
 
     case "resetStore":
-      return {...state, token: '', username: '', id: null, lang: 'en', notificationAmount: 0, logged: false}
+      return {...state, token: '', username: '', id: null, lang: 'en', notificationAmount: 0, logged: false, role: ''}
 
     default:
       // If the reducer doesn't care about this action type,

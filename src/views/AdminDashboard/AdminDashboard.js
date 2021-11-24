@@ -23,6 +23,7 @@ import BugReportIcon from '@mui/icons-material/BugReport'
 import AdminUsers from "../../components/admin-users/AdminUsers";
 import AdminPosts from "../../components/admin-posts/AdminPosts";
 import AdminReportsPosts from "../../components/admin-reports-posts/AdminReportsPosts";
+import AdminReportsBugs from "../../components/admin-reports-bugs/AdminReportsBugs";
 
 export default function AdminDashboard() {
 
@@ -138,6 +139,10 @@ export default function AdminDashboard() {
 
         {selected === 'Reports|Posts' &&
         <AdminReportsPosts/>
+        }
+
+        {selected === 'Reports|Bugs' &&
+        <AdminReportsBugs/>
         }
       </div>
     </div>
