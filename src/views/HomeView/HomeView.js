@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {createRef, useEffect, useRef, useState} from 'react'
 import './HomeView.scss'
 
 import {useStore} from "react-redux"
@@ -12,27 +12,50 @@ export default function HomeView() {
 
   const [posts, setPosts] = useState([])
   const [page, setPage] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [emptyPosts, setEmptyPosts] = useState(false)
+  const homeRef = useRef()
+
+  const refPage = useRef(page)
+  useEffect(() => {
+    refPage.current = page
+  }, [page])
+
+  const refLoading = useRef(loading)
+  useEffect(() => {
+    refLoading.current = loading
+  }, [loading])
+
+  const refEmptyPosts = useRef(emptyPosts)
+  useEffect(() => {
+    refEmptyPosts.current = emptyPosts
+  }, [emptyPosts])
 
   function getPosts() {
-    if (emptyPosts)
+    if (refEmptyPosts.current || refLoading.current) {
+      console.log('return')
       return
+    }
 
-    let temp = page + 1
+    let temp = refPage.current + 1
     setLoading(true)
+
+    console.log('get posts' , temp)
 
     const url = `${process.env.REACT_APP_API_URL}/posts?idUser=${store.getState().id}&onlyUserPosts=false&page=${temp}&token=${store.getState().token}`
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        console.log(response)
+        // console.log(response)
         //push new posts to array
-        response.map(item => setPosts(posts => [...posts, item]))
+        setPosts(posts => [...posts, ...response])
 
-        if (!!response.length) {
+        if (response.length !== 0) {
           setPage(temp)
-        } else {
+          console.log('response.length !== 0')
+        }
+
+        if(response.length !== 5) {
           setEmptyPosts(true)
         }
       })
@@ -44,16 +67,26 @@ export default function HomeView() {
 
   useEffect(() => {
     getPosts()
+
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [])
 
+  function onScroll(e) {
+    if(homeRef.current.offsetHeight - 1500 < window.scrollY) {
+      console.log('get posts')
+      getPosts()
+
+    }
+  }
+
   return (
-    <div className="home">
+    <div className="home" ref={homeRef}>
       <div className="home__posts">
         <NewPost/>
-
-        {loading &&
-        <CircularProgress className="home__indicator" size={60}/>
-        }
 
         {!posts.length && !loading &&
         <div style={{fontSize: 16, marginVertical: 20}}>You need to follow someone</div>
@@ -67,6 +100,12 @@ export default function HomeView() {
             homeScreen
           />
         ))}
+
+        {loading &&
+        <div style={{height: 80}}>
+          <CircularProgress className="home__indicator" size={60}/>
+        </div>
+        }
 
       </div>
     </div>

@@ -79,7 +79,11 @@ export default function AdminUsers() {
   useEffect(() => {
     setPage(0)
     setUsersResult(users.filter(filterUsers))
-  }, [query, users])
+  }, [query])
+
+  useEffect(() => {
+    setUsersResult(users.filter(filterUsers))
+  }, [users])
 
   function filterUsers(user) {
     return user.username.toLowerCase().includes(query.toLowerCase()) ||
@@ -91,7 +95,7 @@ export default function AdminUsers() {
 
   function getUsers() {
     const url = `${process.env.REACT_APP_API_URL}/admin/users?token=${store.getState().token}`
-    setUsersLoading(true)
+    // setUsersLoading(true)
     fetch(url)
       .then(response => response.json())
       .then(response => {
@@ -103,6 +107,11 @@ export default function AdminUsers() {
   }
 
   function deleteAccount() {
+    if(idUserToDelete === store.getState().id) {
+      enqueueSnackbar('Cannot delete your account from admin dashboard.')
+      return
+    }
+
     setIsLoadingDeleting(true)
     const url = `${process.env.REACT_APP_API_URL}/admin/users/${idUserToDelete}`
     fetch(url, {
@@ -121,6 +130,33 @@ export default function AdminUsers() {
         setIsLoadingDeleting(false)
         setDeleteAccountDialogIsOpen(false)
       })
+  }
+
+  function changeRole(id, role) {
+    if(id === store.getState().id) {
+      enqueueSnackbar('Cannot change role of yourself')
+      return
+    }
+
+    const url = `${process.env.REACT_APP_API_URL}/admin/users/roles`
+    const obj = {
+      id: id,
+      role: role
+    }
+
+    fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(obj),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(response => response.json())
+      .then(response => {
+        enqueueSnackbar(response.message)
+        getUsers()
+      })
+      .catch(() => enqueueSnackbar('Something went wrong!'))
   }
 
   return (
@@ -167,12 +203,20 @@ export default function AdminUsers() {
                   {row.email}
                 </TableCell>
                 <TableCell align="center">
-                  <Chip label={row.role} color="primary"
-                        style={{color: 'white'}}/>
+                  {row.role === 'ADMIN' ? (
+                    <Tooltip title="Change role to USER">
+                      <Chip label='ADMIN' color="primary"
+                        style={{color: 'white'}} onClick={() => changeRole(row.id, 'USER')}/>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Change role to ADMIN">
+                      <Chip label='USER' variant="outlined" onClick={() => changeRole(row.id, 'ADMIN')}/>
+                    </Tooltip>
+                  )}
                 </TableCell>
                 <TableCell align="center" sx={{minWidth: 120}}>
                   <Tooltip title="Go to user">
-                    <IconButton onClick={() => history.push(`/${row.username}`)}>
+                    <IconButton onClick={() => window.open(`/${row.username}`, '_blank').focus()}>
                       <RemoveRedEyeIcon/>
                     </IconButton>
                   </Tooltip>

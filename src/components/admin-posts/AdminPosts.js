@@ -196,7 +196,7 @@ export default function AdminPosts() {
                 </TableCell>
                 <TableCell align="center" sx={{minWidth: 120}}>
                   <Tooltip title="Go to post">
-                    <IconButton onClick={() => history.push(`/post/${row.id}`)}>
+                    <IconButton onClick={() => window.open(`/post/${row.id}`, '_blank').focus()}>
                       <RemoveRedEyeIcon/>
                     </IconButton>
                   </Tooltip>

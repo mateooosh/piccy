@@ -2,14 +2,14 @@ import { createStore } from 'redux'
 
 //STORE
 const initialState = {
-  logged: true,
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzksImlhdCI6MTYzMTQ2NjE5MSwiZXhwIjoxNjMxNTUyNTkxfQ.5wTXB5pPvS3cF2jasWIlft_Pb6rSf81cv2qgkNemS-A',
-  username: 'rooman',
-  id: 39,
+  logged: false,
+  token: '',
+  username: '',
+  id: null,
   lang: 'en',
   notificationAmount: 0,
   avatar: null,
-  role: 'ADMIN'
+  role: 'USER'
 }
 
 function Reducer(state = initialState, action) {

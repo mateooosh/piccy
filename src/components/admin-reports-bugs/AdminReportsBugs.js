@@ -69,7 +69,11 @@ export default function AdminReportsBugs() {
   useEffect(() => {
     setPage(0)
     setBugsResult(bugs.filter(filterBugs))
-  }, [query, bugs])
+  }, [query])
+
+  useEffect(() => {
+    setBugsResult(bugs.filter(filterBugs))
+  }, [bugs])
 
   function filterBugs(report) {
     return report.username.toLowerCase().includes(query.toLowerCase()) ||
@@ -148,12 +152,12 @@ export default function AdminReportsBugs() {
   }
 
   return (
-    <div className="admin-posts">
-      <h2 className="admin-posts__title">Reported bugs</h2>
+    <div className="admin-reports-bugs">
+      <h2 className="admin-reports-bugs__title">Reported bugs</h2>
 
       <input value={query}
              onChange={e => setQuery(e.target.value)}
-             className="admin-posts__input" type="text" placeholder="Type here query..."/>
+             className="admin-reports-bugs__input" type="text" placeholder="Type here query..."/>
 
       {bugsLoading ? (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
@@ -169,7 +173,6 @@ export default function AdminReportsBugs() {
               <TableCell sx={{fontWeight: 700}} align="left">Description</TableCell>
               <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">Date</TableCell>
               <TableCell sx={{fontWeight: 700}} align="center">Status</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -183,7 +186,7 @@ export default function AdminReportsBugs() {
                 </TableCell>
                 <TableCell align="center">
                   {row.attachment !== null ? (
-                    <img onClick={() => displayAttachment(row.id)} className="admin-posts__img" src={row.attachment}
+                    <img onClick={() => displayAttachment(row.id)} className="admin-reports-bugs__img" src={row.attachment}
                          width={50}/>
                   ) : (
                     <NoPhotographyIcon width={30}/>
@@ -200,28 +203,14 @@ export default function AdminReportsBugs() {
                 </TableCell>
                 <TableCell align="center">
                   {row.status == 'opened' &&
-                  <Chip label="Opened" color="primary"
-                        style={{color: 'white'}}/>
-                  }
-
-                  {row.status === 'resolved' &&
-                  <Chip label="Resolved" color="primary" variant="outlined"/>
-                  }
-                </TableCell>
-                <TableCell align="center" sx={{minWidth: 120}}>
-                  {row.status === 'resolved' &&
-                  <Tooltip title="Mark as opened">
-                    <IconButton onClick={() => markAs(row.id, 'opened')}>
-                      <CancelIcon color="error"/>
-                    </IconButton>
+                  <Tooltip title="Mark as resolved">
+                  <Chip label="Opened" color="primary" style={{color: 'white'}} onClick={() => markAs(row.id, 'resolved')}/>
                   </Tooltip>
                   }
 
-                  {row.status === 'opened' &&
-                  <Tooltip title="Mark as resolved">
-                    <IconButton onClick={() => markAs(row.id, 'resolved')}>
-                      <CheckCircleIcon color="primary"/>
-                    </IconButton>
+                  {row.status === 'resolved' &&
+                  <Tooltip title="Mark as opened">
+                    <Chip label="Resolved" color="primary" variant="outlined" onClick={() => markAs(row.id, 'opened')}/>
                   </Tooltip>
                   }
                 </TableCell>

@@ -51,7 +51,12 @@ export default function LoginView() {
       .then(response => response.json())
       .then(response => {
         // alert(response.message)
-        console.log('asdasdasd', response)
+        localStorage.setItem('token', response.token)
+        localStorage.setItem('id', response.id)
+        localStorage.setItem('username', response.username)
+        localStorage.setItem('avatar', response.photo)
+        localStorage.setItem('role', response.role)
+
         store.dispatch({type: "tokenSet", payload: response.token})
         store.dispatch({type: "usernameSet", payload: response.username})
         store.dispatch({type: "idSet", payload: response.id})

@@ -85,9 +85,9 @@ export default function MessagesView(props) {
     console.log(`message-to-user-${store.getState().id}`, response)
 
     if (response.idChannel == refIdChannel.current) {
-      setMessages(old => [...old, response])
+      setMessages(old => [response, ...old])
       markAsRead(store.getState().id, response.idChannel)
-      scrollToEnd('smooth')
+      // scrollToEnd('smooth')
     }
   }
 
@@ -112,7 +112,7 @@ export default function MessagesView(props) {
         setIdChannel(response.idChannel)
         markAsRead(store.getState().id, response.idChannel)
         markAsReadOnApp(store.getState().id, response.idChannel)
-        scrollToEnd('auto')
+        // scrollToEnd('auto')
       })
       .catch(err => {
         console.log(err)
@@ -182,10 +182,10 @@ export default function MessagesView(props) {
       createdAt: new Date()
     }
 
-    setMessages(old => [...old, obj])
+    setMessages(old => [obj, ...old])
 
     socket.emit('message-from-user', obj)
-    scrollToEnd('smooth')
+    // scrollToEnd('smooth')
     setInput('')
     getChannels()
   }
@@ -230,9 +230,9 @@ export default function MessagesView(props) {
               <div className="messages__nav__user__username">{channel.username}</div>
               <div className="messages__nav__user__lastMessage">
                 {channel.status == 0 ? (
-                  channel.lastMessage
+                  channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage
                 ) : (
-                  <b>{channel.lastMessage}</b>
+                  <b>{channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage}</b>
                 )}
               </div>
             </div>

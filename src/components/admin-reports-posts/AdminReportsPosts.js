@@ -77,7 +77,12 @@ export default function AdminReportsPosts() {
   useEffect(() => {
     setPage(0)
     setPostsResult(posts.filter(filterPosts))
-  }, [query, posts])
+  }, [query])
+
+
+  useEffect(() => {
+    setPostsResult(posts.filter(filterPosts))
+  }, [posts])
 
   function filterPosts(report) {
     return report.reporter.toLowerCase().includes(query.toLowerCase()) ||
@@ -130,14 +135,14 @@ export default function AdminReportsPosts() {
       })
   }
 
-  function markAsClosed(id) {
-    console.log('mark as closed, ', id)
+  function markAs(id, status) {
+    console.log('mark as ', status)
 
     const url = `${process.env.REACT_APP_API_URL}/admin/reports/posts`
 
     const obj = {
       id: id,
-      status: 'closed'
+      status: status
     }
 
     fetch(url, {
@@ -156,12 +161,12 @@ export default function AdminReportsPosts() {
   }
 
   return (
-    <div className="admin-posts">
-      <h2 className="admin-posts__title">Reported posts</h2>
+    <div className="admin-reports-posts">
+      <h2 className="admin-reports-posts__title">Reported posts</h2>
 
       <input value={query}
              onChange={e => setQuery(e.target.value)}
-             className="admin-posts__input" type="text" placeholder="Type here query..."/>
+             className="admin-reports-posts__input" type="text" placeholder="Type here query..."/>
 
       {postsLoading ? (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
@@ -190,7 +195,7 @@ export default function AdminReportsPosts() {
                   {row.id}
                 </TableCell>
                 <TableCell>
-                  <img className="admin-posts__img" src={row.photo} width={50}/>
+                  <img className="admin-reports-posts__img" src={row.photo} width={50}/>
                 </TableCell>
                 <TableCell>
                   {row.reporter}
@@ -203,17 +208,21 @@ export default function AdminReportsPosts() {
                 </TableCell>
                 <TableCell align="center">
                   {row.status == 'new' &&
-                  <Chip label="New" color="primary"
-                        style={{color: 'white'}}/>
+                  <Tooltip title="Mark as closed" onClick={() => markAs(row.id, 'closed')}>
+                    <Chip label="New" color="primary"
+                          style={{color: 'white'}}/>
+                  </Tooltip>
                   }
 
                   {row.status === 'closed' &&
-                  <Chip label="Closed" color="primary" variant="outlined"/>
+                  <Tooltip title="Mark as new" onClick={() => markAs(row.id, 'new')}>
+                    <Chip label="Closed" color="primary" variant="outlined"/>
+                  </Tooltip>
                   }
                 </TableCell>
                 <TableCell align="center" sx={{minWidth: 120}}>
                   <Tooltip title="Go to post">
-                    <IconButton onClick={() => history.push(`/post/${row.idPost}`)}>
+                    <IconButton onClick={() => window.open(`/post/${row.id}`, '_blank').focus()}>
                       <RemoveRedEyeIcon/>
                     </IconButton>
                   </Tooltip>
@@ -222,21 +231,13 @@ export default function AdminReportsPosts() {
                       <DeleteForeverIcon color="error"/>
                     </IconButton>
                   </Tooltip>
-
-                  {row.status === 'new' &&
-                  <Tooltip title="Mark as closed">
-                    <IconButton onClick={() => markAsClosed(row.id)}>
-                      <CheckCircleIcon color="primary"/>
-                    </IconButton>
-                  </Tooltip>
-                  }
                 </TableCell>
               </TableRow>
             ))}
 
             {emptyRows > 0 && (
               <TableRow style={{height: 53 * emptyRows}}>
-                <TableCell colSpan={6}/>
+                <TableCell colSpan={7}/>
               </TableRow>
             )}
           </TableBody>
@@ -272,7 +273,7 @@ export default function AdminReportsPosts() {
         <DialogActions>
           <Button
             variant="outlined"
-            className="admin-posts__button admin-posts__button--outlined"
+            className="admin-reports-posts__button admin-reports-posts__button--outlined"
             disableRipple
             onClick={closeDeletePostDialog}
           >
@@ -281,7 +282,7 @@ export default function AdminReportsPosts() {
           <LoadingButton
             loading={isLoadingDeleting}
             variant="contained"
-            className="admin-posts__button admin-posts__button--danger"
+            className="admin-reports-posts__button admin-reports-posts__button--danger"
             disableRipple
             onClick={deletePost}
           >

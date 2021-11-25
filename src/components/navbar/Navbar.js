@@ -49,6 +49,7 @@ export default function Navbar() {
 
   function logOut() {
     socket.emit('log-out', store.getState().username)
+    localStorage.clear()
     store.dispatch({type: 'resetStore'})
     history.push('/')
     enqueueSnackbar('You have been logged out')
@@ -57,7 +58,7 @@ export default function Navbar() {
   return (
     <div className={getClassesOfNavbar()}>
 
-      <img className="navbar__logo" src="piccy.svg" alt="Piccy" onClick={() => history.push('')}/>
+      <img className="navbar__logo" src="/piccy.svg" alt="Piccy" onClick={() => history.push('')}/>
       <div className="navbar__actions">
 
         <Search onClick={() => history.push('/search')} className="navbar__actions__icon"/>
@@ -67,19 +68,14 @@ export default function Navbar() {
         >
           <ChatBubbleOutlineOutlinedIcon className="navbar__actions__icon" onClick={() => history.push('/messages')}/>
         </Badge>
-        {/*<AccountCircleOutlinedIcon className="navbar__actions__icon" onClick={() => history.push('/account')}/>*/}
         <IconButton onClick={handleClick} style={{padding: 0}}>
           <Avatar className="navbar__actions__avatar"
                   src={avatar}/>
         </IconButton>
 
-        {/*<SettingsSharpIcon className="navbar__actions__icon" onClick={() => history.push('/settings')}/>*/}
-        {/*<LogoutOutlinedIcon className="navbar__actions__icon"*/}
-        {/*                    onClick={logOut}/>*/}
 
       </div>
 
-      {/*account*/}
       <Menu
         className="menu"
         anchorEl={anchorEl}

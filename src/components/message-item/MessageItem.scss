@@ -4,14 +4,25 @@
   width: 100%;
   display: flex;
 
-  &__block {
-    max-width: 60%;
-    padding: 12px 15px;
+  &>div{
+    max-width: 75%
+  }
 
+  &__time {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+    width: 100%;
+  }
+
+  &__block {
+    padding: 12px 15px;
     border-radius: 20px;
     text-align: left;
     word-wrap: break-word;
     font-size: 16px;
+    cursor: pointer;
 
     &__link {
       text-decoration: underline;
@@ -30,9 +41,19 @@
 
   &--my {
     justify-content: flex-end;
+    &>div{
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+    }
   }
 
   &--other {
     justify-content: flex-start;
+    &>div{
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
   }
 }

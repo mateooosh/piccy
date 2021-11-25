@@ -4,23 +4,25 @@ import {createTheme, StyledEngineProvider, ThemeProvider} from '@mui/material/st
 
 import variables from './styles/variables.module.scss';
 import {SnackbarProvider} from "notistack";
-console.log(variables)
+import {useEffect} from "react";
 
-// require('dotenv').config()
-
-console.log(process.env.REACT_APP_API_URL)
 
 export default function App() {
   const store = useStore();
   const logged = useSelector(state => state.logged);
 
-  function onClick() {
-    if (logged) {
-      store.dispatch({type: "logged/false"});
-    } else {
-      store.dispatch({type: "logged/true"});
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(token) {
+      console.log(token)
+      store.dispatch({type: "tokenSet", payload: token})
+      store.dispatch({type: "usernameSet", payload: localStorage.getItem('username')})
+      store.dispatch({type: "idSet", payload: localStorage.getItem('id')})
+      store.dispatch({type: "avatarSet", payload: localStorage.getItem('avatar')})
+      store.dispatch({type: "roleSet", payload: localStorage.getItem('role')})
+      store.dispatch({type: "logged/true"})
     }
-  }
+  }, [])
 
   const theme = createTheme({
     palette: {
@@ -30,7 +32,7 @@ export default function App() {
         dark: variables['primary-dark']
       }
     }
-  });
+  })
 
   return (
     <div className="App">
@@ -42,6 +44,6 @@ export default function App() {
         </StyledEngineProvider>
       </ThemeProvider>
     </div>
-  );
+  )
 }
 

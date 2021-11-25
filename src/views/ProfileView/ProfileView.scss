@@ -77,6 +77,10 @@
       font-weight: 700;
       margin-bottom: 4px;
     }
+
+    >div:nth-child(2) {
+      font-size: 14px;
+    }
   }
 
   &__actions {

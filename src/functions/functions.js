@@ -37,3 +37,46 @@ export const displayTime = (date, lang, t) => {
     return new Date(date).getDate() + ' ' + monthNames[new Date(date).getMonth()] + ' ' + new Date(date).getFullYear();
   }
 }
+
+function isSameDay(d1, d2) {
+  return d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+}
+
+export const displayTimeV2 = date => {
+  let now = new Date();
+  date = new Date(date);
+
+
+  if (isSameDay(now, date)) {
+    return `${date.getHours()}:${prefixTime(date.getMinutes())}`
+  }
+
+  return displayTimeV3(date);
+}
+
+export const displayTimeV3 = date => {
+  date = new Date(date);
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let hours = date.getHours() + 1;
+  let minutes = date.getMinutes() + 1;
+
+  day = (day < 10) ? `0${day}` : day;
+  month = (month < 10) ? `0${month}` : month;
+  hours = (hours < 10) ? `0${hours}` : hours;
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+const prefixTime = value => {
+  if (value < 10) {
+    return `0${value}`;
+  }
+  return value;
+}

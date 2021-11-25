@@ -125,7 +125,7 @@ export default function Post(props) {
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        console.log('photo', response)
+        // console.log('photo', response)
         setPhoto(response.photo)
       })
       .catch(err => console.log(err))
