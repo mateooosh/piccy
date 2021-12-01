@@ -3,13 +3,9 @@ import './AdminReportsBugs.scss'
 import {useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
-  Button,
-  Chip, CircularProgress,
+  Chip,
+  CircularProgress,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -19,14 +15,9 @@ import {
   TableRow,
   Tooltip
 } from "@mui/material"
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from "notistack"
 import TablePaginationActions from "../table-pagination-actions/TablePaginationActions";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
-import CancelIcon from '@mui/icons-material/Cancel';
 
 export default function AdminReportsBugs() {
 
@@ -94,7 +85,11 @@ export default function AdminReportsBugs() {
 
   function getReportedBugs() {
     const url = `${process.env.REACT_APP_API_URL}/admin/reports/bugs?token=${store.getState().token}`
-    fetch(url)
+    fetch(url, {
+      headers: {
+        'x-access-token': store.getState().token
+      }
+    })
       .then(response => response.json())
       .then(response => {
         console.log('reported bugs: ', response)
@@ -118,7 +113,8 @@ export default function AdminReportsBugs() {
       method: 'PUT',
       body: JSON.stringify(obj),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
       },
     })
       .then(response => response.json())

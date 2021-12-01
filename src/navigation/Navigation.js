@@ -1,7 +1,7 @@
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route, useHistory
 } from "react-router-dom"
 
 import '../App.scss'
@@ -23,15 +23,26 @@ import TagView from "../views/TagView/TagView";
 import AdminDashboard from "../views/AdminDashboard/AdminDashboard";
 
 export default function Navigation() {
+  return (
+    <Router>
+      <NavigationContent/>
+    </Router>
+  )
+
+}
+
+function NavigationContent() {
   const store = useStore()
+  const history = useHistory()
   const { enqueueSnackbar } = useSnackbar()
 
   const logged = useSelector(state => state.logged)
   const role = useSelector(state => state.role)
 
-  const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+  const [socket, setSocket] = useState(null)
 
   useEffect(() => {
+    setSocket(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
     const id = store.getState().id
     const log = store.getState().logged
     const username = store.getState().username
@@ -40,6 +51,7 @@ export default function Navigation() {
       console.log('turn on: ', `message-to-user-${id}`)
       socket.emit('new-user', username)
       socket.on(`message-to-user-${id}`, handleMessage)
+      socket.on(`invalid-token-${id}`, handleInvalidToken)
     }
 
     return function cleanup() {
@@ -47,6 +59,8 @@ export default function Navigation() {
       if(log) {
         console.log('turn off: ', `message-to-user-${id}`)
         socket.off(`message-to-user-${id}`, handleMessage)
+        socket.off(`invalid-token-${id}`, handleInvalidToken)
+        setSocket(null)
       }
     }
   }, [logged])
@@ -56,15 +70,26 @@ export default function Navigation() {
     const pathname = window.location.pathname
 
     if(!pathname.includes('messages')) {
-      enqueueSnackbar('New message')
+      enqueueSnackbar(`${message.usernameSender}: ${message.message}`)
       store.dispatch({type: 'notificationAmountSet', payload: store.getState().notificationAmount + 1})
     } else {
       console.log('nie')
     }
   }
 
+  const handleInvalidToken = message => {
+    console.log('invalid token, ', message)
+    socket.emit('log-out', store.getState().username)
+    localStorage.clear()
+    store.dispatch({type: 'resetStore'})
+    history.push('/')
+    enqueueSnackbar('You have been logged out because of invalid token', {
+      variant: 'error'
+    })
+  }
+
   return (
-    <Router>
+    <>
       {logged ? (
         <div style={{display: 'flex', flexDirection: 'column'}}>
 
@@ -118,6 +143,6 @@ export default function Navigation() {
           </Route>
         </Switch>
       )}
-    </Router>
+    </>
   )
 }

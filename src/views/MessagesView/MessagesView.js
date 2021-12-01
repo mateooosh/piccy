@@ -42,6 +42,11 @@ export default function MessagesView(props) {
     refMessages.current = messages
   }, [messages])
 
+  const refFirstAttempt = useRef(firstAttempt)
+  useEffect(() => {
+    refFirstAttempt.current = firstAttempt
+  }, [firstAttempt])
+
   const refIdChannel = useRef(idChannel)
   useEffect(() => {
     refIdChannel.current = idChannel
@@ -82,7 +87,7 @@ export default function MessagesView(props) {
 
   function handler(response) {
     getChannels()
-    console.log(`message-to-user-${store.getState().id}`, response)
+    // console.log(`message-to-user-${store.getState().id}`, response)
 
     if (response.idChannel == refIdChannel.current) {
       setMessages(old => [response, ...old])
@@ -98,7 +103,7 @@ export default function MessagesView(props) {
   function getMessages(id) {
     setMessages([])
 
-    console.log('id', id)
+    // console.log('id', id)
 
     const url = `${process.env.REACT_APP_API_URL}/messages/${id}?myIdUser=${store.getState().id}&token=${store.getState().token}`
 
@@ -106,7 +111,7 @@ export default function MessagesView(props) {
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        console.log('messages:', response)
+        // console.log('messages:', response)
         setMessages(response.messages)
         setUserChattingWith(findUserChattingWith(response.users))
         setIdChannel(response.idChannel)
@@ -137,15 +142,17 @@ export default function MessagesView(props) {
       .then(response => {
         console.log(response)
         setChannels(response)
-        if (response.length > 0) {
-          if (location.state?.idUser && firstAttempt) {
-            setActiveUserId(location.state?.idUser)
-            setFirstAttempt(false)
-          } else if (firstAttempt) {
-            setActiveUserId(response[0].idUser)
-            setFirstAttempt(false)
-          }
+        // if (response.length > 0) {
+        console.log('first attempt', refFirstAttempt.current)
+        if (location.state?.idUser && refFirstAttempt.current) {
+          setActiveUserId(location.state?.idUser)
+          setFirstAttempt(false)
+        } else if (refFirstAttempt.current) {
+          setActiveUserId(response[0]?.idUser)
+          setFirstAttempt(false)
         }
+
+        // }
 
         const index = response.findIndex(channel => channel.idUser == location.state?.idUser)
         if (index === -1 && location.state?.idUser) {
@@ -169,7 +176,7 @@ export default function MessagesView(props) {
   }
 
   function sendMessage() {
-    console.log('send', input)
+    console.log('send', input, activeUserId)
 
     if (activeUserId === null)
       return
@@ -177,6 +184,7 @@ export default function MessagesView(props) {
     const obj = {
       message: input,
       idSender: store.getState().id,
+      usernameSender: store.getState().username,
       idReciever: activeUserId,
       idChannel: idChannel,
       createdAt: new Date()
@@ -229,11 +237,12 @@ export default function MessagesView(props) {
             <div style={{flexGrow: 1}}>
               <div className="messages__nav__user__username">{channel.username}</div>
               <div className="messages__nav__user__lastMessage">
-                {channel.status == 0 ? (
-                  channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage
-                ) : (
-                  <b>{channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage}</b>
-                )}
+                {channel.lastMessage}
+                {/*{channel.status == 0 ? (*/}
+                {/*  channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage*/}
+                {/*) : (*/}
+                {/*  <b>{channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage}</b>*/}
+                {/*)}*/}
               </div>
             </div>
             {channel.status == 1 ? (

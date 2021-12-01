@@ -104,7 +104,11 @@ export default function AdminReportsPosts() {
 
   function getReportedPosts() {
     const url = `${process.env.REACT_APP_API_URL}/admin/reports/posts?token=${store.getState().token}`
-    fetch(url)
+    fetch(url, {
+      headers: {
+        'x-access-token': store.getState().token
+      },
+    })
       .then(response => response.json())
       .then(response => {
         console.log('reported posts: ', response)
@@ -120,8 +124,9 @@ export default function AdminReportsPosts() {
     fetch(url, {
       method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-      }
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      },
     })
       .then(response => response.json())
       .then(response => {
@@ -149,7 +154,8 @@ export default function AdminReportsPosts() {
       method: 'PUT',
       body: JSON.stringify(obj),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
       },
     })
       .then(response => response.json())

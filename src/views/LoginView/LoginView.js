@@ -50,7 +50,9 @@ export default function LoginView() {
     })
       .then(response => response.json())
       .then(response => {
-        // alert(response.message)
+        enqueueSnackbar(response.message, {
+          variant: 'success'
+        })
         localStorage.setItem('token', response.token)
         localStorage.setItem('id', response.id)
         localStorage.setItem('username', response.username)
@@ -66,7 +68,9 @@ export default function LoginView() {
         history.push('/')
       })
       .catch(err => {
-        enqueueSnackbar('Wrong credentials! Try again.')
+        enqueueSnackbar('Wrong credentials! Try again.', {
+          variant: 'error'
+        })
       })
       .finally(() => setLoading(false))
   }

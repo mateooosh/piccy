@@ -76,12 +76,15 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
       method: "PUT",
       body: JSON.stringify(obj),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      },
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message, {
+          variant: 'success'
+        })
         setOpen(false)
         getProfile()
       })

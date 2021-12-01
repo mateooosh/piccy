@@ -68,7 +68,7 @@ export default function Post(props) {
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false)
 
 
-  const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+  const [socket, setSocket] = useState(null)
 
 
   const handleClick = (event) => {
@@ -96,6 +96,8 @@ export default function Post(props) {
 
 
   useEffect(() => {
+    setSocket(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+
     setPost(props.post)
     let arr = [
       {
@@ -120,9 +122,13 @@ export default function Post(props) {
   }, [])
 
   function getPhoto(id) {
-    const url = `${process.env.REACT_APP_API_URL}/posts/${id}/photo?token=${store.getState().token}`
+    const url = `${process.env.REACT_APP_API_URL}/posts/${id}/photo`
 
-    fetch(url)
+    fetch(url, {
+      headers: {
+        'x-access-token': store.getState().token
+      }
+    })
       .then(response => response.json())
       .then(response => {
         // console.log('photo', response)
@@ -133,8 +139,12 @@ export default function Post(props) {
 
   function getComments(id) {
     if (!props.homeScreen) {
-      const url = `${process.env.REACT_APP_API_URL}/comments/${id}?token=${store.getState().token}`
-      fetch(url)
+      const url = `${process.env.REACT_APP_API_URL}/comments/${id}`
+      fetch(url, {
+        headers: {
+          'x-access-token': store.getState().token
+        }
+      })
         .then((response) => response.json())
         .then((response) => {
           console.log('comments', response)
@@ -151,8 +161,9 @@ export default function Post(props) {
       method: "POST",
       body: JSON.stringify({idUser: idUser, idPost: idPost, token: store.getState().token}),
       headers: {
-        "Content-Type": "application/json",
-      },
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      }
     })
       .then((response) => response.json())
       .then(response => {
@@ -172,8 +183,9 @@ export default function Post(props) {
       method: "DELETE",
       body: JSON.stringify({idUser: idUser, idPost: idPost, token: store.getState().token}),
       headers: {
-        "Content-Type": "application/json",
-      },
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      }
     })
       .then((response) => response.json())
       .then((response) => {
@@ -202,7 +214,8 @@ export default function Post(props) {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
       }
     })
       .then(response => response.json())
@@ -223,7 +236,11 @@ export default function Post(props) {
 
     const url = `${process.env.REACT_APP_API_URL}/posts/${post.id}`
     fetch(url, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      }
     })
       .then(response => response.json())
       .then(response => {
@@ -246,7 +263,8 @@ export default function Post(props) {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
       }
     })
       .then(response => response.json())
@@ -267,8 +285,13 @@ export default function Post(props) {
 
   function getChannels() {
     setLoadingChannels(true)
-    const url = `${process.env.REACT_APP_API_URL}/channels?idUser=${store.getState().id}&token=${store.getState().token}`
-    fetch(url)
+    const url = `${process.env.REACT_APP_API_URL}/channels?idUser=${store.getState().id}`
+    fetch(url,
+      {
+        headers: {
+          'x-access-token': store.getState().token
+        }
+      })
       .then(response => response.json())
       .then(response => {
         console.log(response)

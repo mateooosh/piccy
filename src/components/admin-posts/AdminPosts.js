@@ -3,8 +3,8 @@ import './AdminPosts.scss'
 import {useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
-  Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,11 +13,11 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableRow,
-  Box,
   TableFooter,
-  TablePagination, Tooltip, CircularProgress
+  TableHead,
+  TablePagination,
+  TableRow,
+  Tooltip
 } from "@mui/material"
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
@@ -93,8 +93,13 @@ export default function AdminPosts() {
   }
 
   function getPosts() {
-    const url = `${process.env.REACT_APP_API_URL}/admin/posts?token=${store.getState().token}`
-    fetch(url)
+    const url = `${process.env.REACT_APP_API_URL}/admin/posts`
+    fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      },
+    })
       .then(response => response.json())
       .then(response => {
         console.log('posts: ', response)
@@ -110,8 +115,9 @@ export default function AdminPosts() {
     fetch(url, {
       method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-      }
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      },
     })
       .then(response => response.json())
       .then(response => {
@@ -234,7 +240,6 @@ export default function AdminPosts() {
           </TableFooter>
         </Table>
       )}
-
 
 
       <Dialog

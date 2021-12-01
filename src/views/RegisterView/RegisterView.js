@@ -17,14 +17,16 @@ export default function RegisterView() {
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
+  const [password2, setPassword2] = useState('')
 
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    return() => {
+    return () => {
       setEmail('')
       setUsername('')
       setPassword('')
+      setPassword2('')
       setName('')
       setLoading(false)
     }
@@ -32,10 +34,17 @@ export default function RegisterView() {
 
 
   function register() {
-    if(!allCorrect())
+    if (!allCorrect())
       return
 
-    setLoading(true)
+    if (password !== password2) {
+      enqueueSnackbar('The given passwords do not match', {
+        variant: 'error'
+      })
+      return
+    }
+
+      setLoading(true)
 
     const obj = {
       email: email,
@@ -56,10 +65,10 @@ export default function RegisterView() {
     })
       .then(response => response.json())
       .then(response => {
-        if(response.created) {
+        if (response.created) {
           history.push('/')
-        }
-        else {
+          enqueueSnackbar('Account has been created.')
+        } else {
           enqueueSnackbar(response.message)
         }
       })
@@ -87,8 +96,8 @@ export default function RegisterView() {
     return hasError(username) ? 'Username must be at least 6 characters long' : ''
   }
 
-  function helperTextPassword() {
-    return hasError(password) ? 'Password must be at least 6 characters long' : ''
+  function helperTextPassword(value) {
+    return hasError(value) ? 'Password must be at least 6 characters long' : ''
   }
 
   function helperTextName() {
@@ -96,7 +105,8 @@ export default function RegisterView() {
   }
 
   function allCorrect() {
-    return validation.email(email) && validation.min6Chars(username) && validation.min6Chars(password) && !nameHasError() && name.length !== 0
+    return validation.email(email) && validation.min6Chars(username) && validation.min6Chars(password) &&
+      !nameHasError() && name.length !== 0
   }
 
   function getButtonVariant() {
@@ -111,7 +121,8 @@ export default function RegisterView() {
     <div className="register">
       <img className="register__logo" src="piccy.svg" alt="Piccy"/>
 
-      <TextField className="register__input" label="E-mail" variant="standard" error={hasErrorEmail(email)} value={email}
+      <TextField className="register__input" label="E-mail" variant="standard" error={hasErrorEmail(email)}
+                 value={email}
                  onChange={e => setEmail(e.target.value)} helperText={helperTextEmail()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -120,7 +131,8 @@ export default function RegisterView() {
                    }
                  }}/>
 
-      <TextField className="register__input" label="Username" variant="standard" error={hasError(username)} value={username}
+      <TextField className="register__input" label="Username" variant="standard" error={hasError(username)}
+                 value={username}
                  onChange={e => setUsername(e.target.value)} helperText={helperTextUsername()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -128,8 +140,20 @@ export default function RegisterView() {
                      ev.preventDefault()
                    }
                  }}/>
-      <TextField className="register__input" label="Password" variant="standard" error={hasError(password)} value={password}
-                 onChange={e => setPassword(e.target.value)} helperText={helperTextPassword()}
+      <TextField className="register__input" label="Password" variant="standard" error={hasError(password)}
+                 value={password}
+                 onChange={e => setPassword(e.target.value)} helperText={helperTextPassword(password)}
+                 onKeyPress={(ev) => {
+                   if (ev.key === 'Enter') {
+                     register()
+                     ev.preventDefault()
+                   }
+                 }}
+                 type="password"/>
+
+      <TextField className="register__input" label="Re-enter password" variant="standard" error={hasError(password2)}
+                 value={password2}
+                 onChange={e => setPassword2(e.target.value)} helperText={helperTextPassword(password2)}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
                      register()
@@ -147,11 +171,13 @@ export default function RegisterView() {
                    }
                  }}/>
 
-      <LoadingButton loading={loading} onClick={register} variant={getButtonVariant()} disabled={!allCorrect()} disableRipple className={getButtonClasses()}>
+      <LoadingButton loading={loading} onClick={register} variant={getButtonVariant()} disabled={!allCorrect()}
+                     disableRipple className={getButtonClasses()}>
         Create account
       </LoadingButton>
       <div className="register__divider"></div>
-      <p className="register__paragraph">Already a Piccy member? <Link to="/" className="register__paragraph--log-in">Log in here</Link></p>
+      <p className="register__paragraph">Already a Piccy member? <Link to="/" className="register__paragraph--log-in">Log
+        in here</Link></p>
 
     </div>
   )

@@ -4,13 +4,20 @@ import './ProfileView.scss'
 import {useStore} from "react-redux"
 import {Avatar, Button, CircularProgress, Dialog, DialogContent, DialogTitle} from "@mui/material"
 import {useHistory, useParams} from "react-router-dom"
-import User from "../../components/user/User";
+import User from "../../components/user/User"
+import {useSnackbar} from "notistack"
+import DataLoadStatus from "../../components/data-load-status/DataLoadStatus";
+import {checkStatus} from "../../functions/functions";
 
 export default function ProfileView() {
 
   const store = useStore()
   const history = useHistory()
+  const {enqueueSnackbar} = useSnackbar()
   const {username} = useParams()
+
+  const [error, setError] = useState(null)
+  const [hasError, setHasError] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState(null)
@@ -37,9 +44,10 @@ export default function ProfileView() {
       // get information about profile
       const url = `${process.env.REACT_APP_API_URL}/users?username=${username}&myIdUser=${store.getState().id}&token=${store.getState().token}`
       fetch(url)
-        .then((response) => response.json())
-        .then((response) => {
+        .then(res => checkStatus(res))
+        .then(response => {
           console.log(response)
+
           setProfile(response[0])
           setLoadingFollows(true)
           setEmptyFollows(false)
@@ -47,18 +55,21 @@ export default function ProfileView() {
 
           // get user's posts
           fetch(`${process.env.REACT_APP_API_URL}/posts?username=${username}&onlyUserPosts=true&token=${store.getState().token}`)
-            .then((response) => response.json())
-            .then((response) => {
+            .then(res => checkStatus(res))
+            .then(response => {
               console.log(response)
               setPosts(response)
               if(response.length === 0) {
                 setEmptyPosts(true)
               }
             })
-            .catch((err) => console.log(err))
+            .catch(err => console.log(err))
             .finally(() => setLoadingPosts(false))
         })
-        .catch((err) => console.log(err))
+        .catch(err => {
+          setError(err)
+          setHasError(true)
+        })
         .finally(() => setLoading(false))
     }
   }, [username])
@@ -162,6 +173,7 @@ export default function ProfileView() {
 
   return (
     <div style={{width: '100%', overflowY: 'auto'}}>
+      <DataLoadStatus hasError={hasError} status={error?.status} statusText={error?.statusText}/>
       <div className="profile">
         {loading &&
         <CircularProgress className="profile__indicator" size={60}/>

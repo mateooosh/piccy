@@ -109,8 +109,12 @@
 
   &__posts {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     &__header {
+      width: 100%;
       font-size: 22px;
       font-weight: 700;
       text-align: left;
@@ -118,14 +122,13 @@
     }
 
     &__content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto;
       gap: 4px;
 
       &__item {
-        width: calc(100% / 3 - 3px);
+        width: 100%;
         height: auto;
         cursor: pointer;
         transition: all .2s;

@@ -15,7 +15,7 @@ export default function Navbar() {
 
   const store = useStore()
   const history = useHistory()
-  const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+  const [socket, setSocket] = useState(null)
   const {enqueueSnackbar} = useSnackbar();
 
   const notificationAmount = useSelector(state => state.notificationAmount)
@@ -34,6 +34,7 @@ export default function Navbar() {
   const [pageScrolled, setPageScrolled] = useState(false)
 
   useEffect(() => {
+    setSocket(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
     window.addEventListener('scroll', (e) => {
       if (window.pageYOffset > 50) {
         setPageScrolled(true)

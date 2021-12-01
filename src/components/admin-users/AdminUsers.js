@@ -96,7 +96,11 @@ export default function AdminUsers() {
   function getUsers() {
     const url = `${process.env.REACT_APP_API_URL}/admin/users?token=${store.getState().token}`
     // setUsersLoading(true)
-    fetch(url)
+    fetch(url, {
+      headers: {
+        'x-access-token': store.getState().token
+      },
+    })
       .then(response => response.json())
       .then(response => {
         console.log('users: ', response)
@@ -117,8 +121,9 @@ export default function AdminUsers() {
     fetch(url, {
       method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-      }
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      },
     })
       .then(response => response.json())
       .then(response => {
@@ -148,7 +153,8 @@ export default function AdminUsers() {
       method: 'PUT',
       body: JSON.stringify(obj),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
       },
     })
       .then(response => response.json())

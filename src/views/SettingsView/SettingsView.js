@@ -22,7 +22,7 @@ export default function SettingsView() {
 
   const lang = useSelector(state => state.lang)
 
-  const [socket, setSocket] = useState(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+  const [socket, setSocket] = useState(null)
 
   // const [selectedIndex, setSelectedIndex] = React.useState(0)
   //
@@ -33,6 +33,7 @@ export default function SettingsView() {
   const [bugDescription, setBugDescription] = useState('')
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const [newPassword2, setNewPassword2] = useState('')
 
   const [expanded, setExpanded] = React.useState(false)
 
@@ -45,6 +46,10 @@ export default function SettingsView() {
   const [loadingResetPassword, setLoadingResetPassword] = useState(false)
 
   const [attachment, setAttachment] = useState(null)
+
+  useEffect(() => {
+    setSocket(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
+  }, [])
 
   useEffect(() => {
     console.log(attachment)
@@ -120,7 +125,14 @@ export default function SettingsView() {
   }
 
   function resetPassword() {
-    const url = `${process.env.REACT_APP_API_URL}/reset/password`;
+    if (newPassword !== newPassword2) {
+      enqueueSnackbar('The given passwords do not match', {
+        variant: 'error'
+      })
+      return
+    }
+
+      const url = `${process.env.REACT_APP_API_URL}/reset/password`;
     const obj = {
       idUser: store.getState().id,
       oldPassword: oldPassword,
@@ -139,12 +151,15 @@ export default function SettingsView() {
       .then(response => response.json())
       .then(response => {
         console.log(response.message)
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message, {
+          variant: 'success'
+        })
       })
       .catch(err => console.log(err))
       .finally(() => {
         setLoadingResetPassword(false)
         setNewPassword('')
+        setNewPassword2('')
         setOldPassword('')
       })
   }
@@ -153,8 +168,8 @@ export default function SettingsView() {
     return hasError(oldPassword) ? 'Old password must be at least 6 characters long' : ''
   }
 
-  function helperTextNewPassword() {
-    return hasError(newPassword) ? 'New password must be at least 6 characters long' : ''
+  function helperTextNewPassword(value) {
+    return hasError(value) ? 'New password must be at least 6 characters long' : ''
   }
 
   function hasError(string) {
@@ -162,7 +177,7 @@ export default function SettingsView() {
   }
 
   function activeButton() {
-    return validation.min6Chars(oldPassword) && validation.min6Chars(newPassword);
+    return validation.min6Chars(oldPassword) && validation.min6Chars(newPassword) && validation.min6Chars(newPassword2);
   }
 
   return (
@@ -307,7 +322,18 @@ export default function SettingsView() {
                        value={newPassword}
                        onChange={e => setNewPassword(e.target.value)}
                        error={hasError(newPassword)}
-                       helperText={helperTextNewPassword()}
+                       helperText={helperTextNewPassword(newPassword)}
+            />
+
+            <TextField className="settings__details__input"
+                       label="Re-enter new password"
+                       variant="standard"
+                       type="password"
+                       value={newPassword2}
+                       onChange={e => setNewPassword2(e.target.value)}
+                       error={hasError(newPassword2)}
+                       helperText={helperTextNewPassword(newPassword2)}
+                       style={{marginBottom: 10}}
             />
 
             <div className="settings__details__actions">

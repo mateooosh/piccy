@@ -48,6 +48,10 @@
     &:nth-of-type(4) {
       animation: slideIn .5s .8s forwards;
     }
+
+    &:nth-of-type(5) {
+      animation: slideIn .5s 1s forwards;
+    }
   }
 
   &__button {

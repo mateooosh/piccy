@@ -5,6 +5,8 @@ import {useStore} from "react-redux"
 import Post from "../../components/post/Post"
 import {CircularProgress} from "@mui/material"
 import NewPost from "../../components/new-post/NewPost";
+import {checkStatus} from "../../functions/functions";
+import DataLoadStatus from "../../components/data-load-status/DataLoadStatus";
 
 export default function HomeView() {
 
@@ -13,6 +15,8 @@ export default function HomeView() {
   const [posts, setPosts] = useState([])
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [hasError, setHasError] = useState(false)
   const [emptyPosts, setEmptyPosts] = useState(false)
   const homeRef = useRef()
 
@@ -44,7 +48,7 @@ export default function HomeView() {
 
     const url = `${process.env.REACT_APP_API_URL}/posts?idUser=${store.getState().id}&onlyUserPosts=false&page=${temp}&token=${store.getState().token}`
     fetch(url)
-      .then(response => response.json())
+      .then(res => checkStatus(res))
       .then(response => {
         // console.log(response)
         //push new posts to array
@@ -59,7 +63,10 @@ export default function HomeView() {
           setEmptyPosts(true)
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        setError(err)
+        setHasError(true)
+      })
       .finally(() => {
         setLoading(false)
       })
@@ -87,8 +94,9 @@ export default function HomeView() {
     <div className="home" ref={homeRef}>
       <div className="home__posts">
         <NewPost/>
+        <DataLoadStatus hasError={hasError} status={error?.status} statusText={error?.statusText}/>
 
-        {!posts.length && !loading &&
+        {!posts.length && !loading && !hasError &&
         <div style={{fontSize: 16, marginVertical: 20}}>You need to follow someone</div>
         }
 

@@ -34,8 +34,9 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
       method: 'POST',
       body: JSON.stringify(obj),
       headers: {
-        'Content-Type': 'application/json'
-      },
+        'Content-Type': 'application/json',
+        'x-access-token': store.getState().token
+      }
     })
       .then(response => response.json())
       .then(response => {
