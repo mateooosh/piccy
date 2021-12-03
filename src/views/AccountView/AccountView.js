@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import './AccountView.scss'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material"
 import {useHistory} from "react-router-dom"
-import EditProfileDialog from "../../components/edit-profile-dialog/EditProfileDialog";
-import User from "../../components/user/User";
+import EditProfileDialog from "../../components/edit-profile-dialog/EditProfileDialog"
+import User from "../../components/user/User"
+import {t} from '../../translations/translations'
 
 export default function AccountView() {
 
   const store = useStore()
   const history = useHistory()
+  const lang = useSelector(state => state.lang)
 
   const [loading, setLoading] = useState(false)
   const [profile, setProfile] = useState(null)
@@ -41,13 +43,13 @@ export default function AccountView() {
 
   function onFollowersClick() {
     setFollowsDialogOpen(true)
-    setTitleOfDialog('Followers')
+    setTitleOfDialog(t.followers2[lang])
     getFollows('followers')
   }
 
   function onFollowingClick() {
     setFollowsDialogOpen(true)
-    setTitleOfDialog('Following')
+    setTitleOfDialog(t.following2[lang])
     getFollows('following')
   }
 
@@ -112,17 +114,17 @@ export default function AccountView() {
           <div className="account__stats">
             <div>
               <div className="account__stats__amount">{profile.postsAmount}</div>
-              <div className="account__stats__type">Posts</div>
+              <div className="account__stats__type">{t.posts2[lang]}</div>
             </div>
 
             <div onClick={onFollowersClick}>
               <div className="account__stats__amount">{profile.followers}</div>
-              <div className="account__stats__type">Followers</div>
+              <div className="account__stats__type">{t.followers[lang]}</div>
             </div>
 
             <div onClick={onFollowingClick}>
               <div className="account__stats__amount">{profile.following}</div>
-              <div className="account__stats__type">Following</div>
+              <div className="account__stats__type">{t.following[lang]}</div>
             </div>
           </div>
 
@@ -137,12 +139,12 @@ export default function AccountView() {
             <Button variant="contained"
                     disableRipple className="account__actions__button"
                     onClick={() => setEditProfileIsOpen(true)}>
-              Edit profile
+              {t.editProfile[lang]}
             </Button>
           </div>
 
           <div className="account__posts">
-            <div className="account__posts__header">Posts</div>
+            <div className="account__posts__header">{t.posts[lang]}</div>
             <div className="account__posts__content">
               {posts.map((post, index) =>
                 <img src={post.photo} key={index} className="account__posts__content__item"
@@ -155,7 +157,7 @@ export default function AccountView() {
             }
 
             {emptyPosts &&
-            <div className="account__posts__empty">User has no posts</div>
+            <div className="account__posts__empty">{t.userHasNoPosts[lang]}</div>
             }
           </div>
         </>
@@ -175,7 +177,7 @@ export default function AccountView() {
               <User user={user} key={idx} setFollowsDialogOpen={setFollowsDialogOpen}/>
             )}
             {emptyFollows &&
-              <div className="profile__dialog__error">No users found</div>
+              <div className="profile__dialog__error">{t.noUsersFound[lang]}</div>
             }
           </DialogContent>
         </Dialog>

@@ -5,13 +5,15 @@ import {LoadingButton} from "@mui/lab"
 
 import {validation} from '../../functions/functions'
 import {Link, useHistory} from "react-router-dom"
-import {useStore} from "react-redux"
-import {useSnackbar} from "notistack";
+import {useSelector, useStore} from "react-redux"
+import {useSnackbar} from "notistack"
+import {t} from '../../translations/translations'
 
 export default function RegisterView() {
   const store = useStore()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -38,7 +40,7 @@ export default function RegisterView() {
       return
 
     if (password !== password2) {
-      enqueueSnackbar('The given passwords do not match', {
+      enqueueSnackbar(t.givenPasswordsDoNotMatch[lang], {
         variant: 'error'
       })
       return
@@ -67,7 +69,7 @@ export default function RegisterView() {
       .then(response => {
         if (response.created) {
           history.push('/')
-          enqueueSnackbar('Account has been created.')
+          enqueueSnackbar(t.accountHasBeenCreated[lang])
         } else {
           enqueueSnackbar(response.message)
         }
@@ -89,19 +91,19 @@ export default function RegisterView() {
   }
 
   function helperTextEmail() {
-    return hasErrorEmail(email) ? 'E-mail is not valid' : ''
+    return hasErrorEmail(email) ? t.emailIsNotValid[lang] : ''
   }
 
   function helperTextUsername() {
-    return hasError(username) ? 'Username must be at least 6 characters long' : ''
+    return hasError(username) ? t.usernameAtLeast6[lang] : ''
   }
 
   function helperTextPassword(value) {
-    return hasError(value) ? 'Password must be at least 6 characters long' : ''
+    return hasError(value) ? t.passwordAtLeast6[lang] : ''
   }
 
   function helperTextName() {
-    return nameHasError() ? 'Name must be at least 6 characters long' : ''
+    return nameHasError() ? t.nameAtLeast3[lang] : ''
   }
 
   function allCorrect() {
@@ -131,7 +133,7 @@ export default function RegisterView() {
                    }
                  }}/>
 
-      <TextField className="register__input" label="Username" variant="standard" error={hasError(username)}
+      <TextField className="register__input" label={t.username[lang]} variant="standard" error={hasError(username)}
                  value={username}
                  onChange={e => setUsername(e.target.value)} helperText={helperTextUsername()}
                  onKeyPress={(ev) => {
@@ -140,7 +142,7 @@ export default function RegisterView() {
                      ev.preventDefault()
                    }
                  }}/>
-      <TextField className="register__input" label="Password" variant="standard" error={hasError(password)}
+      <TextField className="register__input" label={t.password[lang]} variant="standard" error={hasError(password)}
                  value={password}
                  onChange={e => setPassword(e.target.value)} helperText={helperTextPassword(password)}
                  onKeyPress={(ev) => {
@@ -151,7 +153,7 @@ export default function RegisterView() {
                  }}
                  type="password"/>
 
-      <TextField className="register__input" label="Re-enter password" variant="standard" error={hasError(password2)}
+      <TextField className="register__input" label={t.reenterPassword[lang]} variant="standard" error={hasError(password2)}
                  value={password2}
                  onChange={e => setPassword2(e.target.value)} helperText={helperTextPassword(password2)}
                  onKeyPress={(ev) => {
@@ -162,7 +164,7 @@ export default function RegisterView() {
                  }}
                  type="password"/>
 
-      <TextField className="register__input" label="Name" variant="standard" error={nameHasError()} value={name}
+      <TextField className="register__input" label={t.name[lang]} variant="standard" error={nameHasError()} value={name}
                  onChange={e => setName(e.target.value)} helperText={helperTextName()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -173,11 +175,10 @@ export default function RegisterView() {
 
       <LoadingButton loading={loading} onClick={register} variant={getButtonVariant()} disabled={!allCorrect()}
                      disableRipple className={getButtonClasses()}>
-        Create account
+        {t.createAccount[lang]}
       </LoadingButton>
       <div className="register__divider"></div>
-      <p className="register__paragraph">Already a Piccy member? <Link to="/" className="register__paragraph--log-in">Log
-        in here</Link></p>
+      <p className="register__paragraph">{t.alreadyAPiccyMember[lang]} <Link to="/" className="register__paragraph--log-in">{t.loginHere[lang]}</Link></p>
 
     </div>
   )

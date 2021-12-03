@@ -1,16 +1,19 @@
 import React, {createRef, useEffect, useRef, useState} from 'react'
 import './HomeView.scss'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import Post from "../../components/post/Post"
 import {CircularProgress} from "@mui/material"
-import NewPost from "../../components/new-post/NewPost";
-import {checkStatus} from "../../functions/functions";
-import DataLoadStatus from "../../components/data-load-status/DataLoadStatus";
+import NewPost from "../../components/new-post/NewPost"
+import {checkStatus} from "../../functions/functions"
+import DataLoadStatus from "../../components/data-load-status/DataLoadStatus"
+import {t} from '../../translations/translations'
+
 
 export default function HomeView() {
 
   const store = useStore()
+  const lang = useSelector(state => state.lang)
 
   const [posts, setPosts] = useState([])
   const [page, setPage] = useState(0)
@@ -97,7 +100,7 @@ export default function HomeView() {
         <DataLoadStatus hasError={hasError} status={error?.status} statusText={error?.statusText}/>
 
         {!posts.length && !loading && !hasError &&
-        <div style={{fontSize: 16, marginVertical: 20}}>You need to follow someone</div>
+        <div style={{fontSize: 16, marginVertical: 20}}>{t.youNeedToFollowSomeone[lang]}</div>
         }
 
         {posts.map((post, idx) => (

@@ -320,7 +320,34 @@ const translations = {
   more: {
     en: 'More',
     pl: 'Więcej'
+  },
+  wrongCredentials: {
+    en: 'Wrong credentials! Try again.',
+    pl: 'Błędne dane! Spróbuj ponownie.'
+  },
+  givenPasswordsDoNotMatch: {
+    en: 'The given passwords do not match.',
+    pl: 'Podane hasła nie pasują do siebie.'
+  },
+  accountHasBeenCreated: {
+    en: 'Account has been created.',
+    pl: 'Konto zostało utworzone.'
+  },
+  reenterPassword: {
+    en: 'Re-enter password',
+    pl: 'Powtórz hasło'
+  },
+  youNeedToFollowSomeone: {
+    en: 'You need to follow someone',
+    pl: 'Musisz kogoś zaobserwować'
+  },
+  noUsersFound: {
+    en: 'No users found',
+    pl: 'Nie znaleziono użytkowników'
   }
+
+
+
 }
 
 module.exports.t = translations

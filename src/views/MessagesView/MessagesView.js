@@ -27,7 +27,9 @@ export default function MessagesView(props) {
   const [idChannel, setIdChannel] = useState(null)
   const [messages, setMessages] = useState([])
   const [userChattingWith, setUserChattingWith] = useState(null)
-  const [loadingMessages, setLoadingMessages] = useState(true)
+  const [loadingMessages, setLoadingMessages] = useState(false)
+  const [noChannels, setNoChannels] = useState(false)
+  const [noMessages, setNoMessages] = useState(false)
 
   const [firstAttempt, setFirstAttempt] = useState(true)
 
@@ -60,16 +62,6 @@ export default function MessagesView(props) {
     if (window.innerWidth <= 620 && !location?.state?.idUser) {
       setDrawerOpen(true)
     }
-
-    // if(location.state?.idUser) {
-    //   setNewChannel({
-    //     idUser: location.state.idUser,
-    //     photo: location.state.avatar || null,
-    //     lastMessage: '',
-    //     username: location.state.username
-    //   })
-    // }
-
     return () => {
       socket.off(`message-to-user-${store.getState().id}`, handler)
     }
@@ -84,6 +76,11 @@ export default function MessagesView(props) {
     }
 
   }, [activeUserId])
+
+  useEffect(() => {
+    console.log('noMessages', messages.length === 0)
+    setNoMessages(messages.length === 0)
+  }, [messages])
 
   function handler(response) {
     getChannels()
@@ -125,16 +122,6 @@ export default function MessagesView(props) {
       .finally(() => setLoadingMessages(false))
   }
 
-  function scrollToEnd(behavior) {
-    setTimeout(() => {
-      const arr = messagesRef?.current?.children
-      if (arr?.length === 0)
-        return
-
-      arr[arr.length - 1].scrollIntoView({behavior: behavior})
-    }, 100)
-  }
-
   function getChannels() {
     const url = `${process.env.REACT_APP_API_URL}/channels?idUser=${store.getState().id}&token=${store.getState().token}`
     fetch(url)
@@ -142,8 +129,9 @@ export default function MessagesView(props) {
       .then(response => {
         console.log(response)
         setChannels(response)
-        // if (response.length > 0) {
-        console.log('first attempt', refFirstAttempt.current)
+
+        setNoChannels(response.length === 0)
+
         if (location.state?.idUser && refFirstAttempt.current) {
           setActiveUserId(location.state?.idUser)
           setFirstAttempt(false)
@@ -151,8 +139,6 @@ export default function MessagesView(props) {
           setActiveUserId(response[0]?.idUser)
           setFirstAttempt(false)
         }
-
-        // }
 
         const index = response.findIndex(channel => channel.idUser == location.state?.idUser)
         if (index === -1 && location.state?.idUser) {
@@ -178,7 +164,7 @@ export default function MessagesView(props) {
   function sendMessage() {
     console.log('send', input, activeUserId)
 
-    if (activeUserId === null)
+    if (!activeUserId)
       return
 
     const obj = {
@@ -230,6 +216,9 @@ export default function MessagesView(props) {
   function getChannelsView(rootClass) {
     return (
       <div className={rootClass}>
+        {noChannels && !activeUserId && !loading &&
+        <div style={{padding: 20, fontWeight: '600', fontSize: 16}}>No channels</div>
+        }
         {channels.map((channel, idx) =>
           <div key={idx} className={getClasses(channel.idUser)}
                onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)}>
@@ -273,6 +262,11 @@ export default function MessagesView(props) {
           {messages.map((message, idx) =>
             <MessageItem key={idx} message={message}/>
           )}
+
+          {noMessages && !loadingMessages &&
+          <div style={{margin: 30, fontWeight: '600', fontSize: 16}}>No messages</div>
+          }
+
           {loadingMessages &&
           <CircularProgress className="messages__channel__indicator" size={60}/>
           }

@@ -530,6 +530,10 @@ export default function Post(props) {
                         onClick={sharePost.bind(this, channel.idUser, channel.idChannel)}/>
             </div>
           )}
+
+          {channels.length === 0 && !loadingChannels &&
+            <div style={{width: '100%'}}>You need to have at least one channel to share.</div>
+          }
         </DialogContent>
         <DialogActions>
           <LoadingButton className="post__share__button post__share__button--outlined" loading={false}

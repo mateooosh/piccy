@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import './ProfileView.scss'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {Avatar, Button, CircularProgress, Dialog, DialogContent, DialogTitle} from "@mui/material"
 import {useHistory, useParams} from "react-router-dom"
 import User from "../../components/user/User"
 import {useSnackbar} from "notistack"
 import DataLoadStatus from "../../components/data-load-status/DataLoadStatus";
 import {checkStatus} from "../../functions/functions";
+import {t} from "../../translations/translations";
 
 export default function ProfileView() {
 
@@ -15,6 +16,7 @@ export default function ProfileView() {
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const {username} = useParams()
+  const lang = useSelector(state => state.lang)
 
   const [error, setError] = useState(null)
   const [hasError, setHasError] = useState(false)
@@ -84,13 +86,13 @@ export default function ProfileView() {
 
   function onFollowersClick() {
     setFollowsDialogOpen(true)
-    setTitleOfDialog('Followers')
+    setTitleOfDialog(t.followers2[lang])
     getFollows('followers')
   }
 
   function onFollowingClick() {
     setFollowsDialogOpen(true)
-    setTitleOfDialog('Following')
+    setTitleOfDialog(t.following2[lang])
     getFollows('following')
   }
 
@@ -185,17 +187,17 @@ export default function ProfileView() {
           <div className="profile__stats">
             <div>
               <div className="profile__stats__amount">{profile.postsAmount}</div>
-              <div className="profile__stats__type">Posts</div>
+              <div className="profile__stats__type">{t.posts2[lang]}</div>
             </div>
 
             <div  onClick={onFollowersClick}>
               <div className="profile__stats__amount">{profile.followers}</div>
-              <div className="profile__stats__type">Followers</div>
+              <div className="profile__stats__type">{t.followers[lang]}</div>
             </div>
 
             <div  onClick={onFollowingClick}>
               <div className="profile__stats__amount">{profile.following}</div>
-              <div className="profile__stats__type">Following</div>
+              <div className="profile__stats__type">{t.following[lang]}</div>
             </div>
           </div>
 
@@ -211,18 +213,18 @@ export default function ProfileView() {
               <Button variant="contained" disableRipple
                       className="profile__actions__button profile__actions__button--disabled"
                       onClick={unfollow.bind(this, store.getState().id, profile.id)}>
-                Following
+                {t.following3[lang]}
               </Button>
             ) : (
               <Button variant="contained"
                       disableRipple className="profile__actions__button"
                       onClick={follow.bind(this, store.getState().id, profile.id)}>
-                Follow
+                {t.follow[lang]}
               </Button>
             )}
 
             <Button onClick={pushToMessages} variant="contained" disableRipple className="profile__actions__button">
-              Message
+              {t.message[lang]}
             </Button>
           </div>
 
@@ -240,7 +242,7 @@ export default function ProfileView() {
             }
 
             {emptyPosts &&
-            <div className="profile__posts__empty">User has no posts</div>
+            <div className="profile__posts__empty">{t.userHasNoPosts[lang]}</div>
             }
           </div>
         </>
@@ -261,7 +263,7 @@ export default function ProfileView() {
             )}
 
             {emptyFollows &&
-            <div className="profile__dialog__error">No users found</div>
+            <div className="profile__dialog__error">{t.noUsersFound[lang]}</div>
             }
           </DialogContent>
         </Dialog>

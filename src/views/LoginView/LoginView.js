@@ -5,8 +5,9 @@ import {LoadingButton} from "@mui/lab"
 
 import {validation} from '../../functions/functions'
 import {Link, useHistory} from "react-router-dom"
-import {useStore} from "react-redux"
-import {useSnackbar} from "notistack";
+import {useSelector, useStore} from "react-redux"
+import {useSnackbar} from "notistack"
+import {t} from '../../translations/translations'
 
 export default function LoginView() {
   const [username, setUsername] = useState('')
@@ -16,6 +17,7 @@ export default function LoginView() {
   const store = useStore()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   useEffect(() => {
     return() => {
@@ -50,7 +52,7 @@ export default function LoginView() {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message, {
+        enqueueSnackbar(response.message[lang], {
           variant: 'success'
         })
         localStorage.setItem('token', response.token)
@@ -68,7 +70,7 @@ export default function LoginView() {
         history.push('/')
       })
       .catch(err => {
-        enqueueSnackbar('Wrong credentials! Try again.', {
+        enqueueSnackbar(t.wrongCredentials[lang], {
           variant: 'error'
         })
       })
@@ -80,11 +82,11 @@ export default function LoginView() {
   }
 
   function helperTextUsername() {
-    return hasError(username) ? 'Username must be at least 6 characters long' : ''
+    return hasError(username) ? t.usernameAtLeast6[lang] : ''
   }
 
   function helperTextPassword() {
-    return hasError(password) ? 'Password must be at least 6 characters long' : ''
+    return hasError(password) ? t.passwordAtLeast6[lang] : ''
   }
 
   function allCorrect() {
@@ -102,7 +104,7 @@ export default function LoginView() {
   return (
     <div className="login">
       <img src="piccy.svg" alt="Piccy" className="login__logo"/>
-      <TextField className="login__input" label="Username" variant="standard" error={hasError(username)} value={username}
+      <TextField className="login__input" label={t.username[lang]} variant="standard" error={hasError(username)} value={username}
                  onChange={e => setUsername(e.target.value)} helperText={helperTextUsername()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -110,7 +112,7 @@ export default function LoginView() {
                      ev.preventDefault()
                    }
                  }}/>
-      <TextField className="login__input" label="Password" variant="standard" error={hasError(password)} value={password}
+      <TextField className="login__input" label={t.password[lang]} variant="standard" error={hasError(password)} value={password}
                  onChange={e => setPassword(e.target.value)} helperText={helperTextPassword()}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
@@ -121,10 +123,10 @@ export default function LoginView() {
                  type="password"/>
 
       <LoadingButton loading={loading} onClick={logIn} variant={getButtonVariant()} disabled={!allCorrect()} disableRipple className={getButtonClasses()}>
-        Log in
+        {t.logIn[lang]}
       </LoadingButton>
       <div className="login__divider"></div>
-      <p className="login__paragraph">You don't have an account on Piccy? <Link to="register" className="login__paragraph--sign-up">Sign up</Link></p>
+      <p className="login__paragraph">{t.youDontHaveAnAccount[lang]} <Link to="register" className="login__paragraph--sign-up">{t.signUpHere[lang]}</Link></p>
 
     </div>
   )
