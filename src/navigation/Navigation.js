@@ -18,9 +18,10 @@ import SettingsView from "../views/SettingsView/SettingsView"
 import {io} from "socket.io-client"
 import MessagesView from "../views/MessagesView/MessagesView"
 import {useSnackbar} from "notistack"
-import SearchView from "../views/SearchView/SearchView";
-import TagView from "../views/TagView/TagView";
-import AdminDashboard from "../views/AdminDashboard/AdminDashboard";
+import SearchView from "../views/SearchView/SearchView"
+import TagView from "../views/TagView/TagView"
+import AdminDashboard from "../views/AdminDashboard/AdminDashboard"
+import {t} from '../translations/translations'
 
 export default function Navigation() {
   return (
@@ -35,6 +36,7 @@ function NavigationContent() {
   const store = useStore()
   const history = useHistory()
   const { enqueueSnackbar } = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   const logged = useSelector(state => state.logged)
   const role = useSelector(state => state.role)
@@ -72,8 +74,6 @@ function NavigationContent() {
     if(!pathname.includes('messages')) {
       enqueueSnackbar(`${message.usernameSender}: ${message.message}`)
       store.dispatch({type: 'notificationAmountSet', payload: store.getState().notificationAmount + 1})
-    } else {
-      console.log('nie')
     }
   }
 
@@ -83,7 +83,7 @@ function NavigationContent() {
     localStorage.clear()
     store.dispatch({type: 'resetStore'})
     history.push('/')
-    enqueueSnackbar('You have been logged out because of invalid token', {
+    enqueueSnackbar(t.youHaveBeenLoggedOutBecauceOfToken[lang], {
       variant: 'error'
     })
   }

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import './SearchView.scss'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {Close} from "@mui/icons-material"
 import Tab from '@mui/material/Tab'
@@ -10,11 +10,13 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import {Box, CircularProgress, Tabs} from "@mui/material"
 import User from "../../components/user/User"
+import {t} from '../../translations/translations'
 
 export default function SearchView() {
 
   const store = useStore()
   const history = useHistory()
+  const lang = useSelector(state => state.lang)
 
   const [query, setQuery] = useState('')
 
@@ -93,7 +95,7 @@ export default function SearchView() {
         <div className="search__top">
           <input value={query}
                  onChange={e => setQuery(e.target.value)}
-                 className="search__input" type="text" placeholder="Type here..."/>
+                 className="search__input" type="text" placeholder={t.typeHere[lang]}/>
           {getCloseIcon()}
         </div>
 

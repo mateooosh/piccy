@@ -20,6 +20,7 @@ export default function App() {
       store.dispatch({type: "idSet", payload: localStorage.getItem('id')})
       store.dispatch({type: "avatarSet", payload: localStorage.getItem('avatar')})
       store.dispatch({type: "roleSet", payload: localStorage.getItem('role')})
+      store.dispatch({type: "langSet", payload: localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en'})
       store.dispatch({type: "logged/true"})
     }
   }, [])

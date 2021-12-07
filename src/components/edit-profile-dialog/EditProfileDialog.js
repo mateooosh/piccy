@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import './EditProfileDialog.scss'
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {
   Avatar,
   Button,
@@ -16,11 +16,13 @@ import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from 'notistack'
 import {useHistory} from "react-router-dom"
 import ImagePicker from "../image-picker/ImagePicker"
+import {t} from "../../translations/translations"
 
 export default function EditProfileDialog({open, setOpen, profile, getProfile}) {
   const history = useHistory()
   const store = useStore()
   const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   const [avatar, setAvatar] = useState(null)
   const [email, setEmail] = useState('')
@@ -82,14 +84,14 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message, {
+        enqueueSnackbar(response.message[lang], {
           variant: 'success'
         })
         setOpen(false)
         getProfile()
         store.dispatch({type: 'avatarSet', payload: getAvatar()})
       })
-      .catch(err => enqueueSnackbar('Something went wrong'))
+      .catch(err => enqueueSnackbar(t.somethingWentWrong[lang]))
       .finally(() => setLoading(false))
   }
 
@@ -121,7 +123,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
 
       {!!profile &&
       <>
-        <DialogTitle style={{fontWeight: '600'}}>Edit profile</DialogTitle>
+        <DialogTitle style={{fontWeight: '600'}}>{t.editProfile[lang]}</DialogTitle>
         <DialogContent className="edit__content">
           {getAvatar() !== null ? (
             <>
@@ -151,7 +153,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
           />
 
           <TextField className="edit__input"
-                     label="Username"
+                     label={t.username[lang]}
                      variant="standard"
                      value={username}
                      onChange={e => setUsername(e.target.value)}
@@ -159,14 +161,14 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
           />
 
           <TextField className="edit__input"
-                     label="Name"
+                     label={t.name[lang]}
                      variant="standard"
                      value={name || ''}
                      onChange={e => setName(e.target.value)}
           />
 
           <TextField className="edit__input"
-                     label="Description"
+                     label={t.description[lang]}
                      variant="standard"
                      value={description || ''}
                      onChange={e => setDescription(e.target.value)}
@@ -180,7 +182,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
             disableRipple
             onClick={closeDialog}
           >
-            Cancel
+            {t.cancel[lang]}
           </Button>
           <LoadingButton
             loading={loading}
@@ -189,7 +191,7 @@ export default function EditProfileDialog({open, setOpen, profile, getProfile}) 
             disableRipple
             onClick={saveChanges}
           >
-            Save changes
+            {t.saveChanges[lang]}
           </LoadingButton>
         </DialogActions>
       </>

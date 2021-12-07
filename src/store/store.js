@@ -6,7 +6,7 @@ const initialState = {
   token: '',
   username: '',
   id: null,
-  lang: 'pl',
+  lang: 'en',
   notificationAmount: 0,
   avatar: null,
   role: 'USER'

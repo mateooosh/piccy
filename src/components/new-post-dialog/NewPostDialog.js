@@ -1,21 +1,24 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import './NewPostDialog.scss'
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material"
-import {LoadingButton} from "@mui/lab";
-import { useSnackbar } from 'notistack';
+import {LoadingButton} from "@mui/lab"
+import { useSnackbar } from 'notistack'
+import {t} from "../../translations/translations"
+
 
 export default function NewPostDialog({croppedImage, open, setOpen}) {
 
   const store = useStore()
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
+  const lang = useSelector(state => state.lang)
+
 
   const [caption, setCaption] = useState('')
 
   const [loading, setLoading] = useState(false)
 
   function createPost() {
-    console.log('create post')
     const index = croppedImage.indexOf(',')
     let base64 = croppedImage.slice(index + 1, (croppedImage.length))
 
@@ -41,10 +44,10 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
       .then(response => response.json())
       .then(response => {
         setOpen(false)
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
       })
       .catch(err => {
-        enqueueSnackbar('Something went wrong')
+        enqueueSnackbar(t.somethingWentWrong[lang])
       })
       .finally(() => setLoading(false))
   }
@@ -76,7 +79,7 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
           disableRipple
           onClick={() => setOpen(false)}
         >
-          Cancel
+          {t.cancel[lang]}
         </Button>
         <LoadingButton
           loading={loading}
@@ -85,7 +88,7 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
           disableRipple
           onClick={createPost}
         >
-          Create
+          {t.create[lang]}
         </LoadingButton>
       </DialogActions>
     </Dialog>

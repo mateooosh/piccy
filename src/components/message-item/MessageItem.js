@@ -4,13 +4,16 @@ import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {displayTimeV2} from '../../functions/functions'
 import {Collapse} from "@mui/material";
+import {t} from "../../translations/translations";
 
 export default function MessageItem({message}) {
   const store = useStore()
   const history = useHistory()
   const [displayTime, setDisplayTime] = useState(false)
 
+
   const id = useSelector(state => state.id)
+  const lang = useSelector(state => state.lang)
 
   return (
     <>
@@ -25,7 +28,7 @@ export default function MessageItem({message}) {
             <div className="message__block message__block--my" onClick={() => setDisplayTime(!displayTime)}>
               {message.message.startsWith('LINKTOPOST') ? (
                 <span className="message__block__link"
-                      onClick={() => history.push('/post/' + message.message.split('|')[1])}>Link to post</span>
+                      onClick={() => history.push('/post/' + message.message.split('|')[1])}>{t.linkToPost[lang]}</span>
               ) : (
                 message.message
               )}
@@ -43,7 +46,7 @@ export default function MessageItem({message}) {
             <div className="message__block message__block--other" onClick={() => setDisplayTime(!displayTime)}>
               {message.message.startsWith('LINKTOPOST') ? (
                 <span className="message__block__link"
-                      onClick={() => history.push('/post/' + message.message.split('|')[1])}>Link to post</span>
+                      onClick={() => history.push('/post/' + message.message.split('|')[1])}>{t.linkToPost[lang]}</span>
               ) : (
                 message.message
               )}

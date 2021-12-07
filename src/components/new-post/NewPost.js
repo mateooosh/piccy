@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import './NewPost.scss'
 import {Button, IconButton} from "@mui/material"
-import ImagePicker from "../image-picker/ImagePicker";
-import NewPostDialog from "../new-post-dialog/NewPostDialog";
+import ImagePicker from "../image-picker/ImagePicker"
+import NewPostDialog from "../new-post-dialog/NewPostDialog"
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined"
+import {useSelector} from "react-redux"
+import {t} from "../../translations/translations"
 
 export default function NewPost() {
 
@@ -11,6 +13,8 @@ export default function NewPost() {
 
   const [croppedImage, setCroppedImage] = useState(null)
   const [src, setSrc] = useState(null)
+  const lang = useSelector(state => state.lang)
+
 
   useEffect(() => {
     croppedImage ? setNewPostDialogIsOpen(true) : setNewPostDialogIsOpen(false)
@@ -31,7 +35,7 @@ export default function NewPost() {
       <input accept="image/*" style={{display: 'none'}} id="icon-button-file" type="file" onChange={onSelectFile}/>
       <label htmlFor="icon-button-file">
         <Button className="new-post-button__button" color="primary" component="span" variant="contained">
-          New post
+          {t.newPost[lang]}
         </Button>
       </label>
 

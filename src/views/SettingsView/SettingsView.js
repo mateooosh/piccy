@@ -13,13 +13,13 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import {validation} from "../../functions/functions";
+import {validation} from "../../functions/functions"
+import {t} from '../../translations/translations'
 
 export default function SettingsView() {
   const store = useStore()
   const {enqueueSnackbar} = useSnackbar()
   const history = useHistory()
-
   const lang = useSelector(state => state.lang)
 
   const [socket, setSocket] = useState(null)
@@ -68,12 +68,12 @@ export default function SettingsView() {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
         socket.emit('log-out', store.getState().username)
         store.dispatch({type: 'resetStore'})
         history.push('/')
       })
-      .catch(err => enqueueSnackbar('Something went wrong!'))
+      .catch(err => enqueueSnackbar(t.somethingWentWrong[lang]))
       .finally(() => setLoadingDeleteAccount(false))
   }
 
@@ -100,7 +100,7 @@ export default function SettingsView() {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
       })
       .catch(err => console.log(err))
       .finally(() => {
@@ -120,19 +120,20 @@ export default function SettingsView() {
     }
   }
 
-  function handleLangChange(lang) {
-    store.dispatch({type: "langSet", payload: lang})
+  function handleLangChange(l) {
+    store.dispatch({type: "langSet", payload: l})
+    localStorage.setItem('lang', l)
   }
 
   function resetPassword() {
     if (newPassword !== newPassword2) {
-      enqueueSnackbar('The given passwords do not match', {
+      enqueueSnackbar(t.givenPasswordsDoNotMatch[lang], {
         variant: 'error'
       })
       return
     }
 
-      const url = `${process.env.REACT_APP_API_URL}/reset/password`;
+    const url = `${process.env.REACT_APP_API_URL}/reset/password`;
     const obj = {
       idUser: store.getState().id,
       oldPassword: oldPassword,
@@ -151,8 +152,8 @@ export default function SettingsView() {
       .then(response => response.json())
       .then(response => {
         console.log(response.message)
-        enqueueSnackbar(response.message, {
-          variant: 'success'
+        enqueueSnackbar(response.message[lang], {
+          variant: response.message.variant
         })
       })
       .catch(err => console.log(err))
@@ -165,11 +166,11 @@ export default function SettingsView() {
   }
 
   function helperTextOldPassword() {
-    return hasError(oldPassword) ? 'Old password must be at least 6 characters long' : ''
+    return hasError(oldPassword) ? t.oldPasswordMustBeAtLeast6[lang] : ''
   }
 
   function helperTextNewPassword(value) {
-    return hasError(value) ? 'New password must be at least 6 characters long' : ''
+    return hasError(value) ? t.newPasswordMustBeAtLeast6[lang] : ''
   }
 
   function hasError(string) {
@@ -191,18 +192,17 @@ export default function SettingsView() {
           >
             <div>
               <PersonRemoveRounded className="settings__accordion__summary__icon"/>
-              Delete account
+              {t.deleteAccount[lang]}
             </div>
           </AccordionSummary>
           <AccordionDetails className="settings__details">
             <div>
-              Are you sure You want to delete your account? Your every post, comment, message and many, many others will
-              be removed. It will not be possible to restore it.
+              {t.areYouSureYouWantToDeleteThisAccount[lang]}
             </div>
             <div className="settings__details__actions">
               <LoadingButton onClick={deleteAccount} variant="contained" disableRipple loading={loadingDeleteAccount}
                              className="settings__details__button settings__details__button--danger">
-                Delete account
+                {t.deleteAccount[lang]}
               </LoadingButton>
             </div>
           </AccordionDetails>
@@ -215,16 +215,16 @@ export default function SettingsView() {
           >
             <div>
               <BugReportOutlined className="settings__accordion__summary__icon"/>
-              Report bug
+              {t.reportBug[lang]}
             </div>
           </AccordionSummary>
           <AccordionDetails className="settings__details">
             <div>
               <div>
-                Describe some observation, event, happening or condition we need to resolve
+                {t.describeSomeObservation[lang]}
               </div>
               <TextField className="settings__details__input settings__details__input--margin"
-                         label="Bug description"
+                         label={t.typeHere[lang]}
                          variant="standard"
                          value={bugDescription}
                          onChange={e => setBugDescription(e.target.value)}
@@ -243,11 +243,11 @@ export default function SettingsView() {
                   hidden
                   onChange={onSelectFile}
                 />
-                Attach screenshot
+                {t.attachScreenshot[lang]}
               </LoadingButton>
               <LoadingButton onClick={reportBug} variant="contained" disableRipple loading={loadingReportBug}
                              className="settings__details__button">
-                Report
+                {t.report[lang]}
               </LoadingButton>
             </div>
           </AccordionDetails>
@@ -260,10 +260,10 @@ export default function SettingsView() {
           >
             <div>
               <LanguageOutlined className="settings__accordion__summary__icon"/>
-              Language
+              {t.language[lang]}
             </div>
             <div>
-              {(lang === 'en') ? 'English' : 'Polish'}
+              {(lang === 'en') ? t.english[lang] : t.polish[lang]}
             </div>
           </AccordionSummary>
           <AccordionDetails className="settings__details settings__details--no-padding">
@@ -276,7 +276,7 @@ export default function SettingsView() {
                 src="https://flagcdn.com/gb.svg"
                 width="40"
                 alt="England"/>
-              English
+              {t.english[lang]}
             </ListItemButton>
             <Divider/>
             <ListItemButton
@@ -287,8 +287,8 @@ export default function SettingsView() {
               <img
                 src="https://flagcdn.com/pl.svg"
                 width="40"
-                alt="England"/>
-              Polish
+                alt="Poland"/>
+              {t.polish[lang]}
             </ListItemButton>
           </AccordionDetails>
         </Accordion>
@@ -301,12 +301,12 @@ export default function SettingsView() {
           >
             <div>
               <LockOutlinedIcon className="settings__accordion__summary__icon"/>
-              Reset password
+              {t.resetPassword[lang]}
             </div>
           </AccordionSummary>
           <AccordionDetails className="settings__details">
             <TextField className="settings__details__input"
-                       label="Old password"
+                       label={t.oldPassword[lang]}
                        variant="standard"
                        type="password"
                        value={oldPassword}
@@ -316,7 +316,7 @@ export default function SettingsView() {
             />
 
             <TextField className="settings__details__input settings__details__input--margin"
-                       label="New password"
+                       label={t.newPassword[lang]}
                        variant="standard"
                        type="password"
                        value={newPassword}
@@ -326,7 +326,7 @@ export default function SettingsView() {
             />
 
             <TextField className="settings__details__input"
-                       label="Re-enter new password"
+                       label={t.reenterPassword[lang]}
                        variant="standard"
                        type="password"
                        value={newPassword2}
@@ -340,12 +340,12 @@ export default function SettingsView() {
               {activeButton() ? (
                 <LoadingButton onClick={resetPassword} variant="contained" disableRipple loading={loadingResetPassword}
                                className="settings__details__button">
-                  Reset password
+                  {t.resetPassword[lang]}
                 </LoadingButton>
               ) : (
                 <LoadingButton variant="outlined" disableRipple
                                className="settings__details__button   settings__details__button--outlined">
-                  Reset password
+                  {t.resetPassword[lang]}
                 </LoadingButton>
               )}
             </div>

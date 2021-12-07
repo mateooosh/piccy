@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import './AdminDashboard.scss'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
   Avatar,
@@ -24,11 +24,13 @@ import AdminUsers from "../../components/admin-users/AdminUsers";
 import AdminPosts from "../../components/admin-posts/AdminPosts";
 import AdminReportsPosts from "../../components/admin-reports-posts/AdminReportsPosts";
 import AdminReportsBugs from "../../components/admin-reports-bugs/AdminReportsBugs";
+import {t} from "../../translations/translations";
 
 export default function AdminDashboard() {
 
   const store = useStore()
   const history = useHistory()
+  const lang = useSelector(state => state.lang)
 
   const [openReports, setOpenReports] = React.useState(false)
   const [selected, setSelected] = React.useState('Users')
@@ -87,21 +89,21 @@ export default function AdminDashboard() {
             <ListItemIcon>
               <PeopleAltIcon/>
             </ListItemIcon>
-            <ListItemText primary="Users"/>
+            <ListItemText primary={t.users[lang]}/>
           </ListItemButton>
           <Divider/>
           <ListItemButton selected={selected === 'Posts'} onClick={(event) => handleListItemClick(event, 'Posts')}>
             <ListItemIcon>
               <PhotoLibraryIcon/>
             </ListItemIcon>
-            <ListItemText primary="Posts"/>
+            <ListItemText primary={t.posts[lang]}/>
           </ListItemButton>
           <Divider/>
           <ListItemButton onClick={handleClick}>
             <ListItemIcon>
               <ReportIcon/>
             </ListItemIcon>
-            <ListItemText primary="Reports"/>
+            <ListItemText primary={t.reports[lang]}/>
             {openReports ? <ExpandLess/> : <ExpandMore/>}
           </ListItemButton>
           <Collapse in={openReports} timeout="auto" unmountOnExit>
@@ -111,7 +113,7 @@ export default function AdminDashboard() {
                 <ListItemIcon>
                   <PhotoLibraryIcon/>
                 </ListItemIcon>
-                <ListItemText primary="Posts"/>
+                <ListItemText primary={t.posts[lang]}/>
               </ListItemButton>
               <Divider/>
               <ListItemButton sx={{pl: 4}} selected={selected === 'Reports|Bugs'}
@@ -119,7 +121,7 @@ export default function AdminDashboard() {
                 <ListItemIcon>
                   <BugReportIcon/>
                 </ListItemIcon>
-                <ListItemText primary="Bugs"/>
+                <ListItemText primary={t.bugs[lang]}/>
               </ListItemButton>
             </List>
 

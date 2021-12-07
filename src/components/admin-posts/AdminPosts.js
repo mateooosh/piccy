@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AdminPosts.scss'
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
   Button,
@@ -24,12 +24,14 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from "notistack"
 import TablePaginationActions from "../table-pagination-actions/TablePaginationActions";
+import {t} from "../../translations/translations"
 
 export default function AdminPosts() {
 
   const store = useStore()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   const [query, setQuery] = useState('')
   const [posts, setPosts] = useState([])
@@ -121,10 +123,10 @@ export default function AdminPosts() {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
         getPosts()
       })
-      .catch(() => enqueueSnackbar('Something went wrong!'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
       .finally(() => {
         setIsLoadingDeleting(false)
         setDeletePostDialogIsOpen(false)
@@ -133,11 +135,11 @@ export default function AdminPosts() {
 
   return (
     <div className="admin-posts">
-      <h2 className="admin-posts__title">Posts</h2>
+      <h2 className="admin-posts__title">{t.posts[lang]}</h2>
 
       <input value={query}
              onChange={e => setQuery(e.target.value)}
-             className="admin-posts__input" type="text" placeholder="Type here query..."/>
+             className="admin-posts__input" type="text" placeholder={t.typeHere[lang]}/>
 
       {postsLoading ? (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
@@ -148,12 +150,12 @@ export default function AdminPosts() {
           <TableHead>
             <TableRow>
               <TableCell sx={{fontWeight: 700}}>ID</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Photo</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Uploader</TableCell>
-              <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">Upload date</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Caption</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="center">Likes</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="center">Actions</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.photo[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.uploader[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">{t.uploadDate[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.caption[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">{t.likes[lang].charAt(0).toUpperCase() + t.likes[lang].slice(1)}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">{t.actions[lang]}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -201,12 +203,12 @@ export default function AdminPosts() {
                   {row.likes}
                 </TableCell>
                 <TableCell align="center" sx={{minWidth: 120}}>
-                  <Tooltip title="Go to post">
+                  <Tooltip title={t.goToPost[lang]}>
                     <IconButton onClick={() => window.open(`/post/${row.id}`, '_blank').focus()}>
                       <RemoveRedEyeIcon/>
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Delete post">
+                  <Tooltip title={t.deletePost[lang]}>
                     <IconButton onClick={() => onDeletePostClick(row.id)}>
                       <DeleteForeverIcon color="error"/>
                     </IconButton>
@@ -224,10 +226,11 @@ export default function AdminPosts() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                rowsPerPageOptions={[5, 10, 25, {label: t.all[lang], value: -1}]}
                 colSpan={7}
                 count={postsResult.length}
                 rowsPerPage={rowsPerPage}
+                labelRowsPerPage={t.rowsPerPage[lang]}
                 page={page}
                 SelectProps={{
                   native: true,
@@ -247,9 +250,9 @@ export default function AdminPosts() {
         keepMounted
         onClose={closeDeletePostDialog}
       >
-        <DialogTitle style={{fontWeight: '600'}}>Delete post</DialogTitle>
+        <DialogTitle style={{fontWeight: '600'}}>{t.deletePost[lang]}</DialogTitle>
         <DialogContent sx={{lineHeight: 1.5}}>
-          Are you sure You want to delete this post? It will not be possible to restore it.
+          {t.areYouSureYouWantToRemoveThisPost[lang]}
         </DialogContent>
         <DialogActions>
           <Button
@@ -258,7 +261,7 @@ export default function AdminPosts() {
             disableRipple
             onClick={closeDeletePostDialog}
           >
-            Cancel
+            {t.cancel[lang]}
           </Button>
           <LoadingButton
             loading={isLoadingDeleting}
@@ -267,7 +270,8 @@ export default function AdminPosts() {
             disableRipple
             onClick={deletePost}
           >
-            Delete post
+
+            {t.deletePost[lang]}
           </LoadingButton>
         </DialogActions>
       </Dialog>

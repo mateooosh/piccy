@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import './MessagesView.scss'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import variables from "../../styles/variables.module.scss"
 import {io} from "socket.io-client"
 import {Avatar, Chip, CircularProgress, TextField} from "@mui/material"
@@ -10,12 +10,13 @@ import SendIcon from '@mui/icons-material/Send'
 import MessagesDrawer from "../../components/messages-drawer/MessagesDrawer"
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 import {useHistory, useLocation} from "react-router-dom"
-
+import {t} from '../../translations/translations'
 export default function MessagesView(props) {
 
   const store = useStore()
   const history = useHistory()
   const location = useLocation()
+  const lang = useSelector(state => state.lang)
 
   const messagesRef = useRef()
 
@@ -217,7 +218,7 @@ export default function MessagesView(props) {
     return (
       <div className={rootClass}>
         {noChannels && !activeUserId && !loading &&
-        <div style={{padding: 20, fontWeight: '600', fontSize: 16}}>No channels</div>
+        <div style={{padding: 20, fontWeight: '600', fontSize: 16}}>{t.noChannels[lang]}</div>
         }
         {channels.map((channel, idx) =>
           <div key={idx} className={getClasses(channel.idUser)}
@@ -235,7 +236,7 @@ export default function MessagesView(props) {
               </div>
             </div>
             {channel.status == 1 ? (
-              <Chip onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)} label="New" color="primary"
+              <Chip onClick={handleUserClick.bind(this, channel.idUser, channel.idChannel)} label={t.new[lang]} color="primary"
                     style={{color: 'white'}}/>
             ) : null}
           </div>
@@ -264,7 +265,7 @@ export default function MessagesView(props) {
           )}
 
           {noMessages && !loadingMessages &&
-          <div style={{margin: 30, fontWeight: '600', fontSize: 16}}>No messages</div>
+          <div style={{margin: 30, fontWeight: '600', fontSize: 16}}>{t.noMessages[lang]}</div>
           }
 
           {loadingMessages &&
@@ -274,7 +275,7 @@ export default function MessagesView(props) {
         <div className="messages__channel__bottom">
           <input value={input}
                  onChange={e => setInput(e.target.value)}
-                 className="messages__channel__input" type="text" placeholder="Type here..."
+                 className="messages__channel__input" type="text" placeholder={t.typeHere[lang]}
                  onKeyPress={(ev) => {
                    if (ev.key === 'Enter') {
                      sendMessage()

@@ -24,10 +24,6 @@ export default function PostView() {
   const [hasError, setHasError] = useState(false)
 
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']})
-
-    console.log(id)
-
     const url = `${process.env.REACT_APP_API_URL}/posts/${id}?idUser=${store.getState().id}`
     setLoading(true)
     fetch(url, {
@@ -37,14 +33,6 @@ export default function PostView() {
     })
       .then(res => checkStatus(res))
       .then(response => {
-        if(response?.code === 'POST_NOT_FOUND') {
-          enqueueSnackbar(response.message, {
-            variant: 'error'
-          })
-          history.push('/')
-          return
-        }
-
         setPost(response)
       })
       .catch(err => {

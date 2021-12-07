@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AdminUsers.scss'
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
   Avatar,
@@ -24,12 +24,14 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from "notistack"
 import TablePaginationActions from "../table-pagination-actions/TablePaginationActions";
+import {t} from "../../translations/translations"
 
 export default function AdminUsers() {
 
   const store = useStore()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   const [query, setQuery] = useState('')
   const [users, setUsers] = useState([])
@@ -112,7 +114,7 @@ export default function AdminUsers() {
 
   function deleteAccount() {
     if(idUserToDelete === store.getState().id) {
-      enqueueSnackbar('Cannot delete your account from admin dashboard.')
+      enqueueSnackbar(t.cannotDeleteYourAccountFromAdminDashboard[lang])
       return
     }
 
@@ -127,10 +129,11 @@ export default function AdminUsers() {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        console.log(response.message)
+        enqueueSnackbar(response.message[lang])
         getUsers()
       })
-      .catch(() => enqueueSnackbar('Something went wrong!'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
       .finally(() => {
         setIsLoadingDeleting(false)
         setDeleteAccountDialogIsOpen(false)
@@ -139,7 +142,7 @@ export default function AdminUsers() {
 
   function changeRole(id, role) {
     if(id === store.getState().id) {
-      enqueueSnackbar('Cannot change role of yourself')
+      enqueueSnackbar(t.cannotChangeRoleOfYourself[lang])
       return
     }
 
@@ -162,16 +165,16 @@ export default function AdminUsers() {
         enqueueSnackbar(response.message)
         getUsers()
       })
-      .catch(() => enqueueSnackbar('Something went wrong!'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
   }
 
   return (
     <div className="admin-users">
-      <h2 className="admin-users__title">Users</h2>
+      <h2 className="admin-users__title">{t.users[lang]}</h2>
 
       <input value={query}
              onChange={e => setQuery(e.target.value)}
-             className="admin-users__input" type="text" placeholder="Type here query..."/>
+             className="admin-users__input" type="text" placeholder={t.typeHere[lang]}/>
 
       {usersLoading ? (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
@@ -182,11 +185,11 @@ export default function AdminUsers() {
           <TableHead>
             <TableRow>
               <TableCell sx={{fontWeight: 700}}>ID</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Username</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Name</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.username[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.name[lang]}</TableCell>
               <TableCell sx={{fontWeight: 700}} align="left">E-mail</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="center">Role</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="center">Actions</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">{t.role[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">{t.actions[lang]}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -210,23 +213,23 @@ export default function AdminUsers() {
                 </TableCell>
                 <TableCell align="center">
                   {row.role === 'ADMIN' ? (
-                    <Tooltip title="Change role to USER">
-                      <Chip label='ADMIN' color="primary"
+                    <Tooltip title={t.changeRoleToUSER[lang]}>
+                      <Chip label={t.ADMIN[lang]} color="primary"
                         style={{color: 'white'}} onClick={() => changeRole(row.id, 'USER')}/>
                     </Tooltip>
                   ) : (
-                    <Tooltip title="Change role to ADMIN">
-                      <Chip label='USER' variant="outlined" onClick={() => changeRole(row.id, 'ADMIN')}/>
+                    <Tooltip title={t.changeRoleToADMIN[lang]}>
+                      <Chip label={t.USER[lang]} variant="outlined" onClick={() => changeRole(row.id, 'ADMIN')}/>
                     </Tooltip>
                   )}
                 </TableCell>
                 <TableCell align="center" sx={{minWidth: 120}}>
-                  <Tooltip title="Go to user">
+                  <Tooltip title={t.goToUser[lang]}>
                     <IconButton onClick={() => window.open(`/${row.username}`, '_blank').focus()}>
                       <RemoveRedEyeIcon/>
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Delete account">
+                  <Tooltip title={t.deleteAccount[lang]}>
                     <IconButton onClick={() => onDeleteAccountClick(row.id)}>
                       <PersonRemoveRounded color="error"/>
                     </IconButton>
@@ -244,10 +247,11 @@ export default function AdminUsers() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                rowsPerPageOptions={[5, 10, 25, {label: t.all[lang], value: -1}]}
                 colSpan={6}
                 count={usersResult.length}
                 rowsPerPage={rowsPerPage}
+                labelRowsPerPage={t.rowsPerPage[lang]}
                 page={page}
                 SelectProps={{
                   native: true,
@@ -266,10 +270,9 @@ export default function AdminUsers() {
         keepMounted
         onClose={closeDeleteAccountDialog}
       >
-        <DialogTitle style={{fontWeight: '600'}}>Delete account</DialogTitle>
+        <DialogTitle style={{fontWeight: '600'}}>{t.deleteAccount[lang]}</DialogTitle>
         <DialogContent sx={{lineHeight: 1.5}}>
-          Are you sure You want to delete this account? Every post, comment, message and many, many others will
-          be removed. It will not be possible to restore it.
+          {t.areYouSureYouWantToDeleteThisAccount[lang]}
         </DialogContent>
         <DialogActions>
           <Button
@@ -278,7 +281,7 @@ export default function AdminUsers() {
             disableRipple
             onClick={closeDeleteAccountDialog}
           >
-            Cancel
+            {t.cancel[lang]}
           </Button>
           <LoadingButton
             loading={isLoadingDeleting}
@@ -287,7 +290,7 @@ export default function AdminUsers() {
             disableRipple
             onClick={deleteAccount}
           >
-            Delete account
+            {t.deleteAccount[lang]}
           </LoadingButton>
         </DialogActions>
       </Dialog>

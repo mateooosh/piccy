@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AdminReportsBugs.scss'
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {
   Chip,
@@ -16,14 +16,17 @@ import {
   Tooltip
 } from "@mui/material"
 import {useSnackbar} from "notistack"
-import TablePaginationActions from "../table-pagination-actions/TablePaginationActions";
-import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
+import TablePaginationActions from "../table-pagination-actions/TablePaginationActions"
+import NoPhotographyIcon from '@mui/icons-material/NoPhotography'
+import {t} from "../../translations/translations"
+
 
 export default function AdminReportsBugs() {
 
   const store = useStore()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
 
   const [query, setQuery] = useState('')
   const [bugs, setBugs] = useState([])
@@ -95,7 +98,7 @@ export default function AdminReportsBugs() {
         console.log('reported bugs: ', response)
         setBugs(response)
       })
-      .catch(() => enqueueSnackbar('Something went wrong'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
       .finally(() => setBugsLoading(false))
   }
 
@@ -119,10 +122,10 @@ export default function AdminReportsBugs() {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
         getReportedBugs()
       })
-      .catch(() => enqueueSnackbar('Something went wrong!'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
   }
 
   function displayAttachment(id) {
@@ -144,16 +147,16 @@ export default function AdminReportsBugs() {
         console.log('photo', response)
         setPhoto(response.attachment)
       })
-      .catch(() => enqueueSnackbar('Something went wrong!'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
   }
 
   return (
     <div className="admin-reports-bugs">
-      <h2 className="admin-reports-bugs__title">Reported bugs</h2>
+      <h2 className="admin-reports-bugs__title">{t.reportedBugs[lang]}</h2>
 
       <input value={query}
              onChange={e => setQuery(e.target.value)}
-             className="admin-reports-bugs__input" type="text" placeholder="Type here query..."/>
+             className="admin-reports-bugs__input" type="text" placeholder={t.typeHere[lang]}/>
 
       {bugsLoading ? (
         <div style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>
@@ -164,10 +167,10 @@ export default function AdminReportsBugs() {
           <TableHead>
             <TableRow>
               <TableCell sx={{fontWeight: 700}}>ID</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="center">Attachment</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Reporter</TableCell>
-              <TableCell sx={{fontWeight: 700}} align="left">Description</TableCell>
-              <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">Date</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="center">{t.attachment[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.reportedBy[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700}} align="left">{t.description[lang]}</TableCell>
+              <TableCell sx={{fontWeight: 700, minWidth: 110}} align="center">{t.date[lang]}</TableCell>
               <TableCell sx={{fontWeight: 700}} align="center">Status</TableCell>
             </TableRow>
           </TableHead>
@@ -199,14 +202,14 @@ export default function AdminReportsBugs() {
                 </TableCell>
                 <TableCell align="center">
                   {row.status == 'opened' &&
-                  <Tooltip title="Mark as resolved">
-                  <Chip label="Opened" color="primary" style={{color: 'white'}} onClick={() => markAs(row.id, 'resolved')}/>
+                  <Tooltip title={t.markAsResolved[lang]}>
+                  <Chip label={t.opened[lang]} color="primary" style={{color: 'white'}} onClick={() => markAs(row.id, 'resolved')}/>
                   </Tooltip>
                   }
 
                   {row.status === 'resolved' &&
-                  <Tooltip title="Mark as opened">
-                    <Chip label="Resolved" color="primary" variant="outlined" onClick={() => markAs(row.id, 'opened')}/>
+                  <Tooltip title={t.markAsOpened[lang]}>
+                    <Chip label={t.resolved[lang]} color="primary" variant="outlined" onClick={() => markAs(row.id, 'opened')}/>
                   </Tooltip>
                   }
                 </TableCell>
@@ -222,10 +225,11 @@ export default function AdminReportsBugs() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                rowsPerPageOptions={[5, 10, 25, {label: t.all[lang], value: -1}]}
                 colSpan={7}
                 count={bugsResult.length}
                 rowsPerPage={rowsPerPage}
+                labelRowsPerPage={t.rowsPerPage[lang]}
                 page={page}
                 SelectProps={{
                   native: true,

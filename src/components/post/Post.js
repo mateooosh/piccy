@@ -4,7 +4,7 @@ import './Post.scss'
 import variables from '../../styles/variables.module.scss'
 import {displayTime, validation} from '../../functions/functions'
 
-import {useStore} from "react-redux"
+import {useSelector, useStore} from "react-redux"
 import {
   Avatar, CircularProgress,
   Dialog, DialogActions,
@@ -34,6 +34,7 @@ import {io} from "socket.io-client"
 export default function Post(props) {
   const store = useStore()
   const history = useHistory()
+  const lang = useSelector(state => state.lang)
 
   const postRef = useRef()
 
@@ -101,17 +102,17 @@ export default function Post(props) {
     setPost(props.post)
     let arr = [
       {
-        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><ReportGmailerrorredRoundedIcon/>Report post</div>,
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><ReportGmailerrorredRoundedIcon/>{t.reportPost[lang]}</div>,
         onClick: setReportDialogOpen
       },
       {
-        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><FileDownloadOutlinedIcon/>Download photo
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><FileDownloadOutlinedIcon/>{t.downloadPhoto[lang]}
         </div>,
         onClick: () => null
       }]
     if (props.post.username === store.getState().username) {
       arr.unshift({
-        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><DeleteOutlinedIcon/>Remove post</div>,
+        title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><DeleteOutlinedIcon/>{t.removePost[lang]}</div>,
         onClick: setRemoveDialogOpen
       })
     }
@@ -221,7 +222,7 @@ export default function Post(props) {
       .then(response => response.json())
       .then(response => {
         console.log(response.message)
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
       })
       .catch(err => console.log(err))
       .finally(() => {
@@ -245,10 +246,10 @@ export default function Post(props) {
       .then(response => response.json())
       .then(response => {
         setRemoveDialogOpen(false)
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
         history.push('/')
       })
-      .catch(() => enqueueSnackbar('Something went wrong'))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
   }
 
   function createComment() {
@@ -269,7 +270,7 @@ export default function Post(props) {
     })
       .then(response => response.json())
       .then(response => {
-        enqueueSnackbar(response.message)
+        enqueueSnackbar(response.message[lang])
       })
       .catch(err => console.log(err))
       .finally(() => {
@@ -318,7 +319,7 @@ export default function Post(props) {
     socket.emit('message-from-user', obj)
 
     setShareDialogOpen(false)
-    enqueueSnackbar('Post has been shared')
+    enqueueSnackbar(t.postHasBeenShared[lang])
   }
 
   function handleClickPhoto() {
@@ -349,7 +350,7 @@ export default function Post(props) {
           </div>
           <div className="post__details">
             <div onClick={pushToProfile} className="post__details__username">{post.username}</div>
-            <div className="post__details__date">{displayTime(post.uploadDate, 'en', t)}</div>
+            <div className="post__details__date">{displayTime(post.uploadDate, lang, t)}</div>
           </div>
           <div className="post__more">
             <MoreVertIcon onClick={handleClick} fontSize="large"/>
@@ -388,10 +389,10 @@ export default function Post(props) {
 
         <div className="post__stats">
           <div className="post__likes">
-            {post.likes} likes
+            {post.likes} {t.likes[lang]}
           </div>
           <div className="post__comments">
-            {post.comments} comments
+            {post.comments} {t.comments[lang]}
           </div>
         </div>
 
@@ -442,7 +443,7 @@ export default function Post(props) {
           {comments.length !== 0 &&
           <div className="post__bottom__comments">
             <div className="post__bottom__comments__header">
-              Comments
+              {t.Comments[lang]}
             </div>
             {comments.map((comment, index) =>
               <div key={index}>
@@ -458,15 +459,15 @@ export default function Post(props) {
       }
 
       <Dialog className="post__report" open={reportDialogOpen} onClose={() => setReportDialogOpen(false)}>
-        <DialogTitle className="post__report__title">Report post</DialogTitle>
+        <DialogTitle className="post__report__title">{t.reportPost[lang]}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Type here what is the reason, that You want to report this post
+            {t.typeHereWhatIsTheReasonReportPost[lang]}
           </DialogContentText>
           <TextField
             className="post__report__input"
             autoFocus
-            label="Reason"
+            label={t.reason[lang]}
             fullWidth
             variant="standard"
             multiline
@@ -483,40 +484,40 @@ export default function Post(props) {
         <DialogActions>
           <LoadingButton className="post__report__button post__report__button--outlined" loading={false}
                          onClick={setReportDialogOpen.bind(this, false)} variant="outlined" disableRipple>
-            Cancel
+            {t.cancel[lang]}
           </LoadingButton>
 
           <LoadingButton loading={reportPostLoading}
                          onClick={reportPost} variant="contained" disableRipple disabled={!allCorrect()}
                          className={getButtonClasses()}>
-            Report
+            {t.report[lang]}
           </LoadingButton>
         </DialogActions>
       </Dialog>
 
       <Dialog className="post__remove" open={removeDialogOpen} onClose={() => setRemoveDialogOpen(false)}>
-        <DialogTitle className="post__remove__title">Remove post</DialogTitle>
+        <DialogTitle className="post__remove__title">{t.removePost[lang]}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Type here what is the reason, that You want to report this post
+            {t.areYouSureYouWantToRemoveThisPost[lang]}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <LoadingButton className="post__remove__button post__remove__button--outlined" loading={false}
                          onClick={setRemoveDialogOpen.bind(this, false)} variant="outlined" disableRipple>
-            Cancel
+            {t.cancel[lang]}
           </LoadingButton>
 
           <LoadingButton loading={reportPostLoading}
                          onClick={removePost} variant="contained" disableRipple
                          className="post__remove__button post__remove__button--danger">
-            Remove
+            {t.remove[lang]}
           </LoadingButton>
         </DialogActions>
       </Dialog>
 
       <Dialog className="post__share" open={shareDialogOpen} onClose={() => setShareDialogOpen(false)}>
-        <DialogTitle className="post__share__title">Share post</DialogTitle>
+        <DialogTitle className="post__share__title">{t.sharePost[lang]}</DialogTitle>
         <DialogContent className="post__share__content">
           {loadingChannels && channels.length === 0 &&
             <CircularProgress className="post__share__indicator" size={60}/>
@@ -532,13 +533,13 @@ export default function Post(props) {
           )}
 
           {channels.length === 0 && !loadingChannels &&
-            <div style={{width: '100%'}}>You need to have at least one channel to share.</div>
+            <div style={{width: '100%'}}>{t.youNeedToHaveAtLeastOneChannel[lang]}</div>
           }
         </DialogContent>
         <DialogActions>
           <LoadingButton className="post__share__button post__share__button--outlined" loading={false}
                          onClick={() => setShareDialogOpen( false)} variant="outlined" disableRipple>
-            Cancel
+            {t.cancel[lang]}
           </LoadingButton>
         </DialogActions>
       </Dialog>

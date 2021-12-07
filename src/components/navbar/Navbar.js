@@ -9,14 +9,17 @@ import NewPost from "../new-post/NewPost"
 import {Logout, Settings, Search, Close} from "@mui/icons-material"
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined'
 import {useSnackbar} from "notistack"
-import SendIcon from "@mui/icons-material/Send";
+import SendIcon from "@mui/icons-material/Send"
+import {t} from "../../translations/translations"
 
 export default function Navbar() {
 
   const store = useStore()
   const history = useHistory()
   const [socket, setSocket] = useState(null)
-  const {enqueueSnackbar} = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar()
+  const lang = useSelector(state => state.lang)
+
 
   const notificationAmount = useSelector(state => state.notificationAmount)
   const avatar = useSelector(state => state.avatar)
@@ -53,7 +56,7 @@ export default function Navbar() {
     localStorage.clear()
     store.dispatch({type: 'resetStore'})
     history.push('/')
-    enqueueSnackbar('You have been logged out')
+    enqueueSnackbar(t.youHaveBeenLoggedOut[lang])
   }
 
   return (
@@ -113,7 +116,7 @@ export default function Navbar() {
         }}
       >
         <MenuItem className="menu__item" onClick={() => history.push('/account')}>
-          <Avatar className="menu__avatar" src={avatar}/>My account
+          <Avatar className="menu__avatar" src={avatar}/>{t.myAccount[lang]}
         </MenuItem>
         <Divider/>
         {role === 'ADMIN' &&
@@ -121,20 +124,20 @@ export default function Navbar() {
             <ListItemIcon className="menu__item__icon">
               <AdminPanelSettingsOutlinedIcon/>
             </ListItemIcon>
-            Admin dashboard
+            {t.adminDashboard[lang]}
           </MenuItem>
         }
         <MenuItem className="menu__item" onClick={() => history.push('/settings')}>
           <ListItemIcon className="menu__item__icon">
             <Settings/>
           </ListItemIcon>
-          Settings
+          {t.settings[lang]}
         </MenuItem>
         <MenuItem className="menu__item" onClick={logOut}>
           <ListItemIcon className="menu__item__icon">
             <Logout/>
           </ListItemIcon>
-          Logout
+          {t.logOut[lang]}
         </MenuItem>
       </Menu>
 

@@ -344,8 +344,219 @@ const translations = {
   noUsersFound: {
     en: 'No users found',
     pl: 'Nie znaleziono użytkowników'
+  },
+  users: {
+    en: 'Users',
+    pl: 'Użytkownicy'
+  },
+  reports: {
+    en: 'Reports',
+    pl: 'Zgłoszenia'
+  },
+  bugs: {
+    en: 'Bugs',
+    pl: 'Błędy'
+  },
+  cannotDeleteYourAccountFromAdminDashboard: {
+    en: 'Cannot delete your account from admin dashboard.',
+    pl: 'Nie można usunąć Twojego konta z panelu administratora'
+  },
+  cannotChangeRoleOfYourself: {
+    en: 'Cannot change role of yourself.',
+    pl: 'Nie można zmienić rolę samemu sobie.'
+  },
+  somethingWentWrong: {
+    en: 'Something went wrong.',
+    pl: 'Coś poszło nie tak.'
+  },
+  role: {
+    en: 'Role',
+    pl: 'Rola'
+  },
+  actions: {
+    en: 'Actions',
+    pl: 'Akcje'
+  },
+  ADMIN: {
+    en: 'ADMIN',
+    pl: 'ADMIN'
+  },
+  USER: {
+    en: 'USER',
+    pl: 'UŻYTKOWNIK'
+  },
+  changeRoleToUSER: {
+    en: 'Change role to USER',
+    pl: 'Zmień rolę na UŻYTKOWNIK'
+  },
+  changeRoleToADMIN: {
+    en: 'Change role to ADMIN',
+    pl: 'Zmień rolę na ADMIN'
+  },
+  goToUser: {
+    en: 'Go to user',
+    pl: 'Zobacz profil'
+  },
+  goToPost: {
+    en: 'Go to post',
+    pl: 'Zobacz post'
+  },
+  areYouSureYouWantToDeleteThisAccount: {
+    en: 'Are you sure You want to delete this account? Every post, comment, message and many, many others will be removed. It will not be possible to restore it.',
+    pl: 'Czy na pewno chcesz usunąć to konto? Każdy post, komentarz, wiadomość i wiele, wiele więcej zostanie usunięte. Nie będzie możliwe odzyskanie ich.'
+  },
+  photo: {
+    en: 'Photo',
+    pl: 'Zdjęcie'
+  },
+  uploader: {
+    en: 'Uploader',
+    pl: 'Przesyłający'
+  },
+  uploadDate: {
+    en: 'Upload date',
+    pl: 'Data przesłania'
+  },
+  deletePost: {
+    en: 'Delete post',
+    pl: 'Usuń post'
+  },
+  all: {
+    en: 'All',
+    pl: 'Wszystko'
+  },
+  rowsPerPage: {
+    en: 'Rows per page',
+    pl: 'Wierszy na stronę'
+  },
+  reportedPosts: {
+    en: 'Reported posts',
+    pl: 'Zgłoszone posty'
+  },
+  reportedBugs: {
+    en: 'Reported bugs',
+    pl: 'Zgłoszone błędy'
+  },
+  reportedBy: {
+    en: 'Reported by',
+    pl: 'Zgłoszone przez'
+  },
+  reason: {
+    en: 'Reason',
+    pl: 'Przyczyna'
+  },
+  date: {
+    en: 'Date',
+    pl: 'Data'
+  },
+  markAsClosed: {
+    en: 'Mark as closed',
+    pl: 'Oznacz jako zamknięty'
+  },
+  new: {
+    en: 'New',
+    pl: 'Nowy'
+  },
+  markAsNew: {
+    en: 'Mark as new',
+    pl: 'Oznacz jako otwarty'
+  },
+  closed: {
+    en: 'Closed',
+    pl: 'Zamknięty'
+  },
+  attachment: {
+    en: 'Attachment',
+    pl: 'Załącznik'
+  },
+  description: {
+    en: 'Description',
+    pl: 'Opis'
+  },
+  markAsResolved: {
+    en: 'Mark as resolved',
+    pl: 'Oznacz jako rozwiązane'
+  },
+  opened: {
+    en: 'Opened',
+    pl: 'Otwarte'
+  },
+  markAsOpened: {
+    en: 'Mark as opened',
+    pl: 'Oznacz jako otwarte'
+  },
+  resolved: {
+    en: 'Resolved',
+    pl: 'Rozwiązane'
+  },
+  saveChanges: {
+    en: 'Save changes',
+    pl: 'Zapisz zmiany'
+  },
+  photoCropping: {
+    en: 'Photo cropping',
+    pl: 'Przycinanie zdjęcia'
+  },
+  crop: {
+    en: 'Crop',
+    pl: 'Przytnij'
+  },
+  youHaveBeenLoggedOut: {
+    en: 'You have been logged out.',
+    pl: 'Zostałeś wylogowany.'
+  },
+  myAccount: {
+    en: 'My account',
+    pl: 'Moje konto'
+  },
+  adminDashboard: {
+    en: 'Admin dashboard',
+    pl: 'Panel administratora'
+  },
+  newPost: {
+    en: 'New post',
+    pl: 'Nowy post'
+  },
+  create: {
+    en: 'Create',
+    pl: 'Utwórz'
+  },
+  postHasBeenShared: {
+    en: 'Post has been shared',
+    pl: 'Post został udostępniony'
+  },
+  sharePost: {
+    en: 'Share post',
+    pl: 'Udostępnij post'
+  },
+  youNeedToHaveAtLeastOneChannel: {
+    en: 'You need to have at least one channel to share.',
+    pl: 'Musisz mieć co najmniej jeden kanał aby móc udostępnić post.'
+  },
+  youHaveBeenLoggedOutBecauceOfToken: {
+    en: 'You have been logged out because of invalid token.',
+    pl: 'Zostałeś wylogowany z powodu niepoprawnego tokenu.'
+  },
+  noChannels: {
+    en: 'No channels',
+    pl: 'Brak kanałów'
+  },
+  noMessages: {
+    en: 'No messages',
+    pl: 'Brak wiadomości'
+  },
+  linkToPost: {
+    en: 'Link to post',
+    pl: 'Link do postu'
+  },
+  oldPasswordMustBeAtLeast6: {
+    en: 'Old password must be at least 6 characters long',
+    pl: 'Stare hasło musi mieć co najmniej 6 znaków'
+  },
+  newPasswordMustBeAtLeast6: {
+    en: 'New password must be at least 6 characters long',
+    pl: 'Nowe hasło musi mieć co najmniej 6 znaków'
   }
-
 
 
 }

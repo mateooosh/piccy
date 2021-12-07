@@ -6,9 +6,15 @@ import RotateLeftIcon from '@mui/icons-material/RotateLeft'
 import RotateRightIcon from '@mui/icons-material/RotateRight'
 import Grid3x3Icon from '@mui/icons-material/Grid3x3'
 import getCroppedImg from "./cropImage"
+import {t} from "../../translations/translations"
+import {useSelector} from "react-redux";
+
 
 
 export default function ImagePicker({ setCroppedImage, src, setSrc}) {
+  const lang = useSelector(state => state.lang)
+
+
   const [crop, setCrop] = useState({x: 0, y: 0})
   const [zoom, setZoom] = useState(1)
   const [rotation, setRotation] = useState(0)
@@ -67,19 +73,13 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
   return (
     <div className="picker">
 
-
-      {/*{!!croppedImage &&*/}
-      {/*<img src={croppedImage} width={size}/>*/}
-      {/*}*/}
-
-
       <Dialog
         open={photoCroppingIsOpen}
         keepMounted
         onClose={resetState}
         fullScreen
       >
-        <DialogTitle style={{fontWeight: '600'}}>Photo cropping</DialogTitle>
+        <DialogTitle style={{fontWeight: '600'}}>{t.photoCropping[lang]}</DialogTitle>
         <DialogContent style={{margin: 'auto', width: '100%', padding: 0}}>
           {src !== null &&
           <div style={{position: 'relative', width: '100%', height: '100%'}}>
@@ -111,7 +111,7 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
             disableRipple
             onClick={resetState}
           >
-            Cancel
+            {t.cancel[lang]}
           </Button>
           <Button
             variant="contained"
@@ -119,7 +119,7 @@ export default function ImagePicker({ setCroppedImage, src, setSrc}) {
             disableRipple
             onClick={showCroppedImage}
           >
-            Crop
+            {t.crop[lang]}
           </Button>
         </DialogActions>
       </Dialog>
