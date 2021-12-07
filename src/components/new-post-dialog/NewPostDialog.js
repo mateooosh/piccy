@@ -44,10 +44,14 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
       .then(response => response.json())
       .then(response => {
         setOpen(false)
-        enqueueSnackbar(response.message[lang])
+        enqueueSnackbar(response.message[lang], {
+          variant: 'success'
+        })
       })
       .catch(err => {
-        enqueueSnackbar(t.somethingWentWrong[lang])
+        enqueueSnackbar(t.somethingWentWrong[lang], {
+          variant: 'error'
+        })
       })
       .finally(() => setLoading(false))
   }

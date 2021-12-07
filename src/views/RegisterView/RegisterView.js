@@ -69,9 +69,13 @@ export default function RegisterView() {
       .then(response => {
         if (response.created) {
           history.push('/')
-          enqueueSnackbar(t.accountHasBeenCreated[lang])
+          enqueueSnackbar(response.message[lang], {
+            variant: response.variant
+          })
         } else {
-          enqueueSnackbar(response.message)
+          enqueueSnackbar(response.message[lang], {
+            variant: response.variant
+          })
         }
       })
       .catch(err => console.log(err))

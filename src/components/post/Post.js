@@ -96,6 +96,12 @@ export default function Post(props) {
   }, [removeDialogOpen])
 
 
+  const refPhoto = useRef(photo)
+  useEffect(() => {
+    refPhoto.current = photo
+  }, [photo])
+
+
   useEffect(() => {
     setSocket(io(process.env.REACT_APP_API_URL_WS, {transports: ['websocket']}))
 
@@ -108,7 +114,15 @@ export default function Post(props) {
       {
         title: <div style={{display: 'flex', alighItems: 'center', gap: 6}}><FileDownloadOutlinedIcon/>{t.downloadPhoto[lang]}
         </div>,
-        onClick: () => null
+        onClick: () => {
+          if(refPhoto.current) {
+            const a = document.createElement("a")
+            a.href = refPhoto.current
+            a.download = `post_${props.post.id}.png`
+            a.click()
+            setAnchorEl(null)
+          }
+        }
       }]
     if (props.post.username === store.getState().username) {
       arr.unshift({
@@ -222,7 +236,9 @@ export default function Post(props) {
       .then(response => response.json())
       .then(response => {
         console.log(response.message)
-        enqueueSnackbar(response.message[lang])
+        enqueueSnackbar(response.message[lang], {
+          variant: 'success'
+        })
       })
       .catch(err => console.log(err))
       .finally(() => {
@@ -246,10 +262,14 @@ export default function Post(props) {
       .then(response => response.json())
       .then(response => {
         setRemoveDialogOpen(false)
-        enqueueSnackbar(response.message[lang])
+        enqueueSnackbar(response.message[lang], {
+          variant: 'success'
+        })
         history.push('/')
       })
-      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]))
+      .catch(() => enqueueSnackbar(t.somethingWentWrong[lang]), {
+        variant: 'error'
+      })
   }
 
   function createComment() {
@@ -430,7 +450,7 @@ export default function Post(props) {
             <input
               value={commentInput}
               onChange={e => setCommentInput(e.target.value)}
-              type="text" placeholder="Type here..."
+              type="text" placeholder={t.typeHere[lang]}
               onKeyPress={(ev) => {
                 if (ev.key === 'Enter') {
                   createComment()
