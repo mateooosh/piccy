@@ -3,10 +3,7 @@ import './PostView.scss'
 
 import {useStore} from "react-redux"
 import Post from "../../components/post/Post"
-import {useHistory, useParams} from "react-router-dom"
-import {CircularProgress} from "@mui/material"
-import {useSnackbar} from "notistack"
-import {io} from "socket.io-client";
+import {useParams} from "react-router-dom"
 import {checkStatus} from "../../functions/functions";
 import DataLoadStatus from "../../components/data-load-status/DataLoadStatus";
 
@@ -14,8 +11,6 @@ export default function PostView() {
 
   const store = useStore()
   const {id} = useParams()
-  const history = useHistory()
-  const {enqueueSnackbar} = useSnackbar()
 
   const [post, setPost] = useState([])
   const [loading, setLoading] = useState(false)

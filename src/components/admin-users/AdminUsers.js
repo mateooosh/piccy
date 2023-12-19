@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import './AdminUsers.scss'
 import {useSelector, useStore} from "react-redux"
-import {useHistory} from "react-router-dom"
 import {
   Avatar,
-  Button, Chip, CircularProgress,
+  Button,
+  Chip,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -16,7 +17,8 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow, Tooltip
+  TableRow,
+  Tooltip
 } from "@mui/material"
 import {PersonRemoveRounded} from "@mui/icons-material"
 
@@ -29,7 +31,6 @@ import {t} from "../../translations/translations"
 export default function AdminUsers() {
 
   const store = useStore()
-  const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const lang = useSelector(state => state.lang)
 

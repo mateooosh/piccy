@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AdminPosts.scss'
 import {useSelector, useStore} from "react-redux"
-import {useHistory} from "react-router-dom"
 import {
   Button,
   CircularProgress,
@@ -29,7 +28,6 @@ import {t} from "../../translations/translations"
 export default function AdminPosts() {
 
   const store = useStore()
-  const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const lang = useSelector(state => state.lang)
 
@@ -168,7 +166,7 @@ export default function AdminPosts() {
                   {row.id}
                 </TableCell>
                 <TableCell>
-                  <img className="admin-posts__img" src={row.photo} width={50}/>
+                  <img className="admin-posts__img" src={row.photo} width={50} img="postImage"/>
                 </TableCell>
                 <TableCell>
                   {row.username}

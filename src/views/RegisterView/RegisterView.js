@@ -5,12 +5,11 @@ import {LoadingButton} from "@mui/lab"
 
 import {validation} from '../../functions/functions'
 import {Link, useHistory} from "react-router-dom"
-import {useSelector, useStore} from "react-redux"
+import {useSelector} from "react-redux"
 import {useSnackbar} from "notistack"
 import {t} from '../../translations/translations'
 
 export default function RegisterView() {
-  const store = useStore()
   const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const lang = useSelector(state => state.lang)

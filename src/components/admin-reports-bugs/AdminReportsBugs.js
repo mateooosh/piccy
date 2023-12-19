@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AdminReportsBugs.scss'
 import {useSelector, useStore} from "react-redux"
-import {useHistory} from "react-router-dom"
 import {
   Chip,
   CircularProgress,
@@ -20,11 +19,9 @@ import TablePaginationActions from "../table-pagination-actions/TablePaginationA
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography'
 import {t} from "../../translations/translations"
 
-
 export default function AdminReportsBugs() {
 
   const store = useStore()
-  const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const lang = useSelector(state => state.lang)
 
@@ -201,7 +198,7 @@ export default function AdminReportsBugs() {
                   {formatDate(row.reportDate)}
                 </TableCell>
                 <TableCell align="center">
-                  {row.status == 'opened' &&
+                  {row.status === 'opened' &&
                   <Tooltip title={t.markAsResolved[lang]}>
                   <Chip label={t.opened[lang]} color="primary" style={{color: 'white'}} onClick={() => markAs(row.id, 'resolved')}/>
                   </Tooltip>

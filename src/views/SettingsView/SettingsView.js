@@ -231,7 +231,7 @@ export default function SettingsView() {
                          multiline
               />
               {attachment !== null &&
-              <img className="settings__details__attachment" src={attachment} width='100%'/>
+              <img className="settings__details__attachment" src={attachment} width='100%' alt="attachment"/>
               }
             </div>
             <div className="settings__details__actions">

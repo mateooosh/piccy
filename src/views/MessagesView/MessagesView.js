@@ -2,16 +2,15 @@ import React, {useEffect, useRef, useState} from 'react'
 import './MessagesView.scss'
 
 import {useSelector, useStore} from "react-redux"
-import variables from "../../styles/variables.module.scss"
 import {io} from "socket.io-client"
-import {Avatar, Chip, CircularProgress, TextField} from "@mui/material"
+import {Avatar, Chip, CircularProgress} from "@mui/material"
 import MessageItem from "../../components/message-item/MessageItem"
 import SendIcon from '@mui/icons-material/Send'
 import MessagesDrawer from "../../components/messages-drawer/MessagesDrawer"
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 import {useHistory, useLocation} from "react-router-dom"
 import {t} from '../../translations/translations'
-export default function MessagesView(props) {
+export default function MessagesView() {
 
   const store = useStore()
   const history = useHistory()
@@ -87,7 +86,7 @@ export default function MessagesView(props) {
     getChannels()
     // console.log(`message-to-user-${store.getState().id}`, response)
 
-    if (response.idChannel == refIdChannel.current) {
+    if (response.idChannel === refIdChannel.current) {
       setMessages(old => [response, ...old])
       markAsRead(store.getState().id, response.idChannel)
       // scrollToEnd('smooth')
@@ -101,15 +100,12 @@ export default function MessagesView(props) {
   function getMessages(id) {
     setMessages([])
 
-    // console.log('id', id)
-
     const url = `${process.env.REACT_APP_API_URL}/messages/${id}?myIdUser=${store.getState().id}&token=${store.getState().token}`
 
     setLoadingMessages(true)
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        // console.log('messages:', response)
         setMessages(response.messages)
         setUserChattingWith(findUserChattingWith(response.users))
         setIdChannel(response.idChannel)
@@ -141,7 +137,7 @@ export default function MessagesView(props) {
           setFirstAttempt(false)
         }
 
-        const index = response.findIndex(channel => channel.idUser == location.state?.idUser)
+        const index = response.findIndex(channel => channel.idUser === location.state?.idUser)
         if (index === -1 && location.state?.idUser) {
           setChannels(old => [{
             createdAt: null,
@@ -190,7 +186,7 @@ export default function MessagesView(props) {
     if (messages.length === 0)
       return
 
-    let obj = channels.find(elem => elem.idChannel == idChannel)
+    let obj = channels.find(elem => elem.idChannel === idChannel)
     let index = channels.indexOf(obj)
 
     let deepCopy = JSON.parse(JSON.stringify(channels))
@@ -207,7 +203,7 @@ export default function MessagesView(props) {
   }
 
   function findUserChattingWith(users) {
-    return users.find(elem => elem.idUser != store.getState().id);
+    return users.find(elem => elem.idUser !== store.getState().id);
   }
 
   function getClasses(idUser) {
@@ -228,11 +224,6 @@ export default function MessagesView(props) {
               <div className="messages__nav__user__username">{channel.username}</div>
               <div className="messages__nav__user__lastMessage">
                 {channel.lastMessage}
-                {/*{channel.status == 0 ? (*/}
-                {/*  channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage*/}
-                {/*) : (*/}
-                {/*  <b>{channel.lastMessage.includes('LINKTOPOST') ? 'Link to post' : channel.lastMessage}</b>*/}
-                {/*)}*/}
               </div>
             </div>
             {channel.status == 1 ? (

@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import './User.scss'
-import {useSelector, useStore} from "react-redux"
 import {useHistory} from "react-router-dom"
 import {Avatar} from "@mui/material";
 
 export default function User({user}) {
 
-  const store = useStore()
   const history = useHistory()
 
   function pushToAccount() {

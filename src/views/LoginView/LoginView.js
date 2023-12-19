@@ -40,9 +40,8 @@ export default function LoginView() {
       password: password,
     }
 
-    console.log(obj)
-
     const url = `${process.env.REACT_APP_API_URL}/auth`
+    console.log(obj)
     fetch(url, {
       method: "POST",
       body: JSON.stringify(obj),

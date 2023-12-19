@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import './HomeView.scss'
 
 import {useSelector, useStore} from "react-redux"
@@ -8,7 +8,6 @@ import NewPost from "../../components/new-post/NewPost"
 import {checkStatus} from "../../functions/functions"
 import DataLoadStatus from "../../components/data-load-status/DataLoadStatus"
 import {t} from '../../translations/translations'
-
 
 export default function HomeView() {
 
@@ -40,7 +39,6 @@ export default function HomeView() {
 
   function getPosts() {
     if (refEmptyPosts.current || refLoading.current) {
-      console.log('return')
       return
     }
 
@@ -85,11 +83,9 @@ export default function HomeView() {
     }
   }, [])
 
-  function onScroll(e) {
+  function onScroll() {
     if(homeRef.current.offsetHeight - 1500 < window.scrollY) {
-      console.log('get posts')
       getPosts()
-
     }
   }
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './EditProfileDialog.scss'
 import {useSelector, useStore} from "react-redux"
 import {
@@ -10,16 +10,15 @@ import {
   DialogTitle,
   IconButton,
   TextField,
-  useMediaQuery, useTheme
+  useMediaQuery,
+  useTheme
 } from "@mui/material"
 import {LoadingButton} from "@mui/lab"
 import {useSnackbar} from 'notistack'
-import {useHistory} from "react-router-dom"
 import ImagePicker from "../image-picker/ImagePicker"
 import {t} from "../../translations/translations"
 
 export default function EditProfileDialog({open, setOpen, profile, getProfile}) {
-  const history = useHistory()
   const store = useStore()
   const {enqueueSnackbar} = useSnackbar()
   const lang = useSelector(state => state.lang)

@@ -5,7 +5,6 @@ import {useSelector, useStore} from "react-redux"
 import {Avatar, Button, CircularProgress, Dialog, DialogContent, DialogTitle} from "@mui/material"
 import {useHistory, useParams} from "react-router-dom"
 import User from "../../components/user/User"
-import {useSnackbar} from "notistack"
 import DataLoadStatus from "../../components/data-load-status/DataLoadStatus";
 import {checkStatus} from "../../functions/functions";
 import {t} from "../../translations/translations";
@@ -14,7 +13,6 @@ export default function ProfileView() {
 
   const store = useStore()
   const history = useHistory()
-  const {enqueueSnackbar} = useSnackbar()
   const {username} = useParams()
   const lang = useSelector(state => state.lang)
 
@@ -233,7 +231,7 @@ export default function ProfileView() {
             <div className="profile__posts__content">
               {posts.map((post, index) =>
                 <img src={post.photo} key={index} className="profile__posts__content__item"
-                     onClick={() => history.push(`/post/${post.id}`)}/>
+                     onClick={() => history.push(`/post/${post.id}`)} alt="postImage"/>
               )}
             </div>
 

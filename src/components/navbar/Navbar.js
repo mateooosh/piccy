@@ -4,16 +4,13 @@ import {useSelector, useStore} from "react-redux"
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined'
 import {useHistory} from "react-router-dom"
 import {io} from "socket.io-client"
-import {Avatar, Badge, Divider, ListItemIcon, MenuItem, Menu, IconButton, Popover} from "@mui/material"
-import NewPost from "../new-post/NewPost"
-import {Logout, Settings, Search, Close} from "@mui/icons-material"
+import {Avatar, Badge, Divider, ListItemIcon, MenuItem, Menu, IconButton} from "@mui/material"
+import {Logout, Settings, Search} from "@mui/icons-material"
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined'
 import {useSnackbar} from "notistack"
-import SendIcon from "@mui/icons-material/Send"
 import {t} from "../../translations/translations"
 
 export default function Navbar() {
-
   const store = useStore()
   const history = useHistory()
   const [socket, setSocket] = useState(null)

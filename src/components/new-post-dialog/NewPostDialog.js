@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import './NewPostDialog.scss'
 import {useSelector, useStore} from "react-redux"
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material"
 import {LoadingButton} from "@mui/lab"
-import { useSnackbar } from 'notistack'
+import {useSnackbar} from 'notistack'
 import {t} from "../../translations/translations"
 
 
@@ -66,7 +66,7 @@ export default function NewPostDialog({croppedImage, open, setOpen}) {
       <DialogTitle style={{fontWeight: '600'}}>Create new post</DialogTitle>
       <DialogContent style={{margin: 'auto', width: '100%', padding: 0, display: 'flex', flexDirection: 'column'}}>
         {croppedImage !== null &&
-        <img src={croppedImage} width='100%'/>
+        <img src={croppedImage} width='100%' alt="croppedImage"/>
         }
         <TextField className="new-post__input"
                    label="Caption"

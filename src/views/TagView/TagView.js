@@ -17,7 +17,6 @@ export default function TagView() {
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        console.log(response)
         setPosts(response)
       })
       .catch(err => console.log(err))
@@ -30,11 +29,11 @@ export default function TagView() {
         <span>{`#${tag}`}</span>
       </div>
       <div className="tags__posts">
-      {posts.map((post, idx) =>
-        <img src={post.photo} key={idx} className="tags__post"
-        onClick={() => history.push(`/post/${post.id}`)}/>
-      )}
-        </div>
+        {posts.map((post, idx) =>
+          <img src={post.photo} key={idx} className="tags__post" alt="tag"
+               onClick={() => history.push(`/post/${post.id}`)}/>
+        )}
+      </div>
     </div>
   )
 }

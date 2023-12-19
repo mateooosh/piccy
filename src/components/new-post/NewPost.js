@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import './NewPost.scss'
-import {Button, IconButton} from "@mui/material"
+import {Button} from "@mui/material"
 import ImagePicker from "../image-picker/ImagePicker"
 import NewPostDialog from "../new-post-dialog/NewPostDialog"
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined"
 import {useSelector} from "react-redux"
 import {t} from "../../translations/translations"
 

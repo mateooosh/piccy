@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import './AdminReportsPosts.scss'
 import {useSelector, useStore} from "react-redux"
-import {useHistory} from "react-router-dom"
 import {
   Button,
-  Chip, CircularProgress,
+  Chip,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,11 +26,9 @@ import {useSnackbar} from "notistack"
 import TablePaginationActions from "../table-pagination-actions/TablePaginationActions"
 import {t} from "../../translations/translations"
 
-
 export default function AdminReportsPosts() {
 
   const store = useStore()
-  const history = useHistory()
   const {enqueueSnackbar} = useSnackbar()
   const lang = useSelector(state => state.lang)
 
@@ -203,7 +201,7 @@ export default function AdminReportsPosts() {
                   {row.id}
                 </TableCell>
                 <TableCell>
-                  <img className="admin-reports-posts__img" src={row.photo} width={50}/>
+                  <img className="admin-reports-posts__img" src={row.photo} width={50} alt="reportImage"/>
                 </TableCell>
                 <TableCell>
                   {row.reporter}
@@ -215,7 +213,7 @@ export default function AdminReportsPosts() {
                   {formatDate(row.date)}
                 </TableCell>
                 <TableCell align="center">
-                  {row.status == 'new' &&
+                  {row.status === 'new' &&
                   <Tooltip title={t.markAsClosed[lang]} onClick={() => markAs(row.id, 'closed')}>
                     <Chip label={t.new[lang]} color="primary"
                           style={{color: 'white'}}/>

@@ -6,7 +6,6 @@ import {useHistory} from "react-router-dom"
 import {Close} from "@mui/icons-material"
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
-import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import {Box, CircularProgress, Tabs} from "@mui/material"
 import User from "../../components/user/User"
@@ -37,20 +36,19 @@ export default function SearchView() {
 
   useEffect(() => {
     clearTimeout(time)
-    if (tab == 1) {
+    if (parseInt(tab) === 1) {
       getAccounts()
-    } else if (tab == 2) {
+    } else if (parseInt(tab) === 2) {
       getTags()
     }
-
   }, [tab])
 
   useEffect(() => {
     console.log(query, tab)
     clearTimeout(time)
-    if (tab == 1) {
+    if (parseInt(tab) === 1) {
       setTime(setTimeout(getAccounts, 250))
-    } else if (tab == 2) {
+    } else if (parseInt(tab) === 2) {
       setTime(setTimeout(getTags, 250))
     }
 

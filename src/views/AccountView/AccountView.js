@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import './AccountView.scss'
 
 import {useSelector, useStore} from "react-redux"
-import {Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material"
+import {Avatar, Button, CircularProgress, Dialog, DialogContent, DialogTitle} from "@mui/material"
 import {useHistory} from "react-router-dom"
 import EditProfileDialog from "../../components/edit-profile-dialog/EditProfileDialog"
 import User from "../../components/user/User"
@@ -148,7 +148,7 @@ export default function AccountView() {
             <div className="account__posts__content">
               {posts.map((post, index) =>
                 <img src={post.photo} key={index} className="account__posts__content__item"
-                     onClick={() => history.push(`/post/${post.id}`)}/>
+                     onClick={() => history.push(`/post/${post.id}`)} alt="postPhoto"/>
               )}
             </div>
 

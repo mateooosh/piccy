@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
 import './Post.scss'
 
-import variables from '../../styles/variables.module.scss'
 import {displayTime, validation} from '../../functions/functions'
 
 import {useSelector, useStore} from "react-redux"
@@ -146,7 +145,6 @@ export default function Post(props) {
     })
       .then(response => response.json())
       .then(response => {
-        // console.log('photo', response)
         setPhoto(response.photo)
       })
       .catch(err => console.log(err))
@@ -385,7 +383,7 @@ export default function Post(props) {
         <div className="post__image">
 
           {photo ? (
-            <img onClick={handleClickPhoto} width="100%" src={photo}
+            <img onClick={handleClickPhoto} width="100%" src={photo} alt="postPhoto"
                  className={props.homeScreen ? 'post__image--cursor' : ''}/>
           ) : (
             <Skeleton variant="rectangular" width={width} height={width}/>
