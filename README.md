@@ -1,6 +1,7 @@
 # Piccy
 
 Photo sharing social networking service - web version.
+![Logo](https://github.com/mateooosh/piccy/assets/57798535/20a94e21-ed45-43b9-97ef-3ba5eca9e2e1)
 
 ## Functions
 
