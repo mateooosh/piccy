@@ -49,7 +49,14 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ### `npm serve-mock`
 
-Runs the mocked server that allows to develop application without remote services.
+Runs the mocked server that allows to develop application without remote services. 
+
+.env file in the project directory is required with urls:
+
+    REACT_APP_API_URL=http://x.x.x.x:8000
+
+    REACT_APP_API_URL_WS=ws://x.x.x.x:8000
+
 
 ## Technologies
 

@@ -1,7 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const fs = require('fs')
+const websocket = require('socket.io')
+const {users, posts} = require('./data')
+const fs = require("fs");
 
 const app = express()
 const port = 8000
@@ -10,66 +12,41 @@ app.use(bodyParser.json({limit: '20mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '20mb', extended: true}));
 app.use(cors())
 
-app.listen(port)
+const server = app.listen(port)
 
-const posts = [
-  {
-    id: 1,
-    username: "user1",
-    uploadDate: new Date('2022-11-20'),
-    liked: true,
-    likes: 98,
-    comments: 2,
-    description: 'Description',
-    photo: 'data:image/png;base64,' + toBase64(`./assets/cat-1.jpg`)
-  },
-  {
-    id: 2,
-    username: "user1",
-    uploadDate: new Date('2022-11-21'),
-    liked: false,
-    likes: 64,
-    comments: 4,
-    description: 'Funny cat #cat',
-    photo: 'data:image/png;base64,' + toBase64(`./assets/cat-2.jpg`)
-  },
-  {
-    id: 3,
-    username: "user1",
-    uploadDate: new Date('2022-11-22'),
-    liked: false,
-    likes: 51,
-    comments: 1,
-    description: '#cat',
-    photo: 'data:image/png;base64,' + toBase64(`./assets/cat-3.jpg`)
-  }
-]
+const io = websocket(server)
+app.use(function (req, res, next) {
+  req.io = io
+  next()
+})
 
+io.on("connection", function (socket) {
+  socket.on('message-from-user', (message) => {
+    setTimeout(() => {
+      io.emit(`message-to-user-1`, {
+        message: 'Hello! What\'s up?',
+        idSender: 2,
+        usernameSender: 'user2',
+        idReciever: 1,
+        idChannel: 1,
+        createdAt: new Date()
+      })
+    }, 5000)
 
-const users = [{
-  id: 1,
-  username: 'user1',
-  email: 'user1@gmail.com',
-  name: 'John Doe',
-  photo: 'data:image/png;base64,' + toBase64(`./assets/cat-1.jpg`),
-  description: 'Hello, here is my description!',
-  postsAmount: 2,
-  following: 532,
-  followers: 985,
-  amIFollowing: true
-}, {
-  id: 2,
-  username: 'user2',
-  email: 'user2@gmail.com',
-  name: 'Jane Doe',
-  photo: 'data:image/png;base64,' + toBase64(`./assets/cat-2.jpg`),
-  description: 'My name is Jane Doe',
-  postsAmount: 1,
-  following: 542,
-  followers: 764,
-  amIFollowing: false
-}]
+  })
 
+  socket.on('mark-as-read', (idUser, idChannel) => {
+    console.log('mark as read', idUser, idChannel)
+  })
+
+  socket.on("new-user", function (data) {
+    socket.username = data;
+  })
+
+  socket.on("log-out", function (data) {
+    console.log('disconnect', data)
+  })
+})
 
 // -------------------------------------------
 // AUTH
@@ -128,6 +105,17 @@ app.put('/users/:id', (req, res) => {
     message: {
       en: 'Changes have been saved!',
       pl: 'Zmiany zostały zapisane!'
+    }
+  })
+})
+
+// reset password
+app.put('/reset/password', (req, res) => {
+  res.json({
+    message: {
+      variant: 'success',
+      en: 'Password has been changed.',
+      pl: 'Hasło zostało zmienione.'
     }
   })
 })
@@ -311,10 +299,7 @@ app.get('/channels', (req, res) => {
   ])
 })
 
-
 function toBase64(filePath) {
   const img = fs.readFileSync(filePath)
   return Buffer.from(img).toString('base64')
 }
-
-

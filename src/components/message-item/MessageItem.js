@@ -15,7 +15,7 @@ export default function MessageItem({message}) {
 
   return (
     <>
-      {message.idSender === id ? (
+      {message.idSender == id ? (
         <div className="message message--my">
           <div>
             <Collapse in={displayTime} className="message__time">
