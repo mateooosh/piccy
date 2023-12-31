@@ -96,7 +96,7 @@ app.delete('/users/:id/follow/:idFollower', (req, res) => res.json({message: 'Un
 
 // search user by username
 app.get('/users/:query', (req, res) => {
-  res.json(users.filter(user => Object.values(user).some(value => value.includes(req.params.query))))
+  res.json(users.filter(user => user.username.includes(req.params.query)))
 })
 
 // update user's info
@@ -297,6 +297,72 @@ app.get('/channels', (req, res) => {
       status: 1
     }
   ])
+})
+
+
+// -------------------------------------------
+// ADMIN DASHBOARD
+// -------------------------------------------
+//get all users
+app.get('/admin/users', (req, res) => res.json(users))
+
+//get all posts
+app.get('/admin/posts', (req, res) => res.json(posts))
+
+//delete post by id
+app.delete('/admin/posts/:id', (req, res) => {
+  res.json({
+    message: {
+      en: 'Post has been removed.',
+      pl: 'Post został usunięty.'
+    }
+  })
+})
+
+// remove user's account
+app.delete('/admin/users/:id', (req, res) => {
+  res.json({
+    message: {
+      en: 'Account has been deleted.',
+      pl: 'Konto zostało usunięte.'
+    }
+  })
+})
+
+//get all reported posts
+app.get('/admin/reports/posts', (req, res) => {
+  res.json([])
+})
+
+//change role of user
+app.put('/admin/users/roles', (req, res) => {
+  res.json({message: 'Changed role to ' + req.body.role})
+})
+
+//change status of reported post
+app.put('/admin/reports/posts', (req, res) => {
+  res.json({message: 'Changed status to ' + req.body.status});
+})
+
+//get all reported bugs
+app.get('/admin/reports/bugs', (req, res) => {
+  res.json([])
+})
+
+//get attachment by id
+app.get('/admin/reports/bugs/:id/photo', (req, res) => {
+  res.json(null)
+})
+
+//change status of reported bugs
+app.put('/admin/reports/bugs', (req, res) => {
+  const statusPL = req.body.status === 'opened' ? 'otwarte' : 'rozwiązane'
+  res.json({
+    message: {
+      en: 'Marked as' + req.body.status,
+      pl: 'Oznaczono jako ' + statusPL
+    }
+  })
 })
 
 function toBase64(filePath) {

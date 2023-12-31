@@ -49,7 +49,8 @@ exports.users = [{
   postsAmount: 2,
   following: 532,
   followers: 985,
-  amIFollowing: true
+  amIFollowing: true,
+  role: 'ADMIN'
 }, {
   id: 2,
   username: 'user2',
@@ -60,5 +61,6 @@ exports.users = [{
   postsAmount: 1,
   following: 542,
   followers: 764,
-  amIFollowing: false
+  amIFollowing: false,
+  role: 'USER'
 }]
