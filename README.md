@@ -69,7 +69,7 @@ Runs the mocked server that allows to develop application without remote service
 
 ## Screenshots
 
-### Sing in
+### Sign in
 
 ![Sign in](https://github.com/mateooosh/piccy/assets/57798535/6b54c7b0-e81f-4545-8142-c959ccc435a6)
 
