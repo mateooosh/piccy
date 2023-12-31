@@ -79,23 +79,23 @@ Runs the mocked server that allows to develop application without remote service
 
 ### Home
 
-> ![Home](https://github.com/mateooosh/piccy/assets/57798535/ae25a24b-6df3-4b87-bd41-e593fcface1f)
+> ![Home](https://github.com/mateooosh/piccy/assets/57798535/def86450-6d62-44eb-af90-a881506e103e)
 
 ### Photo cropping
 
-> ![Photo cropping](https://github.com/mateooosh/piccy/assets/57798535/2fb75f9d-f8f1-4b4d-add9-36f603c0e03c)
+> ![Photo cropping](https://github.com/mateooosh/piccy/assets/57798535/d460659d-c1dd-4a2c-b3fc-13ceffa60344)
 
 ### User's profile
 
-> ![User's profile](https://github.com/mateooosh/piccy/assets/57798535/baf48081-e340-46ab-9f6e-19c143987192)
+> ![User's profile](https://github.com/mateooosh/piccy/assets/57798535/9bee6983-cba1-44c7-8571-86bcbb32afa6)
 
 ### Searching
 
-> ![Searching](https://github.com/mateooosh/piccy/assets/57798535/17d7da0a-f3ec-40fd-9bc9-91fb8c3b1632)
+> ![Searching](https://github.com/mateooosh/piccy/assets/57798535/95395356-7267-4b54-bfb8-31969686efac)
 
 ### Chatting
 
-> ![Chatting](https://github.com/mateooosh/piccy/assets/57798535/a066ed1a-ac8c-4c45-b770-0178d25fe938)
+> ![Chatting](https://github.com/mateooosh/piccy/assets/57798535/3d14d99e-2af7-4bf6-bb87-b0ea1834af7b)
 
 ### Settings
 

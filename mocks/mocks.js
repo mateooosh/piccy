@@ -265,7 +265,7 @@ app.get('/messages/:idUser', (req, res) => {
   res.json(
     {
       idChannel: 1,
-      users: [users[0], users[1]],
+      users: [users[1], users[0]],
       messages: [
         {
           id: 1,
@@ -292,6 +292,7 @@ app.get('/channels', (req, res) => {
       idUser: 2,
       idChannel: 1,
       username: 'user2',
+      photo: 'data:image/png;base64,' + toBase64(`./assets/cat-2.jpg`),
       name: 'John Doe',
       createdAt: new Date(2022, 11, 20, 10, 0, 50),
       status: 1
