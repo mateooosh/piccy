@@ -1,4 +1,4 @@
-******# Piccy
+# Piccy
 
 Photo sharing social networking service - web version.
 
@@ -103,4 +103,4 @@ Runs the mocked server that allows to develop application without remote service
 
 ### Admin dashboard
 
-![Admin dashboard](https://github.com/mateooosh/piccy/assets/57798535/9063529c-e875-4281-9f51-2ce8318cd873)******
+![Admin dashboard](https://github.com/mateooosh/piccy/assets/57798535/9063529c-e875-4281-9f51-2ce8318cd873)
