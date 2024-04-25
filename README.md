@@ -2,6 +2,10 @@
 
 Photo sharing social networking service - web version.
 
+Mobile application created with React Native -> [Piccy](https://github.com/mateooosh/piccy-mobile)
+
+Server created with Node.js -> [Server](https://github.com/mateooosh/piccy-server)
+
 ![Logo](https://github.com/mateooosh/piccy/assets/57798535/20a94e21-ed45-43b9-97ef-3ba5eca9e2e1)
 
 ## Functions
